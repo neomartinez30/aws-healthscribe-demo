@@ -10,7 +10,7 @@ import { useAuthContext } from '@/store/auth';
 
 import styles from './Welcome.module.css';
 import WelcomeHeader from './WelcomeHeader';
-import { Details, Footer, Highlights, Overview } from './WelcomeSections';
+import { Details, Highlights, Overview } from './WelcomeSections';
 
 function Welcome() {
     const { isUserAuthenticated } = useAuthContext();
@@ -28,7 +28,6 @@ function Welcome() {
                     <Overview />
                     <Highlights />
                     <Details />
-                    <Footer />
                 </SpaceBetween>
             </main>
         </ContentLayout>
