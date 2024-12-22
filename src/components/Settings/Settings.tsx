@@ -1,5 +1,3 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useState } from 'react';
 
 import Button from '@cloudscape-design/components/button';
@@ -13,23 +11,20 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Spinner from '@cloudscape-design/components/spinner';
 
 import { SettingSelect } from '@/components/Settings/Common';
+import { ImageViewer } from '@/components/Settings/ImageViewer';
 import { useAppSettingsContext } from '@/store/appSettings';
 import { AppSettingKeys, AppSettings } from '@/store/appSettings/appSettings.type';
 import { DEFAULT_SETTINGS } from '@/store/appSettings/defaultSettings';
 
 export default function Settings() {
     const { appSettings, setAppSettings } = useAppSettingsContext();
-    // Saving is instant, but create artificial wait
     const [isSaving, setIsSaving] = useState(false);
-    // Make a copy of appSettings, write back it after form validation
     const [localSettings, setLocalSettings] = useState<AppSettings>(appSettings);
 
-    // Reset settings to defaults, defined in consts
     function handleResetToDefaults() {
         setLocalSettings(DEFAULT_SETTINGS);
     }
 
-    // Reload settings from appSettings from appContext
     function handleReload() {
         setLocalSettings(appSettings);
     }
@@ -53,6 +48,11 @@ export default function Settings() {
             }
         >
             <Container>
+                <ImageViewer 
+                    src="https://i.ytimg.com/vi/8L8TC9fSSK4/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYACsAWKAgwIABABGFUgYShlMA8=&rs=AOn4CLDUoKZ_MPD6D0M0k3xinNGBcBReqw"
+                    alt="Genesys Agent Desktop"
+                />
+                
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
