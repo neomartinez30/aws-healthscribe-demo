@@ -53,13 +53,13 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                 ]}
             >
                 <Box padding="xs">
-                    <img 
-                        src={https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png} 
-                        alt="DHA Logo" 
-                        style={{ 
+                    <img
+                        src="https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png"
+                        alt="DHA Logo"
+                        style={{
                             maxHeight: '64px',
                             width: 'auto'
-                        }} 
+                        }}
                     />
                 </Box>
                 <SpaceBetween size="xl">
@@ -97,7 +97,7 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                                         },
                                     ]}
                                 />
-                                <Button variant="primary" onClick={() => handleGetStartedClick()}>
+                                <Button variant="primary" onClick={handleGetStartedClick}>
                                     {getStartedSelectionText}
                                 </Button>
                             </SpaceBetween>
