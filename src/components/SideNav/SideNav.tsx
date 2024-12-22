@@ -22,7 +22,6 @@ export default function SideNav() {
             text: 'New Conversation',
             href: '/new',
         },
-        { type: 'divider' },
         {
             type: 'link',
             text: 'Generate Audio',
@@ -31,26 +30,19 @@ export default function SideNav() {
         { type: 'divider' },
         {
             type: 'link',
-            text: 'Settings',
+            text: 'Patient Insights',
             href: '/settings',
         },
         { type: 'divider' },
         {
             type: 'link',
-            text: 'AWS HealthScribe',
-            href: 'https://aws.amazon.com/healthscribe',
+            text: 'Agent Desktop',
             external: true,
         },
+        { type: 'divider' },
         {
             type: 'link',
-            text: 'AWS for Health',
-            href: 'https://aws.amazon.com/health',
-            external: true,
-        },
-        {
-            type: 'link',
-            text: 'Amazon Web Services',
-            href: 'https://aws.amazon.com',
+            text: 'Provider Locator',
             external: true,
         },
     ];
@@ -58,7 +50,7 @@ export default function SideNav() {
     return (
         <SideNavigation
             activeHref={`/${location.pathname.split('/')[1]}`}
-            header={{ text: 'AWS HealthScribe', href: '/' }}
+            header={{ text: 'Toolkit', href: '/' }}
             items={sideNavItems}
             onFollow={(e) => {
                 e.preventDefault();
