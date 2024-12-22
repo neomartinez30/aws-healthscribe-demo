@@ -1,7 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 import React, { useMemo, useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@cloudscape-design/components/box';
@@ -13,7 +12,11 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 
 import { useAuthContext } from '@/store/auth';
 
-export default function WelcomeHeader() {
+interface WelcomeHeaderProps {
+    logoUrl: string;
+}
+
+export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
     const navigate = useNavigate();
     const { isUserAuthenticated } = useAuthContext();
     const [getStartedSelection, setGetStartedSelection] = useState<string>('conversations');
@@ -24,7 +27,7 @@ export default function WelcomeHeader() {
         } else if (getStartedSelection === 'newConversation') {
             return 'View Insights';
         } else if (getStartedSelection === 'generateAudio') {
-            return 'Find a provider';
+            return 'Find a Provider';
         } else {
             return 'Go';
         }
@@ -43,8 +46,22 @@ export default function WelcomeHeader() {
     return (
         <Box padding={{ top: 'xs', bottom: 'l' }}>
             <Grid
-                gridDefinition={[{ colspan: { default: 12, xs: 7, s: 8 } }, { colspan: { default: 12, xs: 5, s: 4 } }]}
+                gridDefinition={[
+                    { colspan: { default: 12, xs: 2, s: 2 } },
+                    { colspan: { default: 12, xs: 5, s: 6 } },
+                    { colspan: { default: 12, xs: 5, s: 4 } }
+                ]}
             >
+                <Box padding="xs">
+                    <img 
+                        src={https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png} 
+                        alt="DHA Logo" 
+                        style={{ 
+                            maxHeight: '64px',
+                            width: 'auto'
+                        }} 
+                    />
+                </Box>
                 <SpaceBetween size="xl">
                     <Box fontSize="display-l" fontWeight="bold">
                         Virtual Nurse Experience
@@ -70,13 +87,13 @@ export default function WelcomeHeader() {
                                         },
                                         {
                                             value: 'newConversation',
-                                            label: 'New Conversation',
-                                            description: 'Record or submit new audio',
+                                            label: 'Patient Insights',
+                                            description: 'Interact with patient medical history',
                                         },
                                         {
                                             value: 'generateAudio',
-                                            label: 'Generate Audio',
-                                            description: 'Generate multi-speaker synthetic audio',
+                                            label: 'Provider Locator',
+                                            description: 'Find and triage to a provider',
                                         },
                                     ]}
                                 />
