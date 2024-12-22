@@ -37,13 +37,13 @@ export default function SideNav() {
         {
             type: 'link',
             text: 'Agent Desktop',
-            external: true,
+            href: '/settings',
         },
         { type: 'divider' },
         {
             type: 'link',
             text: 'Provider Locator',
-            external: true,
+            href: '/settings',
         },
     ];
 
