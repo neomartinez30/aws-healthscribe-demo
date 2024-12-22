@@ -12,13 +12,15 @@ import styles from './Welcome.module.css';
 import WelcomeHeader from './WelcomeHeader';
 import { Details, Highlights, Overview } from './WelcomeSections';
 
+const logoUrl = "https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png";
+
 function Welcome() {
     const { isUserAuthenticated } = useAuthContext();
 
     return (
         <ContentLayout
             headerVariant={'high-contrast'}
-            header={<WelcomeHeader />}
+            header={<WelcomeHeader logoUrl={logoUrl} />}
             defaultPadding={true}
             disableOverlap={true}
         >
