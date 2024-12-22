@@ -20,8 +20,6 @@ export function Overview() {
                             This sample web app shows the art of the possible in using AI and GenAI techniques for Next-Gen Virtual Nurse workspaces.
                             <li>This demo website uses synthetic patient data. Nothing is real.</li>
                         </Box>
-                        <Box variant="p">
-                        </Box>
                     </TextContent>
                 </SpaceBetween>
             </Container>
@@ -62,11 +60,11 @@ export function Details() {
                     <Box>
                         The patient insights module is powered by AWS HealthLake and AWS Berock.
                         <ul>
-                            <li>Summarized clinical notes</li>
-                            <li>Rich consultation transcripts</li>
-                            <li>Transcript segmentation</li>
-                            <li>Evidence mapping</li>
-                            <li>Structured medical terms</li>
+                            <li>Database Integration: Connect databased to Amazon HealthLake and select the resources to analyze.</li>
+                            <li>Summarization: Generate detailed summaries of patient medical data by leveraging Amazon Bedrock's Generative AI capabilities.</li>
+                            <li>Consolidated Summary: Obtain a comprehensive, coherent summary of the patient's medical history by merging information from various sources.</li>
+                            <li>Individual FHIR summary: Obtain a more granular summary of each FHIR resource selected for analysis.</li>
+                            <li>Interactive Chat: Engage in a conversational interface to ask questions about the patient's medical record and receive relevant answers.</li>
                         </ul>
                     </Box>
                 </SpaceBetween>
