@@ -17,12 +17,10 @@ export function Overview() {
                 <SpaceBetween size={'s'}>
                     <TextContent>
                         <Box variant="p">
-                            This sample ReactJS-based web app shows the art of the possible in using AWS HealthScribe.
+                            This sample web app shows the art of the possible in using AI and GenAI techniques for Next-Gen Virtual Nurse workspaces.
+                            <li>This demo website uses synthetic patient data. Nothing is real.</li>
                         </Box>
                         <Box variant="p">
-                            AWS HealthScribe is a HIPAA-eligible service empowering healthcare software vendors to build
-                            clinical applications that automatically generate clinical notes by analyzing
-                            patient-clinician conversations.
                         </Box>
                     </TextContent>
                 </SpaceBetween>
@@ -34,14 +32,20 @@ export function Overview() {
 export function Highlights() {
     return (
         <SpaceBetween size={'s'}>
-            <Header variant="h2">Highlights</Header>
+            <Header variant="h2">Conversations</Header>
             <Container>
-                <ul>
-                    <li>Submit an audio file for AWS HealthScribe.</li>
-                    <li>View AWS HealthScribe results.</li>
-                    <li>Record or generate audio.</li>
-                    <li>Integration with Amazon Comprehend Medical.</li>
-                </ul>
+                <SpaceBetween size={'s'}>
+                    <Box>
+                        The <b>conversations<b> tab is powered by AWS Healthscribe and AWS Bedrock. AWS HealthScribe is a HIPAA-eligible service empowering healthcare software vendors to build clinical applications that automatically generate clinical notes by analyzing patient-clinician conversations.
+                        <ul>
+                            <li>Summarized clinical notes</li>
+                            <li>Rich consultation transcripts</li>
+                            <li>Transcript segmentation</li>
+                            <li>Evidence mapping</li>
+                            <li>Structured medical terms</li>
+                        </ul>
+                    </Box>
+                </SpaceBetween>
             </Container>
         </SpaceBetween>
     );
@@ -51,12 +55,12 @@ export function Details() {
     return (
         <SpaceBetween size={'s'}>
             <Header variant="h2">
-                <span>Details</span>
+                <span>Patient Insights</span>
             </Header>
             <Container>
                 <SpaceBetween size={'s'}>
                     <Box>
-                        <b>View HealthScribe results</b>, including:
+                        The patient insights module is powered by AWS HealthLake and AWS Berock.
                         <ul>
                             <li>Summarized clinical notes</li>
                             <li>Rich consultation transcripts</li>
@@ -65,51 +69,9 @@ export function Details() {
                             <li>Structured medical terms</li>
                         </ul>
                     </Box>
-                    <Box>
-                        <b>
-                            Integrate AWS HealthScribe with{' '}
-                            <Link external href="https://aws.amazon.com/comprehend/medical/">
-                                Amazon Comprehend Medical
-                            </Link>
-                        </b>
-                        , allowing you to:
-                        <ul>
-                            <li>
-                                Infer medical ontologies (RxNorm, ICD-10-CM, and SNOMED CT) from the HealthScribe
-                                trancript
-                            </li>
-                            <li>
-                                Detect medical terminologies and infer medical ontologies from the HealthScribe insights
-                                output
-                            </li>
-                        </ul>
-                    </Box>
                 </SpaceBetween>
             </Container>
         </SpaceBetween>
     );
 }
 
-export function Footer() {
-    return (
-        <Container>
-            <Box textAlign="center" color="text-body-secondary" fontSize="body-s">
-                <p>Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.</p>
-                <p>
-                    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-                    associated documentation files (the &quot;Software&quot;), to deal in the Software without
-                    restriction, including without limitation the rights to use, copy, modify, merge, publish,
-                    distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-                    Software is furnished to do so.
-                </p>
-                <p>
-                    THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-                    INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-                    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-                    OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-                    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                </p>
-            </Box>
-        </Container>
-    );
-}
