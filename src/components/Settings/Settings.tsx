@@ -42,8 +42,8 @@ export default function Settings() {
         <ContentLayout
             headerVariant={'high-contrast'}
             header={
-                <Header variant="h2" description="Settings are saved locally to the browser">
-                    Settings
+                <Header variant="h2" description="Sample agent desktop integration">
+                    Agent Desktop
                 </Header>
             }
         >
