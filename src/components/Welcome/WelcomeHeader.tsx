@@ -22,9 +22,9 @@ export default function WelcomeHeader() {
         if (getStartedSelection === 'conversations') {
             return 'View Conversations';
         } else if (getStartedSelection === 'newConversation') {
-            return 'Create Conversation';
+            return 'View Insights';
         } else if (getStartedSelection === 'generateAudio') {
-            return 'Generate Synthetic Audio';
+            return 'Find a provider';
         } else {
             return 'Go';
         }
@@ -47,9 +47,9 @@ export default function WelcomeHeader() {
             >
                 <SpaceBetween size="xl">
                     <Box fontSize="display-l" fontWeight="bold">
-                        Demo Application Experience
+                        Virtual Nurse Experience
                     </Box>
-                    <Box fontSize="display-l">Powered by AWS HealthScribe</Box>
+                    <Box fontSize="display-l">DHA Nurse Advise Health Line</Box>
                 </SpaceBetween>
 
                 <div>
