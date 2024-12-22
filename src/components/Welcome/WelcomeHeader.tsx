@@ -54,7 +54,7 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
             >
                 <Box padding="xs">
                     <img
-                        src="https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png"
+                        src={logoUrl}
                         alt="DHA Logo"
                         style={{
                             maxHeight: '64px',
