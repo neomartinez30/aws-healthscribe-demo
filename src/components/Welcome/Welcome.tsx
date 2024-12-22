@@ -12,7 +12,7 @@ import styles from './Welcome.module.css';
 import WelcomeHeader from './WelcomeHeader';
 import { Details, Highlights, Overview } from './WelcomeSections';
 
-const logoUrl = "https://sample-data-203918854345-22hcl401.s3.us-east-1.amazonaws.com/TRICARE_Logo_png.png";
+const logoUrl = "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx";
 
 function Welcome() {
     const { isUserAuthenticated } = useAuthContext();
