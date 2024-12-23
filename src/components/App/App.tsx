@@ -26,7 +26,7 @@ const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
 // src/App.tsx (or wherever your routing is configured)
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import RedirectToStreamlit from './pages/RedirectToStreamlit';
+import RedirectToStreamlit from './components/RedirectToStreamlit';
 
 export default function App() {
     const { isUserAuthenticated } = useAuthContext();
