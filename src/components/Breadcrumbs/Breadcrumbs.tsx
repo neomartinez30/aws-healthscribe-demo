@@ -63,12 +63,12 @@ export default function Breadcrumbs() {
                 href: '/generate',
             },
         ];
-    } else if (pathName === '/patientInsights') {
+    } else if (pathName === '/PatientInsights') {
         items = [
             ...baseBreadcrumb,
             {
                 text: 'Patient Insights',
-                href: '/patientInsights',
+                href: '/PatientInsights',
             },
         ];
     }
