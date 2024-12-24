@@ -34,7 +34,7 @@ export default function App() {
                     <Route path="/new" element={<NewConversation />} />
                     <Route path="/generate" element={<GenerateAudio />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/patientInsights" element={<PatientInsights />} /> 
+                    <Route path="/PatientInsights" element={<PatientInsights />} /> 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             ) : (
