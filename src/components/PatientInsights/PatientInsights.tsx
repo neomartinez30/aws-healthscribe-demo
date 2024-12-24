@@ -1,16 +1,12 @@
 import React from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
-import { TopNav } from '..//components/TopNav/TopNav.tsx';
-
-import React from 'react';
-import ContentLayout from '@cloudscape-design/components/content-layout';
-import TopNav from '../TopNav';  // Correct import statement
+import TopNav from '../TopNav'; // Correct import statement
 
 export default function StreamlitApp() {
     return (
         <ContentLayout
             headerVariant={'high-contrast'}
-            header={<TopNav />} 
+            header={<TopNav />}
         >
             <iframe
                 title="Streamlit Application"
