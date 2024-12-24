@@ -17,21 +17,11 @@ export default function SideNav() {
             text: 'Conversations',
             href: '/conversations',
         },
-        {
-            type: 'link',
-            text: 'New Conversation',
-            href: '/new',
-        },
-        {
-            type: 'link',
-            text: 'Generate Audio',
-            href: '/generate',
-        },
         { type: 'divider' },
         {
             type: 'link',
             text: 'Patient Insights',
-            href: '/settings',
+            href: '/patientInsights',
         },
         { type: 'divider' },
         {
