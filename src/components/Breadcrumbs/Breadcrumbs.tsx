@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import React, { useLocation, useNavigate } from 'react-router-dom';
-
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BreadcrumbGroup, { BreadcrumbGroupProps } from '@cloudscape-design/components/breadcrumb-group';
 
 export default function Breadcrumbs() {
@@ -61,6 +61,14 @@ export default function Breadcrumbs() {
             {
                 text: 'Generate Audio',
                 href: '/generate',
+            },
+        ];
+    } else if (pathName === '/patientInsights') {
+        items = [
+            ...baseBreadcrumb,
+            {
+                text: 'Patient Insights',
+                href: '/patientInsights',
             },
         ];
     }
