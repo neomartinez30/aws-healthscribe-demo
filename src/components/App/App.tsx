@@ -1,12 +1,7 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { Suspense, lazy } from 'react';
-
 import { Navigate, Route, Routes } from 'react-router-dom';
-
 import AppLayout from '@cloudscape-design/components/app-layout';
 import Flashbar from '@cloudscape-design/components/flashbar';
-
 import Breadcrumbs from '@/components/Breadcrumbs';
 import SideNav from '@/components/SideNav';
 import SuspenseLoader from '@/components/SuspenseLoader';
@@ -22,7 +17,7 @@ const Conversations = lazy(() => import('@/components/Conversations'));
 const Conversation = lazy(() => import('@/components/Conversation'));
 const NewConversation = lazy(() => import('@/components/NewConversation'));
 const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
-
+const PatientInsights = lazy(() => import('@/components/PatientInsights'));
 
 export default function App() {
     const { isUserAuthenticated } = useAuthContext();
@@ -39,6 +34,7 @@ export default function App() {
                     <Route path="/new" element={<NewConversation />} />
                     <Route path="/generate" element={<GenerateAudio />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/patientInsights" element={<PatientInsights />} /> 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             ) : (
