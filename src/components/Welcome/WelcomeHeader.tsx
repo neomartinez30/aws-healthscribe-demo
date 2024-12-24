@@ -86,7 +86,7 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                                             description: 'View available conversations',
                                         },
                                         {
-                                            value: 'patientInsights',
+                                            value: 'PatientInsights',
                                             label: 'Patient Insights',
                                             description: 'Interact with patient medical history',
                                         },
