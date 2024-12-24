@@ -21,7 +21,7 @@ export default function SideNav() {
         {
             type: 'link',
             text: 'Patient Insights',
-            href: '/patientInsights',
+            href: '/PatientInsights',
         },
         { type: 'divider' },
         {
