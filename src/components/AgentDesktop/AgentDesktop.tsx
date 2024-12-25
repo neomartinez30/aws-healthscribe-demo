@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
-import Button from '@cloudscape-design/components/button';
-import Badge from '@cloudscape-design/components/badge';
-import Box from '@cloudscape-design/components/box';
+import Container from '@cloudscape-design/components/container';
+import ColumnLayout from '@cloudscape-design/components/column-layout';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import Icon from '@cloudscape-design/components/icon';
+import Button from '@cloudscape-design/components/button';
+import Box from '@cloudscape-design/components/box';
+import Grid from '@cloudscape-design/components/grid';
 
 import styles from './AgentDesktop.module.css';
 
 // Placeholder for Connect Streams integration
 const mockCustomerProfile = {
-    name: "John Doe",
+    name: "Julius Cesar",
     id: "12345",
-    dob: "1980-01-01",
-    phone: "+1 (555) 123-4567",
-    status: "Connected"
+    phone: "+1 999 123 1234",
+    queue: "Nurse Line",
+    verification: "Successful"
 };
 
 export default function AgentDesktop() {
@@ -50,44 +51,41 @@ export default function AgentDesktop() {
             }
         >
             <div className={styles.container}>
-                {/* Top Box - Call Controls and Customer Profile */}
-                <div className={styles.topBox}>
-                    <div className={styles.profileSection}>
-                        <div className={styles.avatar}>
-                            <Icon name="user-profile" size="big" />
-                        </div>
-                        <div className={styles.profileInfo}>
-                            <SpaceBetween size="s">
-                                <Box variant="h2">{mockCustomerProfile.name}</Box>
-                                <SpaceBetween size="xs" direction="horizontal">
-                                    <Box variant="small">ID: {mockCustomerProfile.id}</Box>
-                                    <Box variant="small">DOB: {mockCustomerProfile.dob}</Box>
-                                    <Box variant="small">Phone: {mockCustomerProfile.phone}</Box>
-                                    <Badge color="green">{mockCustomerProfile.status}</Badge>
+                <Container
+                    header={
+                        <Header
+                            variant="h2"
+                            description="Patient Profile"
+                            actions={
+                                <SpaceBetween direction="horizontal" size="xs">
+                                    <Button
+                                        iconName={isMuted ? "microphone-off" : "microphone"}
+                                        onClick={handleMute}
+                                    >
+                                        {isMuted ? "Unmute" : "Mute"}
+                                    </Button>
+                                    <Button
+                                        iconName={isOnHold ? "status-negative" : "status-positive"}
+                                        onClick={handleHold}
+                                    >
+                                        {isOnHold ? "Resume" : "Hold"}
+                                    </Button>
+                                    <Button onClick={handleEndCall}>End</Button>
+                                    <Button>Transfer</Button>
                                 </SpaceBetween>
-                            </SpaceBetween>
-                        </div>
-                    </div>
-                    <div className={styles.controlsSection}>
-                        <Button
-                            iconName={isMuted ? "microphone-off" : "microphone"}
-                            variant="icon"
-                            onClick={handleMute}
-                        />
-                        <Button
-                            iconName={isOnHold ? "status-negative" : "status-positive"}
-                            variant="icon"
-                            onClick={handleHold}
-                        />
-                        <Button
-                            iconName="close"
-                            variant="primary"
-                            onClick={handleEndCall}
+                            }
                         >
-                            End Call
-                        </Button>
-                    </div>
-                </div>
+                            Call Control
+                        </Header>
+                    }
+                >
+                    <ColumnLayout columns={2}>
+                        <div>Name: {mockCustomerProfile.name}</div>
+                        <div>Caller ID: {mockCustomerProfile.phone}</div>
+                        <div>Queue: {mockCustomerProfile.queue}</div>
+                        <div>Verification: {mockCustomerProfile.verification}</div>
+                    </ColumnLayout>
+                </Container>
 
                 {/* Main Content Area */}
                 <div className={styles.mainContent}>
