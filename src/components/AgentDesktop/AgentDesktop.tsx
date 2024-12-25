@@ -75,7 +75,7 @@ export default function AgentDesktop() {
                             onClick={handleMute}
                         />
                         <Button
-                            iconName={isOnHold ? "status-pending" : "status-active"}
+                            iconName={isOnHold ? "pause" : "play"}
                             variant="icon"
                             onClick={handleHold}
                         />
