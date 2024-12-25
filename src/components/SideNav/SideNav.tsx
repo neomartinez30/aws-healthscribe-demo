@@ -1,9 +1,5 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React from 'react';
-
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import SideNavigation from '@cloudscape-design/components/side-navigation';
 import { SideNavigationProps } from '@cloudscape-design/components/side-navigation';
 
@@ -27,7 +23,7 @@ export default function SideNav() {
         {
             type: 'link',
             text: 'Agent Desktop',
-            href: '/settings',
+            href: '/agent-desktop',
         },
         { type: 'divider' },
         {
