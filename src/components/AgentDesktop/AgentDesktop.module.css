@@ -57,7 +57,6 @@
 }
 
 .videoSection, .chatSection {
-    flex: 1;
     background: var(--color-background-container-content);
     border-radius: 8px;
     padding: 20px;
