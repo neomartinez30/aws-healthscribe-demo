@@ -41,7 +41,7 @@ export default function AgentDesktop() {
     return (
         <ContentLayout
             header={
-                <Header 
+                <Header
                     variant="h1"
                     description="Agent workspace for handling patient interactions"
                 >
@@ -75,10 +75,9 @@ export default function AgentDesktop() {
                             onClick={handleMute}
                         />
                         <Button
-                            iconName="status-pending"
+                            iconName={isOnHold ? "status-pending" : "status-active"}
                             variant="icon"
                             onClick={handleHold}
-                            selected={isOnHold}
                         />
                         <Button
                             iconName="close"
@@ -101,7 +100,7 @@ export default function AgentDesktop() {
                                 Video stream will appear here when connected
                             </Box>
                         </div>
-                        
+
                         {/* Chat Section */}
                         <div className={styles.chatSection}>
                             <Box variant="h3">Chat</Box>
