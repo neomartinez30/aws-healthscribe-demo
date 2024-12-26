@@ -5,8 +5,10 @@ import Container from '@cloudscape-design/components/container';
 import ColumnLayout from '@cloudscape-design/components/column-layout';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Button from '@cloudscape-design/components/button';
+import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Box from '@cloudscape-design/components/box';
 import Grid from '@cloudscape-design/components/grid';
+import StatusIndicator from '@cloudscape-design/components/status-indicator';
 
 import styles from './AgentDesktop.module.css';
 
@@ -22,6 +24,7 @@ const mockCustomerProfile = {
 export default function AgentDesktop() {
     const [isMuted, setIsMuted] = useState(false);
     const [isOnHold, setIsOnHold] = useState(false);
+    const [agentState, setAgentState] = useState('Available');
 
     // Placeholder functions for Connect Streams integration
     const handleMute = () => {
@@ -43,8 +46,25 @@ export default function AgentDesktop() {
         <ContentLayout
             header={
                 <Header
-                    variant="h1"
-                    description="Agent workspace for handling patient interactions"
+                    variant="awsui-h1-sticky"
+                    actions={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <div className={styles.agentStateContainer}>
+                                <StatusIndicator type={agentState === 'Available' ? 'success' : 'error'} />
+                                <ButtonDropdown
+                                    items={[
+                                        { text: 'Available', id: 'available' },
+                                        { text: 'Offline', id: 'offline' }
+                                    ]}
+                                    onItemClick={({ detail }) => 
+                                        setAgentState(detail.id === 'available' ? 'Available' : 'Offline')
+                                    }
+                                >
+                                    Agent State
+                                </ButtonDropdown>
+                            </div>
+                        </SpaceBetween>
+                    }
                 >
                     Agent Desktop
                 </Header>
@@ -58,6 +78,11 @@ export default function AgentDesktop() {
                             description="Patient Profile"
                             actions={
                                 <SpaceBetween direction="horizontal" size="xs">
+                                    <Button
+                                        variant="primary"
+                                    >
+                                        Answer
+                                    </Button>
                                     <Button
                                         iconName={isMuted ? "microphone-off" : "microphone"}
                                         onClick={handleMute}
