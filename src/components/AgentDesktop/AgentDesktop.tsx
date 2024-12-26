@@ -33,29 +33,22 @@ export default function AgentDesktop() {
   };
 
   const { agent, contact } = useConnect(connectConfig);
-};
 
   const handleStateChange = async (newState: string) => {
     if (agent) {
       try {
         const agentStates = agent.getAgentStates();
         const stateToSet = agentStates.find((state) => state.name === newState);
-        
-        if (!stateToSet) {
-          throw new Error('Invalid state name');
+        if (stateToSet) {
+          await agent.setState(stateToSet);
+          setAgentState(newState as AgentState);
         }
-
-        await agent.setState(stateToSet, {
-          success: () => setAgentState(newState),
-          failure: (err: any) => {
-            throw new Error(`Failed to change state: ${err}`);
-          }
-        });
       } catch (error) {
-        console.error(error);
+        console.error('Failed to change agent state:', error);
       }
     }
   };
+}
 
   return (
     <ContentLayout
