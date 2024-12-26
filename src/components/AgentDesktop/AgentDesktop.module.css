@@ -1,68 +1,44 @@
+```css
 .container {
-    height: calc(100vh - 160px);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-}
-
-.profileSection {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-}
-
-.avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: var(--color-background-layout-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profileInfo {
-    flex: 1;
-}
-
-.controlsSection {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
 }
 
 .mainContent {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-    min-height: 0; /* Important for nested flex containers */
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  min-height: 0;
 }
 
 .leftPanel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 0; /* Important for nested flex containers */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
 }
 
-.videoSection, .chatSection {
-    background: var(--color-background-container-content);
-    border-radius: 8px;
-    padding: 20px;
-    min-height: 0; /* Important for nested flex containers */
+.videoSection,
+.chatSection {
+  background: var(--color-background-container-content);
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 0;
 }
 
 .rightPanel {
-    flex: 1;
-    background: var(--color-background-container-content);
-    border-radius: 8px;
-    padding: 20px;
+  flex: 1;
+  background: var(--color-background-container-content);
+  border-radius: 8px;
+  padding: 20px;
 }
 
-.agentStateContainer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.agent-state-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
