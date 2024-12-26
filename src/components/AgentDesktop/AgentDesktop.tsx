@@ -233,43 +233,57 @@ export default function AgentDesktop() {
         }
     };
 
-    const handleStateChange = async (newState: string) => {
-        if (agent) {
-            try {
-                const stateToSet = {
-                    name: newState,
-                    type: window.connect.AgentStateType.ROUTABLE
-                };
-                
-                await agent.setState(stateToSet, {
-                    success: () => {
-                        addFlashMessage({
-                            id: 'state-change-success',
-                            header: 'State Changed',
-                            content: `Agent state changed to ${newState}`,
-                            type: 'success'
-                        });
-                    },
-                    failure: (err: any) => {
-                        addFlashMessage({
-                            id: 'state-change-error',
-                            header: 'State Change Failed',
-                            content: `Failed to change state: ${err}`,
-                            type: 'error'
-                        });
-                    }
-                });
-            } catch (error) {
-                addFlashMessage({
-                    id: 'state-change-error',
-                    header: 'State Change Failed',
-                    content: `Failed to change state: ${error}`,
-                    type: 'error'
-                });
+const handleStateChange = async (newState: string) => {
+    if (agent) {
+        try {
+            let stateType;
+            switch (newState) {
+                case 'Available':
+                    stateType = window.connect.AgentStateType.ROUTABLE;
+                    break;
+                case 'Offline':
+                    stateType = window.connect.AgentStateType.OFFLINE;
+                    break;
+                // Add other states as needed
+                default:
+                    throw new Error('Invalid state name');
             }
-        }
-    };
 
+            const stateToSet = {
+                name: newState,
+                type: stateType
+            };
+
+            console.log('Setting state:', stateToSet); // Log the state being set
+
+            await agent.setState(stateToSet, {
+                success: () => {
+                    addFlashMessage({
+                        id: 'state-change-success',
+                        header: 'State Changed',
+                        content: `Agent state changed to ${newState}`,
+                        type: 'success'
+                    });
+                },
+                failure: (err: any) => {
+                    addFlashMessage({
+                        id: 'state-change-error',
+                        header: 'State Change Failed',
+                        content: `Failed to change state: ${err}`,
+                        type: 'error'
+                    });
+                }
+            });
+        } catch (error) {
+            addFlashMessage({
+                id: 'state-change-error',
+                header: 'State Change Failed',
+                content: `Failed to change state: ${error}`,
+                type: 'error'
+            });
+        }
+    }
+};
     return (
         <ContentLayout
             header={
