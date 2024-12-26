@@ -1,12 +1,4 @@
 .container {
-    height: calc(100vh - 160px);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-}
-
-.topBox {
     background: var(--color-background-container-content);
     border-radius: 8px;
     padding: 20px;
