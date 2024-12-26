@@ -9,6 +9,7 @@ import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Box from '@cloudscape-design/components/box';
 import Grid from '@cloudscape-design/components/grid';
 import StatusIndicator from '@cloudscape-design/components/status-indicator';
+import { useNotificationsContext } from '@/store/notifications';
 import 'amazon-connect-streams';
 
 import styles from './AgentDesktop.module.css';
@@ -20,6 +21,7 @@ declare global {
 }
 
 export default function AgentDesktop() {
+    const { addFlashMessage } = useNotificationsContext();
     const [agentState, setAgentState] = useState('Offline');
     const [contact, setContact] = useState<any>(null);
     const [agent, setAgent] = useState<any>(null);
@@ -33,16 +35,34 @@ export default function AgentDesktop() {
 
     useEffect(() => {
         // Initialize CCP
-        const connectUrl = "https://mydemopage.my.connect.aws"; // Connect instance URL
+        const connectUrl = process.env.CONNECT_INSTANCE_URL || "https://your-connect-instance.my.connect.aws";
         const containerDiv = document.getElementById("ccp-container");
         
-        if (containerDiv) {
+        if (!containerDiv) {
+            addFlashMessage({
+                id: 'ccp-container-missing',
+                header: 'CCP Error',
+                content: 'CCP container element not found',
+                type: 'error'
+            });
+            return;
+        }
+
+        try {
             const ccpParams = {
-                ccpUrl: connectUrl + "/ccp-v2/",
-                loginPopup: false,
+                ccpUrl: `${connectUrl}/ccp-v2/`,
+                loginPopup: true,
+                loginPopupAutoClose: true,
+                loginOptions: {
+                    autoClose: true,
+                    height: 600,
+                    width: 400,
+                },
                 softphone: {
-                    allowFramedSoftphone: true
-                }
+                    allowFramedSoftphone: true,
+                    disableRingtone: false
+                },
+                region: process.env.CONNECT_REGION || "us-east-1"
             };
             
             window.connect.core.initCCP(containerDiv, ccpParams);
@@ -53,57 +73,163 @@ export default function AgentDesktop() {
                 agent.onStateChange((state: any) => {
                     setAgentState(state.name);
                 });
+
+                // Get initial agent state
+                const initialState = agent.getState();
+                if (initialState) {
+                    setAgentState(initialState.name);
+                }
             });
 
             // Subscribe to contact events
             window.connect.contact((contact: any) => {
                 setContact(contact);
                 
-                // Get customer information when contact is established
+                contact.onConnecting(() => {
+                    addFlashMessage({
+                        id: 'contact-connecting',
+                        header: 'New Contact',
+                        content: 'Incoming contact connecting...',
+                        type: 'info'
+                    });
+                });
+
                 contact.onConnected(() => {
                     const attributes = contact.getAttributes();
                     setCustomerProfile({
                         name: attributes.name?.value || "Unknown",
                         id: attributes.customerId?.value || "Unknown",
                         phone: contact.getInitialConnection().getAddress() || "",
-                        queue: contact.getQueue().name || "",
+                        queue: contact.getQueue()?.name || "",
                         verification: attributes.verified?.value || "Pending"
                     });
                 });
+
+                contact.onEnded(() => {
+                    setContact(null);
+                    setCustomerProfile({
+                        name: "",
+                        id: "",
+                        phone: "",
+                        queue: "",
+                        verification: ""
+                    });
+                });
+            });
+
+        } catch (error) {
+            addFlashMessage({
+                id: 'ccp-init-error',
+                header: 'CCP Error',
+                content: `Failed to initialize CCP: ${error}`,
+                type: 'error'
             });
         }
     }, []);
 
     const handleMute = () => {
         if (contact) {
-            const connection = contact.getInitialConnection();
-            connection.toggleMute();
+            try {
+                const connection = contact.getInitialConnection();
+                connection.toggleMute();
+            } catch (error) {
+                addFlashMessage({
+                    id: 'mute-error',
+                    header: 'Action Failed',
+                    content: `Failed to toggle mute: ${error}`,
+                    type: 'error'
+                });
+            }
         }
     };
 
     const handleHold = () => {
         if (contact) {
-            if (contact.isOnHold()) {
-                contact.resume();
-            } else {
-                contact.hold();
+            try {
+                if (contact.isOnHold()) {
+                    contact.resume();
+                } else {
+                    contact.hold();
+                }
+            } catch (error) {
+                addFlashMessage({
+                    id: 'hold-error',
+                    header: 'Action Failed', 
+                    content: `Failed to toggle hold: ${error}`,
+                    type: 'error'
+                });
             }
         }
     };
 
     const handleEndCall = () => {
         if (contact) {
-            contact.destroy();
+            try {
+                contact.destroy({
+                    success: () => {
+                        addFlashMessage({
+                            id: 'call-ended',
+                            header: 'Call Ended',
+                            content: 'Call has been terminated successfully',
+                            type: 'success'
+                        });
+                    },
+                    failure: (err: any) => {
+                        addFlashMessage({
+                            id: 'end-call-error',
+                            header: 'Action Failed',
+                            content: `Failed to end call: ${err}`,
+                            type: 'error'
+                        });
+                    }
+                });
+            } catch (error) {
+                addFlashMessage({
+                    id: 'end-call-error',
+                    header: 'Action Failed',
+                    content: `Failed to end call: ${error}`,
+                    type: 'error'
+                });
+            }
         }
     };
 
     const handleTransfer = () => {
         if (contact) {
-            // Implement transfer logic based on your requirements
-            // Example: Quick connects, queues, or direct numbers
-            contact.transfer(window.connect.TransferType.QUEUE, {
-                queueId: "YOUR_QUEUE_ARN"
-            });
+            try {
+                // Get the queue ARN from environment variable
+                const queueArn = process.env.CONNECT_QUEUE_ARN;
+                if (!queueArn) {
+                    throw new Error('Queue ARN not configured');
+                }
+
+                contact.transfer(window.connect.TransferType.QUEUE, {
+                    queueARN: queueArn,
+                    success: () => {
+                        addFlashMessage({
+                            id: 'transfer-success',
+                            header: 'Transfer Initiated',
+                            content: 'Call transfer has been initiated',
+                            type: 'success'
+                        });
+                    },
+                    failure: (err: any) => {
+                        addFlashMessage({
+                            id: 'transfer-error',
+                            header: 'Transfer Failed',
+                            content: `Failed to transfer call: ${err}`,
+                            type: 'error'
+                        });
+                    }
+                });
+            } catch (error) {
+                addFlashMessage({
+                    id: 'transfer-error',
+                    header: 'Transfer Failed',
+                    content: `Failed to transfer call: ${error}`,
+                    type: 'error'
+                });
+            }
         }
     };
 
@@ -123,8 +249,34 @@ export default function AgentDesktop() {
                                     ]}
                                     onItemClick={({ detail }) => {
                                         if (agent) {
-                                            const newState = detail.id === 'available' ? 'Available' : 'Offline';
-                                            agent.setState(newState);
+                                            try {
+                                                const newState = detail.id === 'available' ? 'Available' : 'Offline';
+                                                agent.setState(newState, {
+                                                    success: () => {
+                                                        addFlashMessage({
+                                                            id: 'state-change-success',
+                                                            header: 'State Changed',
+                                                            content: `Agent state changed to ${newState}`,
+                                                            type: 'success'
+                                                        });
+                                                    },
+                                                    failure: (err: any) => {
+                                                        addFlashMessage({
+                                                            id: 'state-change-error',
+                                                            header: 'State Change Failed',
+                                                            content: `Failed to change state: ${err}`,
+                                                            type: 'error'
+                                                        });
+                                                    }
+                                                });
+                                            } catch (error) {
+                                                addFlashMessage({
+                                                    id: 'state-change-error',
+                                                    header: 'State Change Failed',
+                                                    content: `Failed to change state: ${error}`,
+                                                    type: 'error'
+                                                });
+                                            }
                                         }
                                     }}
                                 >
@@ -153,23 +305,26 @@ export default function AgentDesktop() {
                                                 contact.accept();
                                             }
                                         }}
+                                        disabled={!contact || contact.isConnected()}
                                     >
                                         Answer
                                     </Button>
                                     <Button
                                         iconName={contact?.isMuted() ? "microphone-off" : "microphone"}
                                         onClick={handleMute}
+                                        disabled={!contact}
                                     >
                                         {contact?.isMuted() ? "Unmute" : "Mute"}
                                     </Button>
                                     <Button
                                         iconName={contact?.isOnHold() ? "status-negative" : "status-positive"}
                                         onClick={handleHold}
+                                        disabled={!contact}
                                     >
                                         {contact?.isOnHold() ? "Resume" : "Hold"}
                                     </Button>
-                                    <Button onClick={handleEndCall}>End</Button>
-                                    <Button onClick={handleTransfer}>Transfer</Button>
+                                    <Button onClick={handleEndCall} disabled={!contact}>End</Button>
+                                    <Button onClick={handleTransfer} disabled={!contact}>Transfer</Button>
                                 </SpaceBetween>
                             }
                         >
