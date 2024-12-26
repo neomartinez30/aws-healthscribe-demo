@@ -33,7 +33,7 @@ export default function AgentDesktop() {
 
     useEffect(() => {
         // Initialize CCP
-        const connectUrl = "YOUR_CONNECT_INSTANCE_URL"; // Replace with your Connect instance URL
+        const connectUrl = "https://mydemopage.my.connect.aws"; // Connect instance URL
         const containerDiv = document.getElementById("ccp-container");
         
         if (containerDiv) {
