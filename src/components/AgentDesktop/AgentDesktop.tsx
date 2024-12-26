@@ -35,7 +35,7 @@ export default function AgentDesktop() {
 
     useEffect(() => {
         // Initialize CCP
-        const connectUrl = process.env.CONNECT_INSTANCE_URL || "https://mydemopage.my.connect.aws";
+        const connectUrl = process.env.CONNECT_INSTANCE_URL || "https://neoathome2024.my.connect.aws";
         const containerDiv = document.getElementById("ccp-container");
         
         if (!containerDiv) {
