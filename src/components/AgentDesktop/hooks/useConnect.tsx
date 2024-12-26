@@ -37,7 +37,7 @@ export const useConnect = (config: ConnectConfig) => {
           setupContactHandlers(contact);
         });
       } catch (error) {
-        addFlashMessage({ type: 'error', message: error.message });
+        addFlashMessage({ type: 'error', content: (error as Error).message });
       }
     };
 

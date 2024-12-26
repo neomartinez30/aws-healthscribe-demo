@@ -31,29 +31,9 @@ export default function AgentDesktop() {
     loginPopup: true,
     loginPopupAutoClose: true,
   };
-}
-
-export default function AgentDesktop() {
-  const [customerProfile, setCustomerProfile] = React.useState<CustomerProfile>(DEFAULT_PROFILE);
-  const [agentState, setAgentState] = React.useState('Offline');
-
-  const connectConfig = {
-    ccpUrl: `${process.env.CONNECT_INSTANCE_URL || "https://neoathome2024.my.connect.aws"}/ccp-v2/`,
-    loginPopup: true,
-    loginPopupAutoClose: true,
-    loginOptions: {
-      autoClose: true,
-      height: 600,
-      width: 400,
-    },
-    softphone: {
-      allowFramedSoftphone: true,
-      disableRingtone: false
-    },
-    region: process.env.CONNECT_REGION || "us-east-1"
-  };
 
   const { agent, contact } = useConnect(connectConfig);
+};
 
   const handleStateChange = async (newState: string) => {
     if (agent) {
