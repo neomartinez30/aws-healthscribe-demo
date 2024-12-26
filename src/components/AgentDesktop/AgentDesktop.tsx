@@ -233,6 +233,43 @@ export default function AgentDesktop() {
         }
     };
 
+    const handleStateChange = async (newState: string) => {
+        if (agent) {
+            try {
+                const stateToSet = {
+                    name: newState,
+                    type: window.connect.AgentStateType.ROUTABLE
+                };
+                
+                await agent.setState(stateToSet, {
+                    success: () => {
+                        addFlashMessage({
+                            id: 'state-change-success',
+                            header: 'State Changed',
+                            content: `Agent state changed to ${newState}`,
+                            type: 'success'
+                        });
+                    },
+                    failure: (err: any) => {
+                        addFlashMessage({
+                            id: 'state-change-error',
+                            header: 'State Change Failed',
+                            content: `Failed to change state: ${err}`,
+                            type: 'error'
+                        });
+                    }
+                });
+            } catch (error) {
+                addFlashMessage({
+                    id: 'state-change-error',
+                    header: 'State Change Failed',
+                    content: `Failed to change state: ${error}`,
+                    type: 'error'
+                });
+            }
+        }
+    };
+
     return (
         <ContentLayout
             header={
@@ -244,41 +281,10 @@ export default function AgentDesktop() {
                                 <StatusIndicator type={agentState === 'Available' ? 'success' : 'error'} />
                                 <ButtonDropdown
                                     items={[
-                                        { text: 'Available', id: 'available' },
-                                        { text: 'Offline', id: 'offline' }
+                                        { text: 'Available', id: 'Available' },
+                                        { text: 'Offline', id: 'Offline' }
                                     ]}
-                                    onItemClick={({ detail }) => {
-                                        if (agent) {
-                                            try {
-                                                const newState = detail.id === 'available' ? 'Available' : 'Offline';
-                                                agent.setState(newState, {
-                                                    success: () => {
-                                                        addFlashMessage({
-                                                            id: 'state-change-success',
-                                                            header: 'State Changed',
-                                                            content: `Agent state changed to ${newState}`,
-                                                            type: 'success'
-                                                        });
-                                                    },
-                                                    failure: (err: any) => {
-                                                        addFlashMessage({
-                                                            id: 'state-change-error',
-                                                            header: 'State Change Failed',
-                                                            content: `Failed to change state: ${err}`,
-                                                            type: 'error'
-                                                        });
-                                                    }
-                                                });
-                                            } catch (error) {
-                                                addFlashMessage({
-                                                    id: 'state-change-error',
-                                                    header: 'State Change Failed',
-                                                    content: `Failed to change state: ${error}`,
-                                                    type: 'error'
-                                                });
-                                            }
-                                        }
-                                    }}
+                                    onItemClick={({ detail }) => handleStateChange(detail.id)}
                                 >
                                     Agent State
                                 </ButtonDropdown>
