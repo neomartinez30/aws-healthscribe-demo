@@ -48,7 +48,6 @@ export default function AgentDesktop() {
       }
     }
   };
-}
 
   return (
     <ContentLayout
