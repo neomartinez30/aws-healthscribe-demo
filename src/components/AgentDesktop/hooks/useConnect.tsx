@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNotificationsContext } from '@/store/notifications';
 import { ConnectConfig, Contact, Agent } from '../types';
 
+// Extend the window interface to include the connect property
+declare global {
+  interface Window {
+    connect: any;
+  }
+}
+
 export const useConnect = (config: ConnectConfig) => {
   const [agent, setAgent] = useState<Agent | null>(null);
   const [contact, setContact] = useState<Contact | null>(null);
@@ -27,25 +34,23 @@ export const useConnect = (config: ConnectConfig) => {
 
         // Subscribe to contact events  
         window.connect.contact((contact: Contact) => {
-          setContact(contact);
           setupContactHandlers(contact);
         });
-
       } catch (error) {
-        addFlashMessage({
-          id: 'ccp-init-error',
-          header: 'CCP Error', 
-          content: `Failed to initialize CCP: ${error}`,
-          type: 'error'
-        });
+        addFlashMessage({ type: 'error', message: error.message });
       }
     };
 
     initializeCCP();
-  }, [config]);
+  }, [config, addFlashMessage]);
 
-  return {
-    agent,
-    contact
+  const setAgentState = (state: string) => {
+    // Implement the logic to set the agent state
   };
+
+  const setupContactHandlers = (contact: Contact) => {
+    // Implement the logic to handle contact events
+  };
+
+  return { agent, contact };
 };
