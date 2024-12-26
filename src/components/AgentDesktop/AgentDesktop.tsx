@@ -237,22 +237,12 @@ const handleStateChange = async (newState: string) => {
     if (agent) {
         try {
             let stateType;
-            switch (newState) {
-                case 'Available':
-                    stateType = window.connect.AgentStateType.ROUTABLE;
-                    break;
-                case 'Offline':
-                    stateType = window.connect.AgentStateType.OFFLINE;
-                    break;
-                // Add other states as needed
-                default:
-                    throw new Error('Invalid state name');
-            }
+            const agentStates = agent.getAgentStates();
+            const stateToSet = agentStates.find((state) => state.name === newState);
 
-            const stateToSet = {
-                name: newState,
-                type: stateType
-            };
+            if (!stateToSet) {
+                throw new Error('Invalid state name');
+            }
 
             console.log('Setting state:', stateToSet); // Log the state being set
 
