@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
 import Container from '@cloudscape-design/components/container';
@@ -9,37 +9,102 @@ import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Box from '@cloudscape-design/components/box';
 import Grid from '@cloudscape-design/components/grid';
 import StatusIndicator from '@cloudscape-design/components/status-indicator';
+import 'amazon-connect-streams';
 
 import styles from './AgentDesktop.module.css';
 
-// Placeholder for Connect Streams integration
-const mockCustomerProfile = {
-    name: "Julius Cesar",
-    id: "12345",
-    phone: "+1 999 123 1234",
-    queue: "Nurse Line",
-    verification: "Successful"
-};
+declare global {
+    interface Window {
+        connect: any;
+    }
+}
 
 export default function AgentDesktop() {
-    const [isMuted, setIsMuted] = useState(false);
-    const [isOnHold, setIsOnHold] = useState(false);
-    const [agentState, setAgentState] = useState('Available');
+    const [agentState, setAgentState] = useState('Offline');
+    const [contact, setContact] = useState<any>(null);
+    const [agent, setAgent] = useState<any>(null);
+    const [customerProfile, setCustomerProfile] = useState({
+        name: "",
+        id: "",
+        phone: "",
+        queue: "",
+        verification: ""
+    });
 
-    // Placeholder functions for Connect Streams integration
+    useEffect(() => {
+        // Initialize CCP
+        const connectUrl = "YOUR_CONNECT_INSTANCE_URL"; // Replace with your Connect instance URL
+        const containerDiv = document.getElementById("ccp-container");
+        
+        if (containerDiv) {
+            const ccpParams = {
+                ccpUrl: connectUrl + "/ccp-v2/",
+                loginPopup: false,
+                softphone: {
+                    allowFramedSoftphone: true
+                }
+            };
+            
+            window.connect.core.initCCP(containerDiv, ccpParams);
+
+            // Subscribe to agent state changes
+            window.connect.agent((agent: any) => {
+                setAgent(agent);
+                agent.onStateChange((state: any) => {
+                    setAgentState(state.name);
+                });
+            });
+
+            // Subscribe to contact events
+            window.connect.contact((contact: any) => {
+                setContact(contact);
+                
+                // Get customer information when contact is established
+                contact.onConnected(() => {
+                    const attributes = contact.getAttributes();
+                    setCustomerProfile({
+                        name: attributes.name?.value || "Unknown",
+                        id: attributes.customerId?.value || "Unknown",
+                        phone: contact.getInitialConnection().getAddress() || "",
+                        queue: contact.getQueue().name || "",
+                        verification: attributes.verified?.value || "Pending"
+                    });
+                });
+            });
+        }
+    }, []);
+
     const handleMute = () => {
-        setIsMuted(!isMuted);
-        // TODO: Implement Connect Streams mute functionality
+        if (contact) {
+            const connection = contact.getInitialConnection();
+            connection.toggleMute();
+        }
     };
 
     const handleHold = () => {
-        setIsOnHold(!isOnHold);
-        // TODO: Implement Connect Streams hold functionality
+        if (contact) {
+            if (contact.isOnHold()) {
+                contact.resume();
+            } else {
+                contact.hold();
+            }
+        }
     };
 
     const handleEndCall = () => {
-        // TODO: Implement Connect Streams end call functionality
-        console.log("End call");
+        if (contact) {
+            contact.destroy();
+        }
+    };
+
+    const handleTransfer = () => {
+        if (contact) {
+            // Implement transfer logic based on your requirements
+            // Example: Quick connects, queues, or direct numbers
+            contact.transfer(window.connect.TransferType.QUEUE, {
+                queueId: "YOUR_QUEUE_ARN"
+            });
+        }
     };
 
     return (
@@ -56,9 +121,12 @@ export default function AgentDesktop() {
                                         { text: 'Available', id: 'available' },
                                         { text: 'Offline', id: 'offline' }
                                     ]}
-                                    onItemClick={({ detail }) => 
-                                        setAgentState(detail.id === 'available' ? 'Available' : 'Offline')
-                                    }
+                                    onItemClick={({ detail }) => {
+                                        if (agent) {
+                                            const newState = detail.id === 'available' ? 'Available' : 'Offline';
+                                            agent.setState(newState);
+                                        }
+                                    }}
                                 >
                                     Agent State
                                 </ButtonDropdown>
@@ -80,23 +148,28 @@ export default function AgentDesktop() {
                                 <SpaceBetween direction="horizontal" size="xs">
                                     <Button
                                         variant="primary"
+                                        onClick={() => {
+                                            if (contact && !contact.isConnected()) {
+                                                contact.accept();
+                                            }
+                                        }}
                                     >
                                         Answer
                                     </Button>
                                     <Button
-                                        iconName={isMuted ? "microphone-off" : "microphone"}
+                                        iconName={contact?.isMuted() ? "microphone-off" : "microphone"}
                                         onClick={handleMute}
                                     >
-                                        {isMuted ? "Unmute" : "Mute"}
+                                        {contact?.isMuted() ? "Unmute" : "Mute"}
                                     </Button>
                                     <Button
-                                        iconName={isOnHold ? "status-negative" : "status-positive"}
+                                        iconName={contact?.isOnHold() ? "status-negative" : "status-positive"}
                                         onClick={handleHold}
                                     >
-                                        {isOnHold ? "Resume" : "Hold"}
+                                        {contact?.isOnHold() ? "Resume" : "Hold"}
                                     </Button>
                                     <Button onClick={handleEndCall}>End</Button>
-                                    <Button>Transfer</Button>
+                                    <Button onClick={handleTransfer}>Transfer</Button>
                                 </SpaceBetween>
                             }
                         >
@@ -105,12 +178,15 @@ export default function AgentDesktop() {
                     }
                 >
                     <ColumnLayout columns={2}>
-                        <div>Name: {mockCustomerProfile.name}</div>
-                        <div>Caller ID: {mockCustomerProfile.phone}</div>
-                        <div>Queue: {mockCustomerProfile.queue}</div>
-                        <div>Verification: {mockCustomerProfile.verification}</div>
+                        <div>Name: {customerProfile.name}</div>
+                        <div>Caller ID: {customerProfile.phone}</div>
+                        <div>Queue: {customerProfile.queue}</div>
+                        <div>Verification: {customerProfile.verification}</div>
                     </ColumnLayout>
                 </Container>
+
+                {/* Hidden CCP container */}
+                <div id="ccp-container" style={{ display: 'none' }}></div>
 
                 {/* Main Content Area */}
                 <div className={styles.mainContent}>
