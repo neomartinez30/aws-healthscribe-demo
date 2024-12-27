@@ -31,7 +31,7 @@ export default function AgentDesktop() {
                     allowFramedVideoCall: true,
                     allowFramedScreenSharing: true,
                     allowFramedScreenSharingPopUp: true,
-                    VDIPlatform: null,
+                    VDIPlatform: undefined,
                     allowEarlyGum: true,
                 },
                 task: {
