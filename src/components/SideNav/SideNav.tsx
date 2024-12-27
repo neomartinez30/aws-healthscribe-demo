@@ -23,7 +23,7 @@ export default function SideNav() {
         {
             type: 'link',
             text: 'Agent Desktop',
-            href: '/agent-desktop',
+            href: '/AgentDesktop',
         },
         { type: 'divider' },
         {
