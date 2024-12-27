@@ -22,7 +22,7 @@ export default function AgentDesktop() {
                     height: 600,
                     width: 400,
                     top: 0,
-                    left: 0
+                    left: 0,
                 },
                 region: 'es-east-1',
                 softphone: {
@@ -40,11 +40,11 @@ export default function AgentDesktop() {
                 pageOptions: {
                     enableAudioDeviceSettings: false,
                     enableVideoDeviceSettings: false,
-                    enablePhoneTypeSettings: true
+                    enablePhoneTypeSettings: true,
                 }
                 ccpAckTimeout: 5000,
                 ccpSynTimeout: 3000,
-                ccpLoadTimeout: 10000
+                ccpLoadTimeout: 10000,
             });
         }
     }, []);
