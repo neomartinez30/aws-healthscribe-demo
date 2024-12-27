@@ -18,7 +18,7 @@ const Conversation = lazy(() => import('@/components/Conversation'));
 const NewConversation = lazy(() => import('@/components/NewConversation'));
 const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
 const PatientInsights = lazy(() => import('@/components/PatientInsights'));
-const AgentDesktop = lazy(() => import('@/components/AgentDesktop'));
+
 
 export default function App() {
     const { isUserAuthenticated } = useAuthContext();
