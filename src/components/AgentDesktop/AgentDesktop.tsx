@@ -24,7 +24,7 @@ export default function AgentDesktop() {
                     top: 0,
                     left: 0
                 },
-                region: 'eu-central-1',
+                region: 'es-east-1',
                 softphone: {
                     allowFramedSoftphone: true,
                     disableRingtone: false,
