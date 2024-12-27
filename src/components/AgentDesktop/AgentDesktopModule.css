@@ -1,0 +1,7 @@
+.ccpContainer {
+    width: 400px;
+    height: 800px;
+    border: 1px solid var(--color-border-container-default);
+    border-radius: 8px;
+    overflow: hidden;
+}
