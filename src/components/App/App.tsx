@@ -36,7 +36,6 @@ export default function App() {
                     <Route path="/generate" element={<GenerateAudio />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/PatientInsights" element={<PatientInsights />} />
-                    <Route path="/agent-desktop" element={<AgentDesktop />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             ) : (
