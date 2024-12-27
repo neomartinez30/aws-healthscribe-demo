@@ -8,7 +8,7 @@ export default function StreamlitApp() {
         >
             <iframe
                 title="Streamlit Application"
-                src="http://54.85.192.249:8501//" // Replace with Streamlit app URL
+                src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8501/" // Replace with Streamlit app URL
                 style={{
                     position: 'absolute',
                     top: 0,
