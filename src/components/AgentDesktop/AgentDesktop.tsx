@@ -8,7 +8,7 @@ import styles from './AgentDesktop.module.css';
 
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";";
+    const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
 
     useEffect(() => {
         if (containerRef.current) {
