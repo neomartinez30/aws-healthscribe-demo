@@ -41,8 +41,7 @@ export default function AgentDesktop() {
                     enableAudioDeviceSettings: false,
                     enableVideoDeviceSettings: false,
                     enablePhoneTypeSettings: true
-                },
-                shouldAddNamespaceToLogs: false,
+                }
                 ccpAckTimeout: 5000,
                 ccpSynTimeout: 3000,
                 ccpLoadTimeout: 10000
