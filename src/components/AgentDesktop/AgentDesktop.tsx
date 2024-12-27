@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
 import Container from '@cloudscape-design/components/container';
-import { connect } from 'amazon-connect-streams';
+import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
 
