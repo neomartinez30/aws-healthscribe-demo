@@ -21,14 +21,24 @@ import "amazon-connect-streams";
 import { medicalHistoryData } from './medicalHistoryData';
 import styles from './AgentDesktop.module.css';
 
-// ... (keep existing MOCK_PROVIDERS and other type definitions)
-
 export default function AgentDesktop() {
-    // ... (keep existing state and refs)
+    const [activeTabId, setActiveTabId] = useState("medical-history");
+    const containerRef = useRef(null);
+    const [showReferralModal, setShowReferralModal] = useState(false);
+    const [referralForm, setReferralForm] = useState({
+        patientName: '',
+        illness: '',
+        medications: '',
+        referTo: '',
+        details: ''
+    });
+
+    const handleReferralSubmit = () => {
+        // Handle referral submission
+        setShowReferralModal(false);
+    };
 
     const medicalHistoryItems = Object.values(medicalHistoryData);
-
-    // ... (keep existing functions)
 
     return (
         <ContentLayout
@@ -117,7 +127,7 @@ export default function AgentDesktop() {
                                 {
                                     id: "provider-locator",
                                     label: "Provider Locator",
-                                    content: <ProviderLocatorContent />
+                                    content: <div>Provider locator content will go here</div>
                                 },
                                 {
                                     id: "insights",
