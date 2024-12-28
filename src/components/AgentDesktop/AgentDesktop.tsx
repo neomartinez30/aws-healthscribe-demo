@@ -19,7 +19,6 @@ import Select from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
-import { medicalHistoryData } from './medicalHistoryData';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
