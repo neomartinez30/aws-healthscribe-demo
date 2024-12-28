@@ -54,7 +54,7 @@ export default function AgentDesktop() {
         details: ''
     });
 
-    const filteredProviders = MOCK_PROVIDERS.filter(provider => 
+    const filteredProviders = MOCK_PROVIDERS.filter(provider =>
         zipCode ? provider.zip.includes(zipCode) : true
     );
 
@@ -142,7 +142,7 @@ export default function AgentDesktop() {
                     }}
                     selectionType="single"
                     selectedItems={selectedProvider ? [selectedProvider] : []}
-                    onSelectionChange={({ detail }) => 
+                    onSelectionChange={({ detail }) =>
                         setSelectedProvider(detail.selectedItems[0])
                     }
                 />
@@ -173,8 +173,8 @@ export default function AgentDesktop() {
                 </Container>
 
                 <SpaceBetween size="l">
-                    <ExpandableSection 
-                        headerText="Patient Details" 
+                    <ExpandableSection
+                        headerText="Patient Details"
                         variant="container"
                         defaultExpanded
                     >
@@ -221,9 +221,12 @@ export default function AgentDesktop() {
                                                 { id: "details", header: "Details", cell: item => item.details }
                                             ]}
                                             items={medicalHistoryItems}
-                                            expandableRows
-                                            onRowExpand={({ detail }) => {
-                                                console.log('Row expanded:', detail);
+                                            expandableRows={{
+                                                expandAll: false,
+                                                expandedRows: [],
+                                                onExpand: (item, expanded) => {
+                                                    console.log('Row expanded:', item, expanded);
+                                                }
                                             }}
                                             variant="container"
                                         />
@@ -267,7 +270,7 @@ export default function AgentDesktop() {
                         <FormField label="Patient name">
                             <Input
                                 value={referralForm.patientName}
-                                onChange={(event) => 
+                                onChange={(event) =>
                                     setReferralForm(prev => ({ ...prev, patientName: event.detail.value }))
                                 }
                             />
@@ -276,7 +279,7 @@ export default function AgentDesktop() {
                         <FormField label="Illness">
                             <Input
                                 value={referralForm.illness}
-                                onChange={(event) => 
+                                onChange={(event) =>
                                     setReferralForm(prev => ({ ...prev, illness: event.detail.value }))
                                 }
                             />
@@ -285,7 +288,7 @@ export default function AgentDesktop() {
                         <FormField label="Medications">
                             <Input
                                 value={referralForm.medications}
-                                onChange={(event) => 
+                                onChange={(event) =>
                                     setReferralForm(prev => ({ ...prev, medications: event.detail.value }))
                                 }
                             />
@@ -294,7 +297,7 @@ export default function AgentDesktop() {
                         <FormField label="Refer to">
                             <Input
                                 value={referralForm.referTo}
-                                onChange={(event) => 
+                                onChange={(event) =>
                                     setReferralForm(prev => ({ ...prev, referTo: event.detail.value }))
                                 }
                             />
@@ -303,7 +306,7 @@ export default function AgentDesktop() {
                         <FormField label="Add details">
                             <Textarea
                                 value={referralForm.details}
-                                onChange={(event) => 
+                                onChange={(event) =>
                                     setReferralForm(prev => ({ ...prev, details: event.detail.value }))
                                 }
                             />
