@@ -13,7 +13,7 @@ import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import { NonCancelableCustomEvent } from '@cloudscape-design/components/internal/events';
+import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
@@ -90,8 +90,8 @@ export default function AgentDesktop() {
         >
             <Grid
                 gridDefinition={[
-                    { colspan: 6 },
-                    { colspan: 6 }
+                    { colspan: 4 },
+                    { colspan: 8 }
                 ]}
             >
                 <Container>
@@ -99,7 +99,11 @@ export default function AgentDesktop() {
                 </Container>
 
                 <SpaceBetween size="l">
-                    <Container header={<Header variant="h2">Patient Details</Header>}>
+                    <ExpandableSection 
+                        headerText="Patient Details" 
+                        variant="container"
+                        defaultExpanded
+                    >
                         <ColumnLayout borders="horizontal" columns={2}>
                             <div>
                                 <Box variant="awsui-key-label">Name</Box>
@@ -126,7 +130,7 @@ export default function AgentDesktop() {
                                 <Box>Dr. Johnson</Box>
                             </div>
                         </ColumnLayout>
-                    </Container>
+                    </ExpandableSection>
 
                     <Container
                         header={
