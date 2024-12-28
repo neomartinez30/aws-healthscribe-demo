@@ -221,11 +221,14 @@ export default function AgentDesktop() {
                                                 { id: "details", header: "Details", cell: item => item.details }
                                             ]}
                                             items={medicalHistoryItems}
-                                            expandableRows={(item: MedicalHistoryItem) => (
-                                                <div>
-                                                    <p>Expanded content for {item.resource}</p>
-                                                </div>
-                                            )}
+                                            expandableRows={{
+                                                lazyLoading: true,
+                                                loadContent: (item: MedicalHistoryItem) => (
+                                                    <div>
+                                                        <p>Expanded content for {item.resource}</p>
+                                                    </div>
+                                                )
+                                            }}
                                             onRowExpand={({ detail }: { detail: { item: MedicalHistoryItem, expanded: boolean } }) => {
                                                 console.log('Row expanded:', detail.item, detail.expanded);
                                             }}
@@ -318,3 +321,4 @@ export default function AgentDesktop() {
         </ContentLayout>
     );
 }
+
