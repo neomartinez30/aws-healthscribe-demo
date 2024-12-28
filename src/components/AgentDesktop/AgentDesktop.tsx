@@ -1,18 +1,53 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
 import Container from '@cloudscape-design/components/container';
+import Grid from '@cloudscape-design/components/grid';
+import ExpandableSection from '@cloudscape-design/components/expandable-section';
+import ColumnLayout from '@cloudscape-design/components/column-layout';
+import Box from '@cloudscape-design/components/box';
+import Input from '@cloudscape-design/components/input';
+import Button from '@cloudscape-design/components/button';
+import Modal from '@cloudscape-design/components/modal';
+import FormField from '@cloudscape-design/components/form-field';
+import Form from '@cloudscape-design/components/form';
+import SpaceBetween from '@cloudscape-design/components/space-between';
+import TextContent from '@cloudscape-design/components/text-content';
+import Cards from '@cloudscape-design/components/cards';
+import Textarea from '@cloudscape-design/components/textarea';
+import Select from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
 
+const MOCK_PROVIDERS = [
+    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
+    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002' },
+    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003' },
+    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004' },
+];
+
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLDivElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
+    const [zipCode, setZipCode] = useState('');
+    const [showReferralModal, setShowReferralModal] = useState(false);
+    const [selectedProvider, setSelectedProvider] = useState<any>(null);
+    const [referralForm, setReferralForm] = useState({
+        patientName: '',
+        illness: '',
+        severity: null,
+        medications: '',
+        referTo: '',
+        details: ''
+    });
+
+    const filteredProviders = MOCK_PROVIDERS.filter(provider => 
+        zipCode ? provider.zip.includes(zipCode) : true
+    );
 
     useEffect(() => {
         if (containerRef.current) {
-            // Initialize the CCP
             connect.core.initCCP(containerRef.current, {
                 ccpUrl: instanceURL,
                 loginPopup: true,
@@ -22,36 +57,25 @@ export default function AgentDesktop() {
                     height: 600,
                     width: 400,
                     top: 0,
-                    left: 0,
+                    left: 0
                 },
-                region: 'es-east-1',
+                region: 'us-east-1',
                 softphone: {
                     allowFramedSoftphone: true,
-                    disableRingtone: false,
-                    allowFramedVideoCall: true,
-                    allowFramedScreenSharing: true,
-                    allowFramedScreenSharingPopUp: true,
-                    VDIPlatform: undefined,
-                    allowEarlyGum: true,
-                },
-                task: {
-                    disableRingtone: false,
-                },
-                pageOptions: {
-                    enableAudioDeviceSettings: false,
-                    enableVideoDeviceSettings: false,
-                    enablePhoneTypeSettings: true,
-                },
-                ccpAckTimeout: 5000,
-                ccpSynTimeout: 3000,
-                ccpLoadTimeout: 10000,
+                    disableRingtone: false
+                }
             });
         }
     }, []);
 
+    const handleReferralSubmit = () => {
+        console.log('Referral submitted:', referralForm);
+        setShowReferralModal(false);
+    };
+
     return (
         <ContentLayout
-            headerVariant={'high-contrast'}
+            headerVariant="high-contrast"
             header={
                 <Header
                     variant="h1"
@@ -61,12 +85,177 @@ export default function AgentDesktop() {
                 </Header>
             }
         >
-            <Container>
-                <div 
-                    ref={containerRef} 
-                    className={styles.ccpContainer}
-                />
-            </Container>
+            <Grid
+                gridDefinition={[
+                    { colspan: 6 },
+                    { colspan: 6 }
+                ]}
+            >
+                <Container>
+                    <div ref={containerRef} className={styles.ccpContainer}/>
+                </Container>
+
+                <SpaceBetween size="l">
+                    <Container header={<Header variant="h2">Patient Details</Header>}>
+                        <ColumnLayout borders="horizontal" columns={2}>
+                            <div>
+                                <Box variant="awsui-key-label">Name</Box>
+                                <Box>John Smith</Box>
+                            </div>
+                            <div>
+                                <Box variant="awsui-key-label">DOB</Box>
+                                <Box>03/15/1985</Box>
+                            </div>
+                            <div>
+                                <Box variant="awsui-key-label">Insurance</Box>
+                                <Box>Blue Cross</Box>
+                            </div>
+                            <div>
+                                <Box variant="awsui-key-label">Member ID</Box>
+                                <Box>BC123456789</Box>
+                            </div>
+                            <div>
+                                <Box variant="awsui-key-label">Last Visit</Box>
+                                <Box>01/10/2024</Box>
+                            </div>
+                            <div>
+                                <Box variant="awsui-key-label">PCP</Box>
+                                <Box>Dr. Johnson</Box>
+                            </div>
+                        </ColumnLayout>
+                    </Container>
+
+                    <Container
+                        header={
+                            <Header
+                                variant="h2"
+                                actions={
+                                    <SpaceBetween direction="horizontal" size="xs">
+                                        <Button onClick={() => setShowReferralModal(true)}>Referral</Button>
+                                    </SpaceBetween>
+                                }
+                            >
+                                Provider Locator
+                            </Header>
+                        }
+                    >
+                        <SpaceBetween size="l">
+                            <FormField label="Search by ZIP code">
+                                <Input
+                                    value={zipCode}
+                                    onChange={({ detail }) => setZipCode(detail.value)}
+                                    placeholder="Enter ZIP code"
+                                />
+                            </FormField>
+
+                            <Cards
+                                items={filteredProviders}
+                                cardDefinition={{
+                                    header: item => item.name,
+                                    sections: [
+                                        {
+                                            id: "specialty",
+                                            header: "Specialty",
+                                            content: item => item.specialty
+                                        },
+                                        {
+                                            id: "address",
+                                            header: "Address",
+                                            content: item => `${item.address}, ${item.zip}`
+                                        }
+                                    ]
+                                }}
+                                selectionType="single"
+                                selectedItems={selectedProvider ? [selectedProvider] : []}
+                                onSelectionChange={({ detail }) => 
+                                    setSelectedProvider(detail.selectedItems[0])
+                                }
+                            />
+                        </SpaceBetween>
+                    </Container>
+                </SpaceBetween>
+            </Grid>
+
+            <Modal
+                visible={showReferralModal}
+                onDismiss={() => setShowReferralModal(false)}
+                header="Patient Referral"
+                size="medium"
+            >
+                <Form
+                    actions={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button variant="link" onClick={() => setShowReferralModal(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleReferralSubmit}>
+                                Submit
+                            </Button>
+                        </SpaceBetween>
+                    }
+                >
+                    <SpaceBetween size="l">
+                        <FormField label="Patient name">
+                            <Input
+                                value={referralForm.patientName}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, patientName: detail.value }))
+                                }
+                            />
+                        </FormField>
+
+                        <FormField label="Illness">
+                            <Input
+                                value={referralForm.illness}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, illness: detail.value }))
+                                }
+                            />
+                        </FormField>
+
+                        <FormField label="Severity">
+                            <Select
+                                selectedOption={referralForm.severity}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, severity: detail.selectedOption }))
+                                }
+                                options={[
+                                    { label: "Low", value: "low" },
+                                    { label: "Medium", value: "medium" },
+                                    { label: "High", value: "high" }
+                                ]}
+                            />
+                        </FormField>
+
+                        <FormField label="Medications">
+                            <Input
+                                value={referralForm.medications}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, medications: detail.value }))
+                                }
+                            />
+                        </FormField>
+
+                        <FormField label="Refer to">
+                            <Input
+                                value={referralForm.referTo}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, referTo: detail.value }))
+                                }
+                            />
+                        </FormField>
+
+                        <FormField label="Add details">
+                            <Textarea
+                                value={referralForm.details}
+                                onChange={({ detail }) => 
+                                    setReferralForm(prev => ({ ...prev, details: detail.value }))
+                                }
+                            />
+                        </FormField>
+                    </SpaceBetween>
+                </Form>
+            </Modal>
         </ContentLayout>
     );
 }
