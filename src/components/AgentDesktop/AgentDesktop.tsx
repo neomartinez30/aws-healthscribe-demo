@@ -15,7 +15,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import Select, { OptionDefinition } from '@cloudscape-design/components/select';
+import Select, OptionDefinition from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
