@@ -15,7 +15,6 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import Select, OptionDefinition from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
@@ -30,7 +29,6 @@ const MOCK_PROVIDERS = [
 type ReferralFormState = {
     patientName: string;
     illness: string;
-    severity: OptionDefinition | null;
     medications: string;
     referTo: string;
     details: string;
