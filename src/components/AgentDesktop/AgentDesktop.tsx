@@ -15,7 +15,7 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
-import Table from '@cloudscape-design/components/table';
+import Table, { TableProps } from '@cloudscape-design/components/table';
 import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
@@ -221,12 +221,13 @@ export default function AgentDesktop() {
                                                 { id: "details", header: "Details", cell: item => item.details }
                                             ]}
                                             items={medicalHistoryItems}
-                                            expandableRows={{
-                                                expandAll: false,
-                                                expandedRows: [],
-                                                onExpand: (item, expanded) => {
-                                                    console.log('Row expanded:', item, expanded);
-                                                }
+                                            expandableRows={(item: MedicalHistoryItem) => (
+                                                <div>
+                                                    <p>Expanded content for {item.resource}</p>
+                                                </div>
+                                            )}
+                                            onRowExpand={({ detail }: { detail: { item: MedicalHistoryItem, expanded: boolean } }) => {
+                                                console.log('Row expanded:', detail.item, detail.expanded);
                                             }}
                                             variant="container"
                                         />
