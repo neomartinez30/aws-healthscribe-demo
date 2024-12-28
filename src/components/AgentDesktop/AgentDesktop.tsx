@@ -15,7 +15,7 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
-import Table, { TableProps } from '@cloudscape-design/components/table';
+import Table, { ExpandableRows } from '@cloudscape-design/components/table';
 import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
@@ -222,8 +222,7 @@ export default function AgentDesktop() {
                                             ]}
                                             items={medicalHistoryItems}
                                             expandableRows={{
-                                                lazyLoading: true,
-                                                loadContent: (item: MedicalHistoryItem) => (
+                                                content: (item: MedicalHistoryItem) => (
                                                     <div>
                                                         <p>Expanded content for {item.resource}</p>
                                                     </div>
@@ -321,4 +320,3 @@ export default function AgentDesktop() {
         </ContentLayout>
     );
 }
-
