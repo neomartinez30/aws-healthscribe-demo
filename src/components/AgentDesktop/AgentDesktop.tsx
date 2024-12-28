@@ -33,6 +33,12 @@ type ReferralFormState = {
     details: string;
 };
 
+interface MedicalHistoryItem {
+    resource: string;
+    details: string;
+    content: Record<string, unknown>;
+}
+
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLDivElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
@@ -80,20 +86,16 @@ export default function AgentDesktop() {
     };
 
     // Medical history data
-    const medicalHistoryItems = [
+    const medicalHistoryItems: MedicalHistoryItem[] = [
         {
             resource: "Resource 1",
             details: "Details 1",
-            content: {
-                // Content for expandable row 1
-            }
+            content: {}
         },
         {
             resource: "Resource 2",
             details: "Details 2",
-            content: {
-                // Content for expandable row 2
-            }
+            content: {}
         }
     ];
 
@@ -221,7 +223,6 @@ export default function AgentDesktop() {
                                             items={medicalHistoryItems}
                                             expandableRows
                                             onRowExpand={({ detail }) => {
-                                                // Handle row expansion
                                                 console.log('Row expanded:', detail);
                                             }}
                                             variant="container"
