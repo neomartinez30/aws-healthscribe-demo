@@ -14,6 +14,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import { NonCancelableCustomEvent } from '@cloudscape-design/components/internal/events';
+import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
