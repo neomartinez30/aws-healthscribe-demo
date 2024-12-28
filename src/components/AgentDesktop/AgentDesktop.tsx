@@ -3,7 +3,6 @@ import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
 import Container from '@cloudscape-design/components/container';
 import Grid from '@cloudscape-design/components/grid';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import ColumnLayout from '@cloudscape-design/components/column-layout';
 import Box from '@cloudscape-design/components/box';
 import Input from '@cloudscape-design/components/input';
@@ -12,15 +11,9 @@ import Modal from '@cloudscape-design/components/modal';
 import FormField from '@cloudscape-design/components/form-field';
 import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import Select from '@cloudscape-design/components/select';
-import { InputProps } from '@cloudscape-design/components/input';
-import { SelectProps } from '@cloudscape-design/components/select';
-import "amazon-connect-streams";
-
-import styles from './AgentDesktop.module.css';
+import { NonCancelableCustomEvent } from '@cloudscape-design/components/internal/events';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
@@ -101,7 +94,7 @@ export default function AgentDesktop() {
                 ]}
             >
                 <Container>
-                    <div ref={containerRef} className={styles.ccpContainer}/>
+                    <div ref={containerRef} style={{ width: '100%', height: '465px' }}/>
                 </Container>
 
                 <SpaceBetween size="l">
@@ -151,9 +144,9 @@ export default function AgentDesktop() {
                         <SpaceBetween size="l">
                             <FormField label="Search by ZIP code">
                                 <Input
-                                value={zipCode}
-                                onChange={({ detail }: InputProps.ChangeDetail) => setZipCode(detail.value)}
-                                placeholder="Enter ZIP code"
+                                    value={zipCode}
+                                    onChange={(event) => setZipCode(event.detail.value)}
+                                    placeholder="Enter ZIP code"
                                 />
                             </FormField>
 
@@ -207,8 +200,8 @@ export default function AgentDesktop() {
                         <FormField label="Patient name">
                             <Input
                                 value={referralForm.patientName}
-                                onChange={({ detail }: InputProps.ChangeDetail) => 
-                                setReferralForm(prev => ({ ...prev, patientName: detail.value }))
+                                onChange={(event) => 
+                                    setReferralForm(prev => ({ ...prev, patientName: event.detail.value }))
                                 }
                             />
                         </FormField>
@@ -216,8 +209,8 @@ export default function AgentDesktop() {
                         <FormField label="Illness">
                             <Input
                                 value={referralForm.illness}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, illness: detail.value }))
+                                onChange={(event) => 
+                                    setReferralForm(prev => ({ ...prev, illness: event.detail.value }))
                                 }
                             />
                         </FormField>
@@ -225,8 +218,8 @@ export default function AgentDesktop() {
                         <FormField label="Medications">
                             <Input
                                 value={referralForm.medications}
-                                onChange={({ detail }: InputProps.ChangeDetail) => 
-                                setReferralForm(prev => ({ ...prev, medications: detail.value }))
+                                onChange={(event) => 
+                                    setReferralForm(prev => ({ ...prev, medications: event.detail.value }))
                                 }
                             />
                         </FormField>
@@ -234,8 +227,8 @@ export default function AgentDesktop() {
                         <FormField label="Refer to">
                             <Input
                                 value={referralForm.referTo}
-                                onChange={({ detail }: InputProps.ChangeDetail) => 
-                                setReferralForm(prev => ({ ...prev, referTo: detail.value }))
+                                onChange={(event) => 
+                                    setReferralForm(prev => ({ ...prev, referTo: event.detail.value }))
                                 }
                             />
                         </FormField>
@@ -243,8 +236,8 @@ export default function AgentDesktop() {
                         <FormField label="Add details">
                             <Textarea
                                 value={referralForm.details}
-                                onChange={({ detail }: TextareaProps.ChangeDetail) => 
-                                setReferralForm(prev => ({ ...prev, details: detail.value }))
+                                onChange={(event) => 
+                                    setReferralForm(prev => ({ ...prev, details: event.detail.value }))
                                 }
                             />
                         </FormField>
