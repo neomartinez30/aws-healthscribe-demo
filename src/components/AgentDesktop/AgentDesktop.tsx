@@ -15,9 +15,11 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
+import Select from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
+import { medicalHistoryData } from './medicalHistoryData';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
@@ -32,6 +34,7 @@ type ReferralFormState = {
     medications: string;
     referTo: string;
     details: string;
+    severity: any;
 };
 
 export default function AgentDesktop() {
@@ -130,6 +133,25 @@ export default function AgentDesktop() {
                                 <Box>Dr. Johnson</Box>
                             </div>
                         </ColumnLayout>
+                    </Container>
+
+                    <Container header={<Header variant="h2">Medical History</Header>}>
+                        <SpaceBetween size="l">
+                            {Object.entries(medicalHistoryData).map(([key, data]) => (
+                                <ExpandableSection 
+                                    key={key}
+                                    headerText={data.resource}
+                                    variant="container"
+                                >
+                                    <TextContent>
+                                        <p>{data.details === "No information available" ? 
+                                            <i>No information available</i> : 
+                                            data.details}
+                                        </p>
+                                    </TextContent>
+                                </ExpandableSection>
+                            ))}
+                        </SpaceBetween>
                     </Container>
 
                     <Container
