@@ -15,6 +15,7 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
+import Table from '@cloudscape-design/components/table';
 import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
@@ -77,6 +78,24 @@ export default function AgentDesktop() {
         console.log('Referral submitted:', referralForm);
         setShowReferralModal(false);
     };
+
+    // Medical history data
+    const medicalHistoryItems = [
+        {
+            resource: "Resource 1",
+            details: "Details 1",
+            content: {
+                // Content for expandable row 1
+            }
+        },
+        {
+            resource: "Resource 2",
+            details: "Details 2",
+            content: {
+                // Content for expandable row 2
+            }
+        }
+    ];
 
     const ProviderLocatorContent = () => (
         <Container
@@ -193,7 +212,21 @@ export default function AgentDesktop() {
                                 {
                                     id: "medical-history",
                                     label: "Medical History",
-                                    content: <div>Medical history content will go here</div>
+                                    content: (
+                                        <Table
+                                            columnDefinitions={[
+                                                { id: "resource", header: "Resource", cell: item => item.resource },
+                                                { id: "details", header: "Details", cell: item => item.details }
+                                            ]}
+                                            items={medicalHistoryItems}
+                                            expandableRows
+                                            onRowExpand={({ detail }) => {
+                                                // Handle row expansion
+                                                console.log('Row expanded:', detail);
+                                            }}
+                                            variant="container"
+                                        />
+                                    )
                                 },
                                 {
                                     id: "provider-locator",
