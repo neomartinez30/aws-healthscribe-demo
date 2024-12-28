@@ -15,6 +15,9 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
+import Select from '@cloudscape-design/components/select';
+import { InputProps } from '@cloudscape-design/components/input';
+import { SelectProps } from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
@@ -43,7 +46,6 @@ export default function AgentDesktop() {
     const [referralForm, setReferralForm] = useState<ReferralFormState>({
         patientName: '',
         illness: '',
-        severity: null,
         medications: '',
         referTo: '',
         details: ''
@@ -149,9 +151,9 @@ export default function AgentDesktop() {
                         <SpaceBetween size="l">
                             <FormField label="Search by ZIP code">
                                 <Input
-                                    value={zipCode}
-                                    onChange={({ detail }) => setZipCode(detail.value)}
-                                    placeholder="Enter ZIP code"
+                                value={zipCode}
+                                onChange={({ detail }: InputProps.ChangeDetail) => setZipCode(detail.value)}
+                                placeholder="Enter ZIP code"
                                 />
                             </FormField>
 
@@ -205,8 +207,8 @@ export default function AgentDesktop() {
                         <FormField label="Patient name">
                             <Input
                                 value={referralForm.patientName}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, patientName: detail.value }))
+                                onChange={({ detail }: InputProps.ChangeDetail) => 
+                                setReferralForm(prev => ({ ...prev, patientName: detail.value }))
                                 }
                             />
                         </FormField>
@@ -220,25 +222,11 @@ export default function AgentDesktop() {
                             />
                         </FormField>
 
-                        <FormField label="Severity">
-                            <Select
-                                selectedOption={referralForm.severity}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, severity: detail.selectedOption }))
-                                }
-                                options={[
-                                    { label: "Low", value: "low" },
-                                    { label: "Medium", value: "medium" },
-                                    { label: "High", value: "high" }
-                                ]}
-                            />
-                        </FormField>
-
                         <FormField label="Medications">
                             <Input
                                 value={referralForm.medications}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, medications: detail.value }))
+                                onChange={({ detail }: InputProps.ChangeDetail) => 
+                                setReferralForm(prev => ({ ...prev, medications: detail.value }))
                                 }
                             />
                         </FormField>
@@ -246,8 +234,8 @@ export default function AgentDesktop() {
                         <FormField label="Refer to">
                             <Input
                                 value={referralForm.referTo}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, referTo: detail.value }))
+                                onChange={({ detail }: InputProps.ChangeDetail) => 
+                                setReferralForm(prev => ({ ...prev, referTo: detail.value }))
                                 }
                             />
                         </FormField>
@@ -255,8 +243,8 @@ export default function AgentDesktop() {
                         <FormField label="Add details">
                             <Textarea
                                 value={referralForm.details}
-                                onChange={({ detail }) => 
-                                    setReferralForm(prev => ({ ...prev, details: detail.value }))
+                                onChange={({ detail }: TextareaProps.ChangeDetail) => 
+                                setReferralForm(prev => ({ ...prev, details: detail.value }))
                                 }
                             />
                         </FormField>
