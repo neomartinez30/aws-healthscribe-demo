@@ -14,6 +14,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
+import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
 
 const MOCK_PROVIDERS = [
@@ -37,6 +38,7 @@ export default function AgentDesktop() {
     const [zipCode, setZipCode] = useState('');
     const [showReferralModal, setShowReferralModal] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<any>(null);
+    const [activeTabId, setActiveTabId] = useState("medical-history");
     const [referralForm, setReferralForm] = useState<ReferralFormState>({
         patientName: '',
         illness: '',
@@ -75,6 +77,57 @@ export default function AgentDesktop() {
         console.log('Referral submitted:', referralForm);
         setShowReferralModal(false);
     };
+
+    const ProviderLocatorContent = () => (
+        <Container
+            header={
+                <Header
+                    variant="h2"
+                    actions={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button onClick={() => setShowReferralModal(true)}>Referral</Button>
+                        </SpaceBetween>
+                    }
+                >
+                    Provider Locator
+                </Header>
+            }
+        >
+            <SpaceBetween size="l">
+                <FormField label="Search by ZIP code">
+                    <Input
+                        value={zipCode}
+                        onChange={(event) => setZipCode(event.detail.value)}
+                        placeholder="Enter ZIP code"
+                    />
+                </FormField>
+
+                <Cards
+                    items={filteredProviders}
+                    cardDefinition={{
+                        header: item => item.name,
+                        sections: [
+                            {
+                                id: "specialty",
+                                header: "Specialty",
+                                content: item => item.specialty
+                            },
+                            {
+                                id: "address",
+                                header: "Address",
+                                content: item => `${item.address}, ${item.zip}`
+                            }
+                        ]
+                    }}
+                    selectionType="single"
+                    selectedItems={selectedProvider ? [selectedProvider] : []}
+                    onSelectionChange={({ detail }) => 
+                        setSelectedProvider(detail.selectedItems[0])
+                    }
+                />
+            </SpaceBetween>
+        </Container>
+    );
 
     return (
         <ContentLayout
@@ -132,53 +185,28 @@ export default function AgentDesktop() {
                         </ColumnLayout>
                     </ExpandableSection>
 
-                    <Container
-                        header={
-                            <Header
-                                variant="h2"
-                                actions={
-                                    <SpaceBetween direction="horizontal" size="xs">
-                                        <Button onClick={() => setShowReferralModal(true)}>Referral</Button>
-                                    </SpaceBetween>
+                    <Container>
+                        <Tabs
+                            activeTabId={activeTabId}
+                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                            tabs={[
+                                {
+                                    id: "medical-history",
+                                    label: "Medical History",
+                                    content: <div>Medical history content will go here</div>
+                                },
+                                {
+                                    id: "provider-locator",
+                                    label: "Provider Locator",
+                                    content: <ProviderLocatorContent />
+                                },
+                                {
+                                    id: "insights",
+                                    label: "Insights",
+                                    content: <div>Insights content will go here</div>
                                 }
-                            >
-                                Provider Locator
-                            </Header>
-                        }
-                    >
-                        <SpaceBetween size="l">
-                            <FormField label="Search by ZIP code">
-                                <Input
-                                    value={zipCode}
-                                    onChange={(event) => setZipCode(event.detail.value)}
-                                    placeholder="Enter ZIP code"
-                                />
-                            </FormField>
-
-                            <Cards
-                                items={filteredProviders}
-                                cardDefinition={{
-                                    header: item => item.name,
-                                    sections: [
-                                        {
-                                            id: "specialty",
-                                            header: "Specialty",
-                                            content: item => item.specialty
-                                        },
-                                        {
-                                            id: "address",
-                                            header: "Address",
-                                            content: item => `${item.address}, ${item.zip}`
-                                        }
-                                    ]
-                                }}
-                                selectionType="single"
-                                selectedItems={selectedProvider ? [selectedProvider] : []}
-                                onSelectionChange={({ detail }) => 
-                                    setSelectedProvider(detail.selectedItems[0])
-                                }
-                            />
-                        </SpaceBetween>
+                            ]}
+                        />
                     </Container>
                 </SpaceBetween>
             </Grid>
