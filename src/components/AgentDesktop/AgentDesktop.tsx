@@ -15,7 +15,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextContent from '@cloudscape-design/components/text-content';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import Select from '@cloudscape-design/components/select';
+import Select, { OptionDefinition } from '@cloudscape-design/components/select';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
@@ -27,13 +27,22 @@ const MOCK_PROVIDERS = [
     { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004' },
 ];
 
+type ReferralFormState = {
+    patientName: string;
+    illness: string;
+    severity: OptionDefinition | null;
+    medications: string;
+    referTo: string;
+    details: string;
+};
+
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLDivElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
     const [zipCode, setZipCode] = useState('');
     const [showReferralModal, setShowReferralModal] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<any>(null);
-    const [referralForm, setReferralForm] = useState({
+    const [referralForm, setReferralForm] = useState<ReferralFormState>({
         patientName: '',
         illness: '',
         severity: null,
