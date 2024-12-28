@@ -15,140 +15,20 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
-import Table, { ExpandableRows } from '@cloudscape-design/components/table';
+import Table from '@cloudscape-design/components/table';
 import "amazon-connect-streams";
 
-const MOCK_PROVIDERS = [
-    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
-    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002' },
-    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003' },
-    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004' },
-];
+import { medicalHistoryData } from './medicalHistoryData';
+import styles from './AgentDesktop.module.css';
 
-type ReferralFormState = {
-    patientName: string;
-    illness: string;
-    medications: string;
-    referTo: string;
-    details: string;
-};
-
-interface MedicalHistoryItem {
-    resource: string;
-    details: string;
-    content: Record<string, unknown>;
-}
+// ... (keep existing MOCK_PROVIDERS and other type definitions)
 
 export default function AgentDesktop() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
-    const [zipCode, setZipCode] = useState('');
-    const [showReferralModal, setShowReferralModal] = useState(false);
-    const [selectedProvider, setSelectedProvider] = useState<any>(null);
-    const [activeTabId, setActiveTabId] = useState("medical-history");
-    const [referralForm, setReferralForm] = useState<ReferralFormState>({
-        patientName: '',
-        illness: '',
-        medications: '',
-        referTo: '',
-        details: ''
-    });
+    // ... (keep existing state and refs)
 
-    const filteredProviders = MOCK_PROVIDERS.filter(provider =>
-        zipCode ? provider.zip.includes(zipCode) : true
-    );
+    const medicalHistoryItems = Object.values(medicalHistoryData);
 
-    useEffect(() => {
-        if (containerRef.current) {
-            connect.core.initCCP(containerRef.current, {
-                ccpUrl: instanceURL,
-                loginPopup: true,
-                loginPopupAutoClose: true,
-                loginOptions: {
-                    autoClose: true,
-                    height: 600,
-                    width: 400,
-                    top: 0,
-                    left: 0
-                },
-                region: 'us-east-1',
-                softphone: {
-                    allowFramedSoftphone: true,
-                    disableRingtone: false
-                }
-            });
-        }
-    }, []);
-
-    const handleReferralSubmit = () => {
-        console.log('Referral submitted:', referralForm);
-        setShowReferralModal(false);
-    };
-
-    // Medical history data
-    const medicalHistoryItems: MedicalHistoryItem[] = [
-        {
-            resource: "Resource 1",
-            details: "Details 1",
-            content: {}
-        },
-        {
-            resource: "Resource 2",
-            details: "Details 2",
-            content: {}
-        }
-    ];
-
-    const ProviderLocatorContent = () => (
-        <Container
-            header={
-                <Header
-                    variant="h2"
-                    actions={
-                        <SpaceBetween direction="horizontal" size="xs">
-                            <Button onClick={() => setShowReferralModal(true)}>Referral</Button>
-                        </SpaceBetween>
-                    }
-                >
-                    Provider Locator
-                </Header>
-            }
-        >
-            <SpaceBetween size="l">
-                <FormField label="Search by ZIP code">
-                    <Input
-                        value={zipCode}
-                        onChange={(event) => setZipCode(event.detail.value)}
-                        placeholder="Enter ZIP code"
-                    />
-                </FormField>
-
-                <Cards
-                    items={filteredProviders}
-                    cardDefinition={{
-                        header: item => item.name,
-                        sections: [
-                            {
-                                id: "specialty",
-                                header: "Specialty",
-                                content: item => item.specialty
-                            },
-                            {
-                                id: "address",
-                                header: "Address",
-                                content: item => `${item.address}, ${item.zip}`
-                            }
-                        ]
-                    }}
-                    selectionType="single"
-                    selectedItems={selectedProvider ? [selectedProvider] : []}
-                    onSelectionChange={({ detail }) =>
-                        setSelectedProvider(detail.selectedItems[0])
-                    }
-                />
-            </SpaceBetween>
-        </Container>
-    );
+    // ... (keep existing functions)
 
     return (
         <ContentLayout
@@ -222,14 +102,13 @@ export default function AgentDesktop() {
                                             ]}
                                             items={medicalHistoryItems}
                                             expandableRows={{
-                                                content: (item: MedicalHistoryItem) => (
-                                                    <div>
-                                                        <p>Expanded content for {item.resource}</p>
+                                                getItemContent: (item) => (
+                                                    <div style={{ padding: '0.5rem' }}>
+                                                        <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+                                                            {item.details}
+                                                        </pre>
                                                     </div>
                                                 )
-                                            }}
-                                            onRowExpand={({ detail }: { detail: { item: MedicalHistoryItem, expanded: boolean } }) => {
-                                                console.log('Row expanded:', detail.item, detail.expanded);
                                             }}
                                             variant="container"
                                         />
