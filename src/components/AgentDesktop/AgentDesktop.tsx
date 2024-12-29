@@ -18,6 +18,7 @@ import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
+import { medicalHistoryData } from './medicalHistoryData';
 import {
   AllergyIntoleranceSection,
   ClaimSection,
@@ -25,7 +26,7 @@ import {
   ImmunizationSection,
   FamilyMemberHistorySection,
   ConditionsSection
-} from "./ExpandableSection";
+} from "./ExpandableSections";
 import SchedulingForm from './SchedulingForm';
 import ExpandableSection from './ExpandableSection';
 
@@ -65,7 +66,7 @@ export default function AgentDesktop() {
 
     useEffect(() => {
         if (containerRef.current) {
-            connect.core.initCCP(containerRef.current, {
+            window.connect.core.initCCP(containerRef.current, {
                 ccpUrl: instanceURL,
                 loginPopup: true,
                 loginPopupAutoClose: true,
