@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import Flashbar from '@cloudscape-design/components/flashbar';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import SideNav from '@/components/SideNav';
 import SuspenseLoader from '@/components/SuspenseLoader';
 import TopNav from '@/components/TopNav';
 import Welcome from '@/components/Welcome';
@@ -19,7 +18,6 @@ const NewConversation = lazy(() => import('@/components/NewConversation'));
 const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
 const PatientInsights = lazy(() => import('@/components/PatientInsights'));
 const AgentDesktop = lazy(() => import('@/components/AgentDesktop'));
-
 
 export default function App() {
     const { isUserAuthenticated } = useAuthContext();
@@ -58,9 +56,12 @@ export default function App() {
                 content={content}
                 headerSelector="#appTopNav"
                 headerVariant="high-contrast"
-                navigation={<SideNav />}
                 notifications={<Flashbar items={flashbarItems} />}
                 toolsHide={true}
+                navigationHide={true}
+                contentType="default"
+                disableContentPaddings={true}
+                maxContentWidth={Number.MAX_VALUE}
             />
         </>
     );
