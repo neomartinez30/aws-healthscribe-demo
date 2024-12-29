@@ -13,7 +13,7 @@ import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
+import ExpandableSections from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
 import {
@@ -152,7 +152,7 @@ export default function AgentDesktop() {
                 </Container>
 
                 <SpaceBetween size="l">
-                    <ExpandableSection 
+                    <ExpandableSections 
                         headerText="Patient Details" 
                         variant="container"
                         defaultExpanded
@@ -183,7 +183,7 @@ export default function AgentDesktop() {
                                 <Box>Dr. Johnson</Box>
                             </div>
                         </ColumnLayout>
-                    </ExpandableSection>
+                    </ExpandableSections>
 
                     <Container>
                         <Tabs
