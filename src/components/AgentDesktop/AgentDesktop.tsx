@@ -18,7 +18,6 @@ import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
-import { medicalHistoryData } from './medicalHistoryData';
 import {
   AllergyIntoleranceSection,
   ClaimSection,
@@ -28,7 +27,6 @@ import {
   ConditionsSection
 } from "./ExpandableSections";
 import SchedulingForm from './SchedulingForm';
-import ExpandableSection from './ExpandableSection';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
@@ -126,7 +124,7 @@ export default function AgentDesktop() {
                     }}
                     selectionType="single"
                     selectedItems={selectedProvider ? [selectedProvider] : []}
-                    onSelectionChange={({ detail }) => 
+                    onSelectionChange={({ detail }) =>
                         setSelectedProvider(detail.selectedItems[0])
                     }
                 />
