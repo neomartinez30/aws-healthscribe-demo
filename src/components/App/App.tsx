@@ -60,8 +60,8 @@ export default function App() {
                 toolsHide={true}
                 navigationHide={true}
                 contentType="default"
-                disableContentPaddings={true}
-                maxContentWidth={Number.MAX_VALUE}
+                disableContentPaddings={false}
+                maxContentWidth={1280}
             />
         </>
     );

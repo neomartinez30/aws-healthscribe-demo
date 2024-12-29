@@ -139,27 +139,28 @@ export default function AgentDesktop() {
             header={
                 <Header
                     variant="h1"
-                    description="Amazon Connect Contact Control Panel (CCP)"
+                    description="Advise Health Line"
                 >
-                    Agent Desktop
+                    Nurse Workspace
                 </Header>
             }
-        >
-            <Grid
-                gridDefinition={[
-                    { colspan: 4 },
-                    { colspan: 8 }
+
+            <div className={styles.mainContent}>
+                <Grid
+                    gridDefinition={[
+                        { colspan: 4 },
+                        { colspan: 8 }
                 ]}
             >
-                <Container>
-                    <div ref={containerRef} style={{ width: '100%', height: '465px' }}/>
-                </Container>
+                    <Container>
+                        <div className={styles.ccpContainer} ref={containerRef} />
+                    </Container>
 
-                <SpaceBetween size="l">
-                    <ExpandableSection
-                        headerText="Patient Details"
-                        variant="container"
-                        defaultExpanded
+                    <SpaceBetween size="l">
+                        <ExpandableSection
+                            headerText="Patient Details"
+                            variant="container"
+                            defaultExpanded
                     >
                         <ColumnLayout borders="horizontal" columns={2}>
                             <div>
