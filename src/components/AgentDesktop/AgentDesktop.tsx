@@ -27,7 +27,7 @@ import {
   ConditionsSection
 } from "./ExpandableSection";
 import SchedulingForm from './SchedulingForm';
-import ExpandableSections from './ExpandableSection';
+import ExpandableSection from './ExpandableSection';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
