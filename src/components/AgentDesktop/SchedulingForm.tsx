@@ -11,6 +11,7 @@ import {
   Button,
   SpaceBetween,
 } from '@cloudscape-design/components';
+import { SelectProps } from '@cloudscape-design/components/select';
 
 const fakeFacilities = [
   { label: 'Facility A', value: 'facility-a' },
@@ -26,8 +27,8 @@ const fakeDepartments = [
 
 const SchedulingForm: React.FC = () => {
   const [patientName, setPatientName] = useState('');
-  const [selectedFacility, setSelectedFacility] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedFacility, setSelectedFacility] = useState<SelectProps.Option | null>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState<SelectProps.Option | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [notes, setNotes] = useState('');
 
@@ -46,41 +47,46 @@ const SchedulingForm: React.FC = () => {
   return (
     <Container>
       <Header variant="h1">Clinical Scheduling</Header>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        actions={
+          <Button variant="primary" onClick={handleSubmit}>
+            Submit
+          </Button>
+        }
+      >
         <SpaceBetween size="m">
           <FormField label="Patient Name">
             <Input
               value={patientName}
-              onChange={(event) => setPatientName(event.detail.value)}
+              onChange={({ detail }) => setPatientName(detail.value)}
             />
           </FormField>
           <FormField label="Facility">
             <Select
               selectedOption={selectedFacility}
-              onChange={(event) => setSelectedFacility(event.detail.selectedOption.value)}
+              onChange={({ detail }) => setSelectedFacility(detail.selectedOption)}
               options={fakeFacilities}
             />
           </FormField>
           <FormField label="Department">
             <Select
               selectedOption={selectedDepartment}
-              onChange={(event) => setSelectedDepartment(event.detail.selectedOption.value)}
+              onChange={({ detail }) => setSelectedDepartment(detail.selectedOption)}
               options={fakeDepartments}
             />
           </FormField>
           <FormField label="Select Day">
             <DatePicker
               value={selectedDate}
-              onChange={(event) => setSelectedDate(event.detail.value)}
+              onChange={({ detail }) => setSelectedDate(detail.value)}
             />
           </FormField>
           <FormField label="Notes">
             <Textarea
               value={notes}
-              onChange={(event) => setNotes(event.detail.value)}
+              onChange={({ detail }) => setNotes(detail.value)}
             />
           </FormField>
-          <Button variant="primary">Submit</Button>
         </SpaceBetween>
       </Form>
     </Container>

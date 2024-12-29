@@ -18,7 +18,6 @@ import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
-import { medicalHistoryData } from './medicalHistoryData'; // Ensure this module exists
 import {
   AllergyIntoleranceSection,
   ClaimSection,
@@ -26,9 +25,9 @@ import {
   ImmunizationSection,
   FamilyMemberHistorySection,
   ConditionsSection
-} from "./ExpandableSections"; // Ensure this module exists and the path is correct
-import SchedulingForm from './SchedulingForm'; // Ensure this module exists
-import ProviderLocatorContent from './ProviderLocatorContent'; // Ensure this module exists
+} from "./ExpandableSection";
+import SchedulingForm from './SchedulingForm';
+import ExpandableSections from './ExpandableSection';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
@@ -90,6 +89,7 @@ export default function AgentDesktop() {
         console.log('Referral submitted:', referralForm);
         setShowReferralModal(false);
     };
+
     const ProviderLocatorContent = () => (
         <Container
             header={
@@ -131,7 +131,8 @@ export default function AgentDesktop() {
                 />
             </SpaceBetween>
         </Container>
-    ); 
+    );
+
     return (
         <ContentLayout
             headerVariant="high-contrast"
@@ -155,7 +156,7 @@ export default function AgentDesktop() {
                 </Container>
 
                 <SpaceBetween size="l">
-                    <ExpandableSections
+                    <ExpandableSection
                         headerText="Patient Details"
                         variant="container"
                         defaultExpanded
@@ -186,7 +187,7 @@ export default function AgentDesktop() {
                                 <Box>Dr. Johnson</Box>
                             </div>
                         </ColumnLayout>
-                    </ExpandableSections>
+                    </ExpandableSection>
 
                     <Container>
                         <Tabs
