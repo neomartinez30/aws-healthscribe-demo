@@ -16,6 +16,14 @@ import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Tabs from '@cloudscape-design/components/tabs';
 import "amazon-connect-streams";
+import {
+  AllergyIntoleranceSection,
+  ClaimSection,
+  MedicationRequestSection,
+  ImmunizationSection,
+  FamilyMemberHistorySection,
+  ConditionsSection
+} from "./ExpandableSections";
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
@@ -94,14 +102,6 @@ export default function AgentDesktop() {
             }
         >
             <SpaceBetween size="l">
-                <FormField label="Search by ZIP code">
-                    <Input
-                        value={zipCode}
-                        onChange={(event) => setZipCode(event.detail.value)}
-                        placeholder="Enter ZIP code"
-                    />
-                </FormField>
-
                 <Cards
                     items={filteredProviders}
                     cardDefinition={{
