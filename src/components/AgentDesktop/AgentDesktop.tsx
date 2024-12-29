@@ -15,6 +15,7 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
 import Tabs from '@cloudscape-design/components/tabs';
+import ExpandableSection from '@cloudscape-design/components/expandable-section'; // Ensure this import is correct
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';

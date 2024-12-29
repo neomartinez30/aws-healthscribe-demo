@@ -44,16 +44,15 @@ const SchedulingForm: React.FC = () => {
     });
   };
 
+  const handleDateChange = (event: { detail: { value: string } }) => {
+    const date = event.detail.value ? new Date(event.detail.value) : null;
+    setSelectedDate(date);
+  };
+
   return (
     <Container>
       <Header variant="h1">Clinical Scheduling</Header>
-      <Form
-        actions={
-          <Button variant="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        }
-      >
+      <Form onSubmit={handleSubmit}>
         <SpaceBetween size="m">
           <FormField label="Patient Name">
             <Input
@@ -77,8 +76,8 @@ const SchedulingForm: React.FC = () => {
           </FormField>
           <FormField label="Select Day">
             <DatePicker
-              value={selectedDate}
-              onChange={({ detail }) => setSelectedDate(detail.value)}
+              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+              onChange={handleDateChange}
             />
           </FormField>
           <FormField label="Notes">
@@ -87,6 +86,9 @@ const SchedulingForm: React.FC = () => {
               onChange={({ detail }) => setNotes(detail.value)}
             />
           </FormField>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
         </SpaceBetween>
       </Form>
     </Container>
