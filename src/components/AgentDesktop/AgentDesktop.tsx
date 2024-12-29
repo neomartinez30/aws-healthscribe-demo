@@ -193,8 +193,17 @@ export default function AgentDesktop() {
                                 {
                                     id: "medical-history",
                                     label: "Medical History",
-                                    content: <div>Medical history content will go here</div>
-                                },
+                                    content: (
+                                      <div>
+                                        <AllergyIntoleranceSection />
+                                        <ClaimSection />
+                                        <MedicationRequestSection />
+                                        <ImmunizationSection />
+                                        <FamilyMemberHistorySection />
+                                        <ConditionsSection />
+                                      </div>
+                                    )
+                                  },
                                 {
                                     id: "provider-locator",
                                     label: "Provider Locator",
