@@ -14,15 +14,15 @@ import {
 import { SelectProps } from '@cloudscape-design/components/select';
 
 const fakeFacilities = [
-  { label: 'Facility A', value: 'facility-a' },
-  { label: 'Facility B', value: 'facility-b' },
-  { label: 'Facility C', value: 'facility-c' },
+  { label: 'San Diego Hospital', value: 'facility-a' },
+  { label: 'Miramar Hospital', value: 'facility-b' },
+  { label: 'Texas Hospital', value: 'facility-c' },
 ];
 
 const fakeDepartments = [
-  { label: 'Department 1', value: 'department-1' },
-  { label: 'Department 2', value: 'department-2' },
-  { label: 'Department 3', value: 'department-3' },
+  { label: 'Emergency', value: 'department-1' },
+  { label: 'Primary Care', value: 'department-2' },
+  { label: 'Specialist', value: 'department-3' },
 ];
 
 const SchedulingForm: React.FC = () => {
@@ -32,8 +32,7 @@ const SchedulingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [notes, setNotes] = useState('');
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     // Handle form submission
     console.log({
       patientName,
@@ -52,7 +51,13 @@ const SchedulingForm: React.FC = () => {
   return (
     <Container>
       <Header variant="h1">Clinical Scheduling</Header>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        actions={
+          <Button variant="primary" onClick={handleSubmit}>
+            Submit
+          </Button>
+        }
+      >
         <SpaceBetween size="m">
           <FormField label="Patient Name">
             <Input
@@ -86,9 +91,6 @@ const SchedulingForm: React.FC = () => {
               onChange={({ detail }) => setNotes(detail.value)}
             />
           </FormField>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
         </SpaceBetween>
       </Form>
     </Container>
