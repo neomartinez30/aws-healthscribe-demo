@@ -232,7 +232,13 @@ export default function AgentDesktop() {
                             ]}
                         >
                             <Container>
-                                <div className={styles.ccpContainer} ref={containerRef} />
+                                <div className={styles.ccpContainer}>
+                                    <iframe 
+                                        ref={containerRef}
+                                        className={styles.iframeContainer}
+                                        title="Amazon Connect CCP"
+                                    />
+                                </div>
                             </Container>
 
                             <SpaceBetween size="l">
