@@ -15,7 +15,9 @@ import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
 import Tabs from '@cloudscape-design/components/tabs';
-import ExpandableSection from '@cloudscape-design/components/expandable-section'; // Ensure this import is correct
+import ExpandableSection from '@cloudscape-design/components/expandable-section';
+import AppLayout from '@cloudscape-design/components/app-layout';
+import HelpPanel from '@cloudscape-design/components/help-panel';
 import "amazon-connect-streams";
 
 import styles from './AgentDesktop.module.css';
@@ -51,6 +53,7 @@ export default function AgentDesktop() {
     const [showReferralModal, setShowReferralModal] = useState(false);
     const [selectedProvider, setSelectedProvider] = useState<any>(null);
     const [activeTabId, setActiveTabId] = useState("medical-history");
+    const [toolsOpen, setToolsOpen] = useState(true);
     const [referralForm, setReferralForm] = useState<ReferralFormState>({
         patientName: '',
         illness: '',
@@ -133,16 +136,35 @@ export default function AgentDesktop() {
         </Container>
     );
 
-    return (
-        <ContentLayout
-            headerVariant="high-contrast"
-            header={
-                <Header
-                    variant="h1"
-                    description="Advise Health Line"
-                >
-                    Nurse Workspace
+    const helpPanelContent = (
+        <div className={styles.helpPanelContent}>
+            <SpaceBetween size="l">
+                <Header variant="h2">
+                    Virtual Assistant
                 </Header>
+                <Container>
+                    <div className={styles.chatPlaceholder}>
+                        <Box color="text-status-inactive" textAlign="center">
+                            <b>AI Assistant Coming Soon</b>
+                            <p>This space will be used for an AI-powered chat assistant to help with patient care.</p>
+                        </Box>
+                    </div>
+                </Container>
+            </SpaceBetween>
+        </div>
+    );
+
+    return (
+        <AppLayout
+            content={
+                <ContentLayout
+                    header={
+                        <Header
+                            variant="h1"
+                            description="Advise Health Line"
+                        >
+                            Nurse Workspace
+                        </Header>
             }
         >
             <div className={styles.mainContent}>

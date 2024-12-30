@@ -8,7 +8,30 @@
 }
 
 .mainContent {
-    max-width: 1280px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
+}
+
+.helpPanel {
+    padding: 20px;
+    height: 100%;
+}
+
+.helpPanelContent {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chatPlaceholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-container-content);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
 }
