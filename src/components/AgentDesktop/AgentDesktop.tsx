@@ -45,7 +45,7 @@ type ReferralFormState = {
 };
 
 export default function AgentDesktop() {
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLIFrameElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
     const [zipCode, setZipCode] = useState('');
     const [showReferralModal, setShowReferralModal] = useState(false);
