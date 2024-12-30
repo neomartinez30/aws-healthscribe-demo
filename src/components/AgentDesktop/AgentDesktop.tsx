@@ -144,14 +144,14 @@ export default function AgentDesktop() {
                     Nurse Workspace
                 </Header>
             }
-
+        >
             <div className={styles.mainContent}>
                 <Grid
                     gridDefinition={[
                         { colspan: 4 },
                         { colspan: 8 }
-                ]}
-            >
+                    ]}
+                >
                     <Container>
                         <div className={styles.ccpContainer} ref={containerRef} />
                     </Container>
@@ -161,141 +161,142 @@ export default function AgentDesktop() {
                             headerText="Patient Details"
                             variant="container"
                             defaultExpanded
-                    >
-                        <ColumnLayout borders="horizontal" columns={2}>
-                            <div>
-                                <Box variant="awsui-key-label">Name</Box>
-                                <Box>John Smith</Box>
-                            </div>
-                            <div>
-                                <Box variant="awsui-key-label">DOB</Box>
-                                <Box>03/15/1985</Box>
-                            </div>
-                            <div>
-                                <Box variant="awsui-key-label">Insurance</Box>
-                                <Box>Blue Cross</Box>
-                            </div>
-                            <div>
-                                <Box variant="awsui-key-label">Member ID</Box>
-                                <Box>BC123456789</Box>
-                            </div>
-                            <div>
-                                <Box variant="awsui-key-label">Last Visit</Box>
-                                <Box>01/10/2024</Box>
-                            </div>
-                            <div>
-                                <Box variant="awsui-key-label">PCP</Box>
-                                <Box>Dr. Johnson</Box>
-                            </div>
-                        </ColumnLayout>
-                    </ExpandableSection>
+                        >
+                            <ColumnLayout borders="horizontal" columns={2}>
+                                <div>
+                                    <Box variant="awsui-key-label">Name</Box>
+                                    <Box>John Smith</Box>
+                                </div>
+                                <div>
+                                    <Box variant="awsui-key-label">DOB</Box>
+                                    <Box>03/15/1985</Box>
+                                </div>
+                                <div>
+                                    <Box variant="awsui-key-label">Insurance</Box>
+                                    <Box>Blue Cross</Box>
+                                </div>
+                                <div>
+                                    <Box variant="awsui-key-label">Member ID</Box>
+                                    <Box>BC123456789</Box>
+                                </div>
+                                <div>
+                                    <Box variant="awsui-key-label">Last Visit</Box>
+                                    <Box>01/10/2024</Box>
+                                </div>
+                                <div>
+                                    <Box variant="awsui-key-label">PCP</Box>
+                                    <Box>Dr. Johnson</Box>
+                                </div>
+                            </ColumnLayout>
+                        </ExpandableSection>
 
-                    <Container>
-                        <Tabs
-                            activeTabId={activeTabId}
-                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                            tabs={[
-                                {
-                                    id: "medical-history",
-                                    label: "Medical History",
-                                    content: (
-                                      <div>
-                                        <AllergyIntoleranceSection />
-                                        <ClaimSection />
-                                        <MedicationRequestSection />
-                                        <ImmunizationSection />
-                                        <FamilyMemberHistorySection />
-                                        <ConditionsSection />
-                                      </div>
-                                    )
-                                  },
-                                {
-                                    id: "provider-locator",
-                                    label: "Provider Locator",
-                                    content: <ProviderLocatorContent />
-                                },
-                                {
-                                    id: "scheduling",
-                                    label: "Scheduling",
-                                    content: <SchedulingForm />
-                                },
-                                {
-                                    id: "insights",
-                                    label: "Insights",
-                                    content: <div>Insights content will go here</div>
-                                }
-                            ]}
-                        />
-                    </Container>
-                </SpaceBetween>
-            </Grid>
-
-            <Modal
-                visible={showReferralModal}
-                onDismiss={() => setShowReferralModal(false)}
-                header="Patient Referral"
-                size="medium"
-            >
-                <Form
-                    actions={
-                        <SpaceBetween direction="horizontal" size="xs">
-                            <Button variant="link" onClick={() => setShowReferralModal(false)}>
-                                Cancel
-                            </Button>
-                            <Button variant="primary" onClick={handleReferralSubmit}>
-                                Submit
-                            </Button>
-                        </SpaceBetween>
-                    }
-                >
-                    <SpaceBetween size="l">
-                        <FormField label="Patient name">
-                            <Input
-                                value={referralForm.patientName}
-                                onChange={(event) =>
-                                    setReferralForm(prev => ({ ...prev, patientName: event.detail.value }))
-                                }
+                        <Container>
+                            <Tabs
+                                activeTabId={activeTabId}
+                                onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                                tabs={[
+                                    {
+                                        id: "medical-history",
+                                        label: "Medical History",
+                                        content: (
+                                            <div>
+                                                <AllergyIntoleranceSection />
+                                                <ClaimSection />
+                                                <MedicationRequestSection />
+                                                <ImmunizationSection />
+                                                <FamilyMemberHistorySection />
+                                                <ConditionsSection />
+                                            </div>
+                                        )
+                                    },
+                                    {
+                                        id: "provider-locator",
+                                        label: "Provider Locator",
+                                        content: <ProviderLocatorContent />
+                                    },
+                                    {
+                                        id: "scheduling",
+                                        label: "Scheduling",
+                                        content: <SchedulingForm />
+                                    },
+                                    {
+                                        id: "insights",
+                                        label: "Insights",
+                                        content: <div>Insights content will go here</div>
+                                    }
+                                ]}
                             />
-                        </FormField>
-
-                        <FormField label="Illness">
-                            <Input
-                                value={referralForm.illness}
-                                onChange={(event) =>
-                                    setReferralForm(prev => ({ ...prev, illness: event.detail.value }))
-                                }
-                            />
-                        </FormField>
-
-                        <FormField label="Medications">
-                            <Input
-                                value={referralForm.medications}
-                                onChange={(event) =>
-                                    setReferralForm(prev => ({ ...prev, medications: event.detail.value }))
-                                }
-                            />
-                        </FormField>
-
-                        <FormField label="Refer to">
-                            <Input
-                                value={referralForm.referTo}
-                                onChange={(event) =>
-                                    setReferralForm(prev => ({ ...prev, referTo: event.detail.value }))
-                                }
-                            />
-                        </FormField>
-
-                        <FormField label="Add details">
-                            <Textarea
-                                value={referralForm.details}
-                                onChange={(event) =>
-                                    setReferralForm(prev => ({ ...prev, details: event.detail.value }))
-                                }
-                            />
-                        </FormField>
+                        </Container>
                     </SpaceBetween>
-                </Form>
-            </Modal>
+                </Grid>
+
+                <Modal
+                    visible={showReferralModal}
+                    onDismiss={() => setShowReferralModal(false)}
+                    header="Patient Referral"
+                    size="medium"
+                >
+                    <Form
+                        actions={
+                            <SpaceBetween direction="horizontal" size="xs">
+                                <Button variant="link" onClick={() => setShowReferralModal(false)}>
+                                    Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleReferralSubmit}>
+                                    Submit
+                                </Button>
+                            </SpaceBetween>
+                        }
+                    >
+                        <SpaceBetween size="l">
+                            <FormField label="Patient name">
+                                <Input
+                                    value={referralForm.patientName}
+                                    onChange={(event) =>
+                                        setReferralForm(prev => ({ ...prev, patientName: event.detail.value }))
+                                    }
+                                />
+                            </FormField>
+
+                            <FormField label="Illness">
+                                <Input
+                                    value={referralForm.illness}
+                                    onChange={(event) =>
+                                        setReferralForm(prev => ({ ...prev, illness: event.detail.value }))
+                                    }
+                                />
+                            </FormField>
+
+                            <FormField label="Medications">
+                                <Input
+                                    value={referralForm.medications}
+                                    onChange={(event) =>
+                                        setReferralForm(prev => ({ ...prev, medications: event.detail.value }))
+                                    }
+                                />
+                            </FormField>
+
+                            <FormField label="Refer to">
+                                <Input
+                                    value={referralForm.referTo}
+                                    onChange={(event) =>
+                                        setReferralForm(prev => ({ ...prev, referTo: event.detail.value }))
+                                    }
+                                />
+                            </FormField>
+
+                            <FormField label="Add details">
+                                <Textarea
+                                    value={referralForm.details}
+                                    onChange={(event) =>
+                                        setReferralForm(prev => ({ ...prev, details: event.detail.value }))
+                                    }
+                                />
+                            </FormField>
+                        </SpaceBetween>
+                    </Form>
+                </Modal>
+            </div>
         </ContentLayout>
     );
 }
