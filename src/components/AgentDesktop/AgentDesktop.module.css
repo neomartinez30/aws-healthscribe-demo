@@ -1,10 +1,11 @@
 .ccpContainer {
     width: 400px;
-    min-height: 700px;
+    min-height: 600px;
     border: 1px solid var(--color-border-container-default);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 20px;
+    box-shadow: var(--shadow-container);
 }
 
 .mainContent {
@@ -34,4 +35,53 @@
     border-radius: 8px;
     padding: 20px;
     text-align: center;
+    min-height: 200px;
+}
+
+.tabContent {
+    padding: 20px 0;
+}
+
+.patientDetails {
+    margin-bottom: 20px;
+}
+
+.patientDetailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.patientDetailsItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.patientDetailsLabel {
+    font-size: 12px;
+    color: var(--color-text-label);
+}
+
+.patientDetailsValue {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.providerLocator {
+    margin-top: 20px;
+}
+
+.providerCard {
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--color-background-container-content);
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+}
+
+.providerCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-container);
 }

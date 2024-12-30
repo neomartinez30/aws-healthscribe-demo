@@ -3,9 +3,7 @@ import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
 import Container from '@cloudscape-design/components/container';
 import Grid from '@cloudscape-design/components/grid';
-import ColumnLayout from '@cloudscape-design/components/column-layout';
 import Box from '@cloudscape-design/components/box';
-import Input from '@cloudscape-design/components/input';
 import Button from '@cloudscape-design/components/button';
 import Modal from '@cloudscape-design/components/modal';
 import FormField from '@cloudscape-design/components/form-field';
@@ -32,10 +30,10 @@ import {
 import SchedulingForm from './SchedulingForm';
 
 const MOCK_PROVIDERS = [
-    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001' },
-    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002' },
-    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003' },
-    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004' },
+    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
+    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002', availability: 'Next available: Today 4pm' },
+    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003', availability: 'Next available: Friday 10am' },
+    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004', availability: 'Next available: Monday 9am' },
 ];
 
 type ReferralFormState = {
@@ -93,14 +91,46 @@ export default function AgentDesktop() {
         setShowReferralModal(false);
     };
 
+    const PatientDetails = () => (
+        <Container className={styles.patientDetails}>
+            <div className={styles.patientDetailsGrid}>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>Name</span>
+                    <span className={styles.patientDetailsValue}>John Smith</span>
+                </div>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>DOB</span>
+                    <span className={styles.patientDetailsValue}>03/15/1985</span>
+                </div>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>Insurance</span>
+                    <span className={styles.patientDetailsValue}>Blue Cross</span>
+                </div>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>Member ID</span>
+                    <span className={styles.patientDetailsValue}>BC123456789</span>
+                </div>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>Last Visit</span>
+                    <span className={styles.patientDetailsValue}>01/10/2024</span>
+                </div>
+                <div className={styles.patientDetailsItem}>
+                    <span className={styles.patientDetailsLabel}>PCP</span>
+                    <span className={styles.patientDetailsValue}>Dr. Johnson</span>
+                </div>
+            </div>
+        </Container>
+    );
+
     const ProviderLocatorContent = () => (
         <Container
+            className={styles.providerLocator}
             header={
                 <Header
                     variant="h2"
                     actions={
                         <SpaceBetween direction="horizontal" size="xs">
-                            <Button onClick={() => setShowReferralModal(true)}>Referral</Button>
+                            <Button onClick={() => setShowReferralModal(true)}>Create Referral</Button>
                         </SpaceBetween>
                     }
                 >
@@ -109,6 +139,20 @@ export default function AgentDesktop() {
             }
         >
             <SpaceBetween size="l">
+                <FormField label="Filter by ZIP code">
+                    <input
+                        type="text"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value)}
+                        placeholder="Enter ZIP code"
+                        style={{
+                            padding: '8px',
+                            borderRadius: '4px',
+                            border: '1px solid var(--color-border-input-default)',
+                            width: '200px'
+                        }}
+                    />
+                </FormField>
                 <Cards
                     items={filteredProviders}
                     cardDefinition={{
@@ -123,6 +167,11 @@ export default function AgentDesktop() {
                                 id: "address",
                                 header: "Address",
                                 content: item => `${item.address}, ${item.zip}`
+                            },
+                            {
+                                id: "availability",
+                                header: "Availability",
+                                content: item => item.availability
                             }
                         ]
                     }}
@@ -130,6 +179,14 @@ export default function AgentDesktop() {
                     selectedItems={selectedProvider ? [selectedProvider] : []}
                     onSelectionChange={({ detail }) =>
                         setSelectedProvider(detail.selectedItems[0])
+                    }
+                    empty={
+                        <Box textAlign="center" color="inherit">
+                            <b>No providers found</b>
+                            <Box padding={{ bottom: 's' }}>
+                                Try adjusting the ZIP code filter
+                            </Box>
+                        </Box>
                     }
                 />
             </SpaceBetween>
@@ -179,38 +236,7 @@ export default function AgentDesktop() {
                             </Container>
 
                             <SpaceBetween size="l">
-                                <ExpandableSection
-                                    headerText="Patient Details"
-                                    variant="container"
-                                    defaultExpanded
-                                >
-                                    <ColumnLayout borders="horizontal" columns={2}>
-                                        <div>
-                                            <Box variant="awsui-key-label">Name</Box>
-                                            <Box>John Smith</Box>
-                                        </div>
-                                        <div>
-                                            <Box variant="awsui-key-label">DOB</Box>
-                                            <Box>03/15/1985</Box>
-                                        </div>
-                                        <div>
-                                            <Box variant="awsui-key-label">Insurance</Box>
-                                            <Box>Blue Cross</Box>
-                                        </div>
-                                        <div>
-                                            <Box variant="awsui-key-label">Member ID</Box>
-                                            <Box>BC123456789</Box>
-                                        </div>
-                                        <div>
-                                            <Box variant="awsui-key-label">Last Visit</Box>
-                                            <Box>01/10/2024</Box>
-                                        </div>
-                                        <div>
-                                            <Box variant="awsui-key-label">PCP</Box>
-                                            <Box>Dr. Johnson</Box>
-                                        </div>
-                                    </ColumnLayout>
-                                </ExpandableSection>
+                                <PatientDetails />
 
                                 <Container>
                                     <Tabs
@@ -221,7 +247,7 @@ export default function AgentDesktop() {
                                                 id: "medical-history",
                                                 label: "Medical History",
                                                 content: (
-                                                    <div>
+                                                    <div className={styles.tabContent}>
                                                         <AllergyIntoleranceSection />
                                                         <ClaimSection />
                                                         <MedicationRequestSection />
@@ -244,7 +270,16 @@ export default function AgentDesktop() {
                                             {
                                                 id: "insights",
                                                 label: "Insights",
-                                                content: <div>Insights content will go here</div>
+                                                content: (
+                                                    <div className={styles.tabContent}>
+                                                        <Container>
+                                                            <Box color="text-status-inactive" textAlign="center">
+                                                                <b>Patient Insights Coming Soon</b>
+                                                                <p>This tab will display AI-generated insights about the patient's medical history.</p>
+                                                            </Box>
+                                                        </Container>
+                                                    </div>
+                                                )
                                             }
                                         ]}
                                     />
@@ -272,42 +307,67 @@ export default function AgentDesktop() {
                             >
                                 <SpaceBetween size="l">
                                     <FormField label="Patient name">
-                                        <Input
+                                        <input
+                                            type="text"
                                             value={referralForm.patientName}
-                                            onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, patientName: event.detail.value }))
+                                            onChange={(e) =>
+                                                setReferralForm(prev => ({ ...prev, patientName: e.target.value }))
                                             }
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border-input-default)'
+                                            }}
                                         />
                                     </FormField>
 
-                                    <FormField label="Illness">
-                                        <Input
+                                    <FormField label="Reason for referral">
+                                        <input
+                                            type="text"
                                             value={referralForm.illness}
-                                            onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, illness: event.detail.value }))
+                                            onChange={(e) =>
+                                                setReferralForm(prev => ({ ...prev, illness: e.target.value }))
                                             }
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border-input-default)'
+                                            }}
                                         />
                                     </FormField>
 
-                                    <FormField label="Medications">
-                                        <Input
+                                    <FormField label="Current medications">
+                                        <input
+                                            type="text"
                                             value={referralForm.medications}
-                                            onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, medications: event.detail.value }))
+                                            onChange={(e) =>
+                                                setReferralForm(prev => ({ ...prev, medications: e.target.value }))
                                             }
+                                            style={{
+                                                width: '100%',
+                                                padding: '8px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border-input-default)'
+                                            }}
                                         />
                                     </FormField>
 
                                     <FormField label="Refer to">
-                                        <Input
-                                            value={referralForm.referTo}
-                                            onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, referTo: event.detail.value }))
-                                            }
+                                        <Select
+                                            selectedOption={selectedProvider ? { label: selectedProvider.name, value: selectedProvider.id } : null}
+                                            onChange={({ detail }) => {
+                                                const provider = MOCK_PROVIDERS.find(p => p.id === detail.selectedOption.value);
+                                                setSelectedProvider(provider);
+                                                setReferralForm(prev => ({ ...prev, referTo: provider?.name || '' }));
+                                            }}
+                                            options={MOCK_PROVIDERS.map(p => ({ label: p.name, value: p.id }))}
+                                            placeholder="Select provider"
                                         />
                                     </FormField>
 
-                                    <FormField label="Add details">
+                                    <FormField label="Additional notes">
                                         <Textarea
                                             value={referralForm.details}
                                             onChange={(event) =>
