@@ -250,6 +250,11 @@ export default function AgentDesktop() {
                                         onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
                                         tabs={[
                                             {
+                                                id: "patient-summary",
+                                                label: "Patient Summary",
+                                                content: <ProviderLocatorContent />
+                                            },
+                                            {
                                                 id: "medical-history",
                                                 label: "Medical History",
                                                 content: (
@@ -274,8 +279,8 @@ export default function AgentDesktop() {
                                                 content: <SchedulingForm />
                                             },
                                             {
-                                                id: "insights",
-                                                label: "Insights",
+                                                id: "settings",
+                                                label: "settings",
                                                 content: (
                                                     <div className={styles.tabContent}>
                                                         <Container>
