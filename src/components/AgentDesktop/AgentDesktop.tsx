@@ -30,13 +30,44 @@ import {
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
 
+interface Provider {
+    id: string;
+    name: string;
+    specialty: string;
+    address: string;
+    zip: string;
+    availability: string;
+}
+
+interface ReferralForm {
+    patientName: string;
+    illness: string;
+    medications: string;
+    referTo: string;
+    details: string;
+}
+
+const MOCK_PROVIDERS: Provider[] = [
+    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
+    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002', availability: 'Next available: Today 4pm' },
+    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003', availability: 'Next available: Friday 10am' },
+    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004', availability: 'Next available: Monday 9am' },
+];
 
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLIFrameElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
     const [toolsOpen, setToolsOpen] = useState(true);
     const [activeTabId, setActiveTabId] = useState("patient-summary");
-
+    const [showReferralModal, setShowReferralModal] = useState(false);
+    const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+    const [referralForm, setReferralForm] = useState<ReferralForm>({
+        patientName: '',
+        illness: '',
+        medications: '',
+        referTo: '',
+        details: ''
+    });
 
     useEffect(() => {
         if (containerRef.current) {
@@ -60,7 +91,10 @@ export default function AgentDesktop() {
         }
     }, []);
 
-
+    const handleReferralSubmit = () => {
+        // Handle referral submission logic here
+        setShowReferralModal(false);
+    };
 
     const PatientDetails = () => (
         <Container className={styles.patientDetails}>
@@ -92,7 +126,6 @@ export default function AgentDesktop() {
             </div>
         </Container>
     );
-
 
     const helpPanelContent = (
         <div className={styles.helpPanelContent}>
@@ -270,7 +303,7 @@ export default function AgentDesktop() {
                                             selectedOption={selectedProvider ? { label: selectedProvider.name, value: selectedProvider.id } : null}
                                             onChange={({ detail }) => {
                                                 const provider = MOCK_PROVIDERS.find(p => p.id === detail.selectedOption.value);
-                                                setSelectedProvider(provider);
+                                                setSelectedProvider(provider || null);
                                                 setReferralForm(prev => ({ ...prev, referTo: provider?.name || '' }));
                                             }}
                                             options={MOCK_PROVIDERS.map(p => ({ label: p.name, value: p.id }))}
