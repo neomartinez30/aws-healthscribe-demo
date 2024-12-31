@@ -28,41 +28,15 @@ import {
   ConditionsSection
 } from "./ExpandableSections";
 import SchedulingForm from './SchedulingForm';
+import { ProviderLocator } from './ProviderLocator';
 
-const MOCK_PROVIDERS = [
-    { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
-    { id: '2', name: 'Dr. Michael Chen', specialty: 'Family Medicine', address: '456 Health St', zip: '20002', availability: 'Next available: Today 4pm' },
-    { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003', availability: 'Next available: Friday 10am' },
-    { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004', availability: 'Next available: Monday 9am' },
-];
-
-type ReferralFormState = {
-    patientName: string;
-    illness: string;
-    medications: string;
-    referTo: string;
-    details: string;
-};
 
 export default function AgentDesktop() {
     const containerRef = useRef<HTMLIFrameElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
-    const [zipCode, setZipCode] = useState('');
-    const [showReferralModal, setShowReferralModal] = useState(false);
-    const [selectedProvider, setSelectedProvider] = useState<any>(null);
-    const [activeTabId, setActiveTabId] = useState("medical-history");
     const [toolsOpen, setToolsOpen] = useState(true);
-    const [referralForm, setReferralForm] = useState<ReferralFormState>({
-        patientName: '',
-        illness: '',
-        medications: '',
-        referTo: '',
-        details: ''
-    });
+    const [activeTabId, setActiveTabId] = useState("patient-summary");
 
-    const filteredProviders = MOCK_PROVIDERS.filter(provider =>
-        zipCode ? provider.zip.includes(zipCode) : true
-    );
 
     useEffect(() => {
         if (containerRef.current) {
@@ -86,10 +60,7 @@ export default function AgentDesktop() {
         }
     }, []);
 
-    const handleReferralSubmit = () => {
-        console.log('Referral submitted:', referralForm);
-        setShowReferralModal(false);
-    };
+
 
     const PatientDetails = () => (
         <Container className={styles.patientDetails}>
@@ -122,76 +93,6 @@ export default function AgentDesktop() {
         </Container>
     );
 
-    const ProviderLocatorContent = () => (
-        <Container
-            className={styles.providerLocator}
-            header={
-                <Header
-                    variant="h2"
-                    actions={
-                        <SpaceBetween direction="horizontal" size="xs">
-                            <Button onClick={() => setShowReferralModal(true)}>Create Referral</Button>
-                        </SpaceBetween>
-                    }
-                >
-                    Provider Locator
-                </Header>
-            }
-        >
-            <SpaceBetween size="l">
-                <FormField label="Filter by ZIP code">
-                    <input
-                        type="text"
-                        value={zipCode}
-                        onChange={(e) => setZipCode(e.target.value)}
-                        placeholder="Enter ZIP code"
-                        style={{
-                            padding: '8px',
-                            borderRadius: '4px',
-                            border: '1px solid var(--color-border-input-default)',
-                            width: '200px'
-                        }}
-                    />
-                </FormField>
-                <Cards
-                    items={filteredProviders}
-                    cardDefinition={{
-                        header: item => item.name,
-                        sections: [
-                            {
-                                id: "specialty",
-                                header: "Specialty",
-                                content: item => item.specialty
-                            },
-                            {
-                                id: "address",
-                                header: "Address",
-                                content: item => `${item.address}, ${item.zip}`
-                            },
-                            {
-                                id: "availability",
-                                header: "Availability",
-                                content: item => item.availability
-                            }
-                        ]
-                    }}
-                    selectionType="single"
-                    selectedItems={selectedProvider ? [selectedProvider] : []}
-                    onSelectionChange={({ detail }) =>
-                        setSelectedProvider(detail.selectedItems[0])
-                    }
-                    empty={
-                        <Box textAlign="center" color="inherit">
-                            <b>No providers found</b>
-                            <Box padding={{ bottom: 's' }}>
-                                Try adjusting the ZIP code filter
-                            </Box>
-                        </Box>
-                    }
-                />
-            </SpaceBetween>
-        </Container>
-    );
 
     const helpPanelContent = (
         <div className={styles.helpPanelContent}>
@@ -200,12 +101,11 @@ export default function AgentDesktop() {
                     Virtual Assistant
                 </Header>
                 <Container>
-                    <div className={styles.chatPlaceholder}>
-                        <Box color="text-status-inactive" textAlign="center">
-                            <b>AI Assistant Coming Soon</b>
-                            <p>This space will be used for an AI-powered chat assistant to help with patient care.</p>
-                        </Box>
-                    </div>
+                    <iframe
+                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8512/"
+                        className={styles.chatbotIframe}
+                        title="AI Assistant"
+                    />
                 </Container>
             </SpaceBetween>
         </div>
@@ -236,7 +136,7 @@ export default function AgentDesktop() {
                                     <iframe 
                                         ref={containerRef}
                                         className={styles.iframeContainer}
-                                        title="Amazon Connect CCP"
+                                        title="Call Center Softphone"
                                     />
                                 </div>
                             </Container>
@@ -252,26 +152,29 @@ export default function AgentDesktop() {
                                             {
                                                 id: "patient-summary",
                                                 label: "Patient Summary",
-                                                content: <ProviderLocatorContent />
+                                                content: (
+                                                    <iframe
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8511/"
+                                                        className={styles.summaryIframe}
+                                                        title="Patient Summary"
+                                                    />
+                                                )
                                             },
                                             {
                                                 id: "medical-history",
                                                 label: "Medical History",
                                                 content: (
-                                                    <div className={styles.tabContent}>
-                                                        <AllergyIntoleranceSection />
-                                                        <ClaimSection />
-                                                        <MedicationRequestSection />
-                                                        <ImmunizationSection />
-                                                        <FamilyMemberHistorySection />
-                                                        <ConditionsSection />
-                                                    </div>
+                                                    <iframe
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8513/"
+                                                        className={styles.fhirIframe}
+                                                        title="Medical History"
+                                                    />
                                                 )
                                             },
                                             {
                                                 id: "provider-locator",
                                                 label: "Provider Locator",
-                                                content: <ProviderLocatorContent />
+                                                content: <ProviderLocator />
                                             },
                                             {
                                                 id: "scheduling",
@@ -280,16 +183,13 @@ export default function AgentDesktop() {
                                             },
                                             {
                                                 id: "settings",
-                                                label: "settings",
+                                                label: "Settings",
                                                 content: (
-                                                    <div className={styles.tabContent}>
-                                                        <Container>
-                                                            <Box color="text-status-inactive" textAlign="center">
-                                                                <b>Patient Insights Coming Soon</b>
-                                                                <p>This tab will display AI-generated insights about the patient's medical history.</p>
-                                                            </Box>
-                                                        </Container>
-                                                    </div>
+                                                    <iframe
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8510/"
+                                                        className={styles.settingsIframe}
+                                                        title="Settings"
+                                                    />
                                                 )
                                             }
                                         ]}

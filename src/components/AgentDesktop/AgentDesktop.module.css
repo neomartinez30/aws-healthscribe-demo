@@ -25,20 +25,20 @@
     gap: 20px;
 }
 
-.chatPlaceholder {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-background-container-content);
+.chatbotIframe {
+    width: 100%;
+    height: 600px;
+    border: none;
     border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    min-height: 200px;
 }
 
-.tabContent {
-    padding: 20px 0;
+.summaryIframe,
+.fhirIframe,
+.settingsIframe {
+    width: 100%;
+    height: 800px;
+    border: none;
+    border-radius: 8px;
 }
 
 .patientDetails {
@@ -68,24 +68,6 @@
     font-weight: 500;
 }
 
-.providerLocator {
-    margin-top: 20px;
-}
-
-.providerCard {
-    padding: 16px;
-    border-radius: 8px;
-    background: var(--color-background-container-content);
-    margin-bottom: 16px;
-    transition: all 0.2s ease;
-}
-
-.providerCard:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-container);
-}
-
-/* Add iframe container styles */
 .iframeContainer {
     width: 100%;
     height: 100%;
@@ -93,7 +75,6 @@
     border: none;
 }
 
-/* Add content spacing */
 .contentSpacing {
     margin-right: 20px;
 }
