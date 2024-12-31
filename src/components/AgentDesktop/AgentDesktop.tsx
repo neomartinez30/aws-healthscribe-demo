@@ -135,8 +135,10 @@ export default function AgentDesktop() {
                 </Header>
                 <Container>
                     <iframe
-                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/*/"
+                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8528/"
                         className={styles.chatbotIframe}
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                        allow="cross-origin-isolated"
                         title="AI Assistant"
                     />
                 </Container>
@@ -187,8 +189,10 @@ export default function AgentDesktop() {
                                                 label: "Patient Summary",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/*/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8527/"
                                                         className={styles.summaryIframe}
+                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                                        allow="cross-origin-isolated"
                                                         title="Patient Summary"
                                                     />
                                                 )
@@ -198,8 +202,10 @@ export default function AgentDesktop() {
                                                 label: "Medical History",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/*/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8529/"
                                                         className={styles.fhirIframe}
+                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                                        allow="cross-origin-isolated"
                                                         title="Medical History"
                                                     />
                                                 )
@@ -219,8 +225,10 @@ export default function AgentDesktop() {
                                                 label: "Settings",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/*/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8526/"
                                                         className={styles.settingsIframe}
+                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                                        allow="cross-origin-isolated"
                                                         title="Settings"
                                                     />
                                                 )
