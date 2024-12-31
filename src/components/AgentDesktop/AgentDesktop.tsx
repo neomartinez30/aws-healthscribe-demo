@@ -135,7 +135,7 @@ export default function AgentDesktop() {
                 </Header>
                 <Container>
                     <iframe
-                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8512/"
+                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8516/"
                         className={styles.chatbotIframe}
                         title="AI Assistant"
                     />
@@ -187,7 +187,7 @@ export default function AgentDesktop() {
                                                 label: "Patient Summary",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8511/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8515/"
                                                         className={styles.summaryIframe}
                                                         title="Patient Summary"
                                                     />
@@ -198,7 +198,7 @@ export default function AgentDesktop() {
                                                 label: "Medical History",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8513/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8517/"
                                                         className={styles.fhirIframe}
                                                         title="Medical History"
                                                     />
@@ -219,7 +219,7 @@ export default function AgentDesktop() {
                                                 label: "Settings",
                                                 content: (
                                                     <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8510/"
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8514/"
                                                         className={styles.settingsIframe}
                                                         title="Settings"
                                                     />
