@@ -17,6 +17,9 @@ import ExpandableSection from '@cloudscape-design/components/expandable-section'
 import AppLayout from '@cloudscape-design/components/app-layout';
 import HelpPanel from '@cloudscape-design/components/help-panel';
 import "amazon-connect-streams";
+import { DatabaseSettings } from './DatabaseSettings';
+import { MedicalHistory } from './MedicalHistory';
+import { ChatPanel } from './ChatPanel';
 
 import styles from './AgentDesktop.module.css';
 import {
@@ -129,18 +132,12 @@ export default function AgentDesktop() {
 
     const helpPanelContent = (
         <div className={styles.helpPanelContent}>
-            <SpaceBetween size="l">
+            <SpaceBetween size={'l'}>
                 <Header variant="h2">
                     Virtual Assistant
                 </Header>
                 <Container>
-                    <iframe
-                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8532/"
-                        className={styles.chatbotIframe}
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                        allow="cross-origin-isolated"
-                        title="AI Assistant"
-                    />
+                    <ChatPanel />
                 </Container>
             </SpaceBetween>
         </div>
@@ -200,15 +197,7 @@ export default function AgentDesktop() {
                                             {
                                                 id: "medical-history",
                                                 label: "Medical History",
-                                                content: (
-                                                    <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8533/"
-                                                        className={styles.fhirIframe}
-                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                                                        allow="cross-origin-isolated"
-                                                        title="Medical History"
-                                                    />
-                                                )
+                                                content: <MedicalHistory />
                                             },
                                             {
                                                 id: "provider-locator",
@@ -223,15 +212,7 @@ export default function AgentDesktop() {
                                             {
                                                 id: "settings",
                                                 label: "Settings",
-                                                content: (
-                                                    <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8530/"
-                                                        className={styles.settingsIframe}
-                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                                                        allow="cross-origin-isolated"
-                                                        title="Settings"
-                                                    />
-                                                )
+                                                content: <DatabaseSettings />
                                             }
                                         ]}
                                     />
