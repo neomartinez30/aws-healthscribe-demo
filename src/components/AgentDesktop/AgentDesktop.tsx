@@ -58,7 +58,7 @@ const MOCK_PROVIDERS: Provider[] = [
 ];
 
 export default function AgentDesktop() {
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLIFrameElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
     const [toolsOpen, setToolsOpen] = useState(true);
     const [activeTabId, setActiveTabId] = useState("patient-summary");
