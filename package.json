@@ -25,6 +25,7 @@
         "ace-builds": "^1.36.3",
         "amazon-connect-streams": "^2.0.0",
         "aws-amplify": "^6.6.7",
+        "axios": "^1.6.5",
         "crunker": "^2.4.0",
         "dayjs": "^1.11.13",
         "framer-motion": "^11.11.10",
