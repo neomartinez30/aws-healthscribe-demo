@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://qukigdtczjsdk.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8000/'
-
+const API_BASE_URL = '54.85.192.249:8000';
 
 export interface DatabaseInfo {
   databases: string[];
