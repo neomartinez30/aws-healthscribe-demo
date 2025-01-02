@@ -74,7 +74,7 @@ export default function AgentDesktop() {
 
     useEffect(() => {
         if (containerRef.current) {
-            window.connect.core.initCCP(containerRef.current, {
+            connect.core.initCCP(containerRef.current, {
                 ccpUrl: instanceURL,
                 loginPopup: true,
                 loginPopupAutoClose: true,

@@ -82,14 +82,15 @@ export function DatabaseSettings() {
               placeholder="Select a database"
             />
 
-            <Multiselect
-              selectedOptions={selectedTables.map(table => ({ label: table, value: table }))}
-              onChange={({ detail }) => 
-                setSelectedTables(detail.selectedOptions.map(option => option.value))
-              }
-              options={tables.map(table => ({ label: table, value: table }))}
-              placeholder="Select tables"
-            />
+      <Multiselect
+        selectedOptions={selectedTables.map(table => ({ label: table, value: table }))}
+        onChange={({ detail }) =>
+          setSelectedTables(detail.selectedOptions.map(option => option.value).filter(Boolean))
+      }
+        options={tables.map(table => ({ label: table, value: table }))}
+        placeholder="Select tables"
+    />
+
 
             <Select
               selectedOption={null}
