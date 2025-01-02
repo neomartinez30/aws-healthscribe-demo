@@ -58,7 +58,7 @@ const MOCK_PROVIDERS: Provider[] = [
 ];
 
 export default function AgentDesktop() {
-    const containerRef = useRef<HTMLIFrameElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
     const [toolsOpen, setToolsOpen] = useState(true);
     const [activeTabId, setActiveTabId] = useState("patient-summary");
@@ -229,8 +229,8 @@ export default function AgentDesktop() {
                             <Form
                                 actions={
                                     <SpaceBetween direction="horizontal" size="xs">
-                                        <Button variant="link" onClick={() => setShowReferralModal(false)}>
-                                            Cancel
+                                        <Button variant="link" onClick={() => setShowReferralModal(true)}>
+                                            Open Referral Modal
                                         </Button>
                                         <Button variant="primary" onClick={handleReferralSubmit}>
                                             Submit
