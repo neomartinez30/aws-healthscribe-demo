@@ -18,7 +18,7 @@ import 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
 import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
-
+import { TransferType, AgentStateType } from 'amazon-connect-streams'; // Add these imports
 import styles from './AgentDesktop.module.css';
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
