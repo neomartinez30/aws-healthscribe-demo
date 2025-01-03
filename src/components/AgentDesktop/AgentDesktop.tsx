@@ -9,27 +9,17 @@ import Modal from '@cloudscape-design/components/modal';
 import FormField from '@cloudscape-design/components/form-field';
 import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import Cards from '@cloudscape-design/components/cards';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
 import Tabs from '@cloudscape-design/components/tabs';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import HelpPanel from '@cloudscape-design/components/help-panel';
-import "amazon-connect-streams";
+import { connect, TransferType, AgentStateType } from "amazon-connect-streams";
 import { DatabaseSettings } from './DatabaseSettings';
 import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
 
 import styles from './AgentDesktop.module.css';
-import {
-  AllergyIntoleranceSection,
-  ClaimSection,
-  MedicationRequestSection,
-  ImmunizationSection,
-  FamilyMemberHistorySection,
-  ConditionsSection
-} from "./ExpandableSections";
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
 
@@ -115,10 +105,10 @@ export default function AgentDesktop() {
                 region: process.env.CONNECT_REGION || "us-east-1"
             };
 
-            window.connect.core.initCCP(containerDiv, ccpParams);
+            connect.core.initCCP(containerDiv, ccpParams);
 
             // Subscribe to agent state changes
-            window.connect.agent((agent: any) => {
+            connect.agent((agent: any) => {
                 setAgent(agent);
                 agent.onStateChange((state: any) => {
                     setAgentState(state.name);
@@ -132,7 +122,7 @@ export default function AgentDesktop() {
             });
 
             // Subscribe to contact events
-            window.connect.contact((contact: any) => {
+            connect.contact((contact: any) => {
                 setContact(contact);
 
                 contact.onConnecting(() => {
@@ -218,7 +208,7 @@ export default function AgentDesktop() {
                     throw new Error('Queue ARN not configured');
                 }
 
-                contact.transfer(window.connect.TransferType.QUEUE, {
+                contact.transfer(TransferType.QUEUE, {
                     queueARN: queueArn,
                     success: () => {
                         console.log('Call transfer has been initiated');
@@ -238,7 +228,7 @@ export default function AgentDesktop() {
             try {
                 const stateToSet = {
                     name: newState,
-                    type: window.connect.AgentStateType.ROUTABLE
+                    type: AgentStateType.ROUTABLE
                 };
 
                 await agent.setState(stateToSet, {
@@ -463,9 +453,10 @@ export default function AgentDesktop() {
                                     <FormField label="Additional notes">
                                         <Textarea
                                             value={referralForm.details}
-                                            onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, details: event.target.value }))
-                                            }
+                                            onChange={(event) => {
+                                                const target = event.target as HTMLTextAreaElement;
+                                                setReferralForm(prev => ({ ...prev, details: target.value }));
+                                            }}
                                         />
                                     </FormField>
                                 </SpaceBetween>
