@@ -57,9 +57,25 @@ const MOCK_PROVIDERS: Provider[] = [
     { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004', availability: 'Next available: Monday 9am' },
 ];
 
+interface CustomerProfile {
+    name: string;
+    id: string;
+    phone: string;
+    queue: string;
+    verification: string;
+}
+
 export default function AgentDesktop() {
-    const containerRef = useRef<HTMLIFrameElement>(null);
-    const instanceURL = "https://neoathome2024.my.connect.aws/ccp-v2/softphone";
+    const [agentState, setAgentState] = useState('Offline');
+    const [contact, setContact] = useState<any>(null);
+    const [agent, setAgent] = useState<any>(null);
+    const [customerProfile, setCustomerProfile] = useState<CustomerProfile>({
+        name: "",
+        id: "",
+        phone: "",
+        queue: "",
+        verification: ""
+    });
     const [toolsOpen, setToolsOpen] = useState(true);
     const [activeTabId, setActiveTabId] = useState("patient-summary");
     const [showReferralModal, setShowReferralModal] = useState(false);
@@ -73,26 +89,171 @@ export default function AgentDesktop() {
     });
 
     useEffect(() => {
-        if (containerRef.current) {
-            connect.core.initCCP(containerRef.current, {
-                ccpUrl: instanceURL,
+        // Initialize CCP
+        const connectUrl = process.env.CONNECT_INSTANCE_URL || "https://neoathome2024.my.connect.aws";
+        const containerDiv = document.getElementById("ccp-container");
+
+        if (!containerDiv) {
+            console.error('CCP container element not found');
+            return;
+        }
+
+        try {
+            const ccpParams = {
+                ccpUrl: `${connectUrl}/ccp-v2/`,
                 loginPopup: true,
                 loginPopupAutoClose: true,
                 loginOptions: {
                     autoClose: true,
                     height: 600,
                     width: 400,
-                    top: 0,
-                    left: 0
                 },
-                region: 'us-east-1',
                 softphone: {
                     allowFramedSoftphone: true,
                     disableRingtone: false
+                },
+                region: process.env.CONNECT_REGION || "us-east-1"
+            };
+
+            window.connect.core.initCCP(containerDiv, ccpParams);
+
+            // Subscribe to agent state changes
+            window.connect.agent((agent: any) => {
+                setAgent(agent);
+                agent.onStateChange((state: any) => {
+                    setAgentState(state.name);
+                });
+
+                // Get initial agent state
+                const initialState = agent.getState();
+                if (initialState) {
+                    setAgentState(initialState.name);
                 }
             });
+
+            // Subscribe to contact events
+            window.connect.contact((contact: any) => {
+                setContact(contact);
+
+                contact.onConnecting(() => {
+                    console.log('Incoming contact connecting...');
+                });
+
+                contact.onConnected(() => {
+                    const attributes = contact.getAttributes();
+                    setCustomerProfile({
+                        name: attributes.name?.value || "Unknown",
+                        id: attributes.customerId?.value || "Unknown",
+                        phone: contact.getInitialConnection().getAddress() || "",
+                        queue: contact.getQueue()?.name || "",
+                        verification: attributes.verified?.value || "Pending"
+                    });
+                });
+
+                contact.onEnded(() => {
+                    setContact(null);
+                    setCustomerProfile({
+                        name: "",
+                        id: "",
+                        phone: "",
+                        queue: "",
+                        verification: ""
+                    });
+                });
+            });
+
+        } catch (error) {
+            console.error(`Failed to initialize CCP: ${error}`);
         }
     }, []);
+
+    const handleMute = () => {
+        if (contact) {
+            try {
+                const connection = contact.getInitialConnection();
+                connection.toggleMute();
+            } catch (error) {
+                console.error(`Failed to toggle mute: ${error}`);
+            }
+        }
+    };
+
+    const handleHold = () => {
+        if (contact) {
+            try {
+                if (contact.isOnHold()) {
+                    contact.resume();
+                } else {
+                    contact.hold();
+                }
+            } catch (error) {
+                console.error(`Failed to toggle hold: ${error}`);
+            }
+        }
+    };
+
+    const handleEndCall = () => {
+        if (contact) {
+            try {
+                contact.destroy({
+                    success: () => {
+                        console.log('Call has been terminated successfully');
+                    },
+                    failure: (err: any) => {
+                        console.error(`Failed to end call: ${err}`);
+                    }
+                });
+            } catch (error) {
+                console.error(`Failed to end call: ${error}`);
+            }
+        }
+    };
+
+    const handleTransfer = () => {
+        if (contact) {
+            try {
+                // Get the queue ARN from environment variable
+                const queueArn = process.env.CONNECT_QUEUE_ARN;
+                if (!queueArn) {
+                    throw new Error('Queue ARN not configured');
+                }
+
+                contact.transfer(window.connect.TransferType.QUEUE, {
+                    queueARN: queueArn,
+                    success: () => {
+                        console.log('Call transfer has been initiated');
+                    },
+                    failure: (err: any) => {
+                        console.error(`Failed to transfer call: ${err}`);
+                    }
+                });
+            } catch (error) {
+                console.error(`Failed to transfer call: ${error}`);
+            }
+        }
+    };
+
+    const handleStateChange = async (newState: string) => {
+        if (agent) {
+            try {
+                const stateToSet = {
+                    name: newState,
+                    type: window.connect.AgentStateType.ROUTABLE
+                };
+
+                await agent.setState(stateToSet, {
+                    success: () => {
+                        console.log(`Agent state changed to ${newState}`);
+                    },
+                    failure: (err: any) => {
+                        console.error(`Failed to change state: ${err}`);
+                    }
+                });
+            } catch (error) {
+                console.error(`Failed to change state: ${error}`);
+            }
+        }
+    };
 
     const handleReferralSubmit = () => {
         // Handle referral submission logic here
@@ -165,8 +326,7 @@ export default function AgentDesktop() {
                         >
                             <Container>
                                 <div className={styles.ccpContainer}>
-                                    <iframe 
-                                        ref={containerRef}
+                                    <iframe
                                         className={styles.iframeContainer}
                                         title="Call Center Softphone"
                                     />
@@ -229,8 +389,8 @@ export default function AgentDesktop() {
                             <Form
                                 actions={
                                     <SpaceBetween direction="horizontal" size="xs">
-                                        <Button variant="link" onClick={() => setShowReferralModal(true)}>
-                                            Open Referral Modal
+                                        <Button variant="link" onClick={() => setShowReferralModal(false)}>
+                                            Cancel
                                         </Button>
                                         <Button variant="primary" onClick={handleReferralSubmit}>
                                             Submit
@@ -304,7 +464,7 @@ export default function AgentDesktop() {
                                         <Textarea
                                             value={referralForm.details}
                                             onChange={(event) =>
-                                                setReferralForm(prev => ({ ...prev, details: event.detail.value }))
+                                                setReferralForm(prev => ({ ...prev, details: event.target.value }))
                                             }
                                         />
                                     </FormField>
