@@ -310,64 +310,53 @@ export default function AgentDesktop() {
                     <div className={styles.mainContent}>
                         <Grid
                             gridDefinition={[
-                                { colspan: 4 },
-                                { colspan: 8 }
+                                { colspan: 12 },
+                                { colspan: { default: 6 } },
+                                { colspan: { default: 6 } }
                             ]}
                         >
-                            <Container>
+                            <Grid
+                                gridDefinition={[
+                                    { colspan: 4 },
+                                    { colspan: 8 }
+                                ]}
+                            >
                                 <div className={styles.ccpContainer}>
-                                    <iframe
-                                        className={styles.iframeContainer}
-                                        title="Call Center Softphone"
-                                    />
+                                    <div id="ccp-container" style={{ width: '400px', height: '600px' }}></div>
                                 </div>
-                            </Container>
 
-                            <SpaceBetween size="l">
                                 <PatientDetails />
+                            </Grid>
 
-                                <Container>
-                                    <Tabs
-                                        activeTabId={activeTabId}
-                                        onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                                        tabs={[
-                                            {
-                                                id: "patient-summary",
-                                                label: "Patient Summary",
-                                                content: (
-                                                    <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8531/"
-                                                        className={styles.summaryIframe}
-                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                                                        allow="cross-origin-isolated"
-                                                        title="Patient Summary"
-                                                    />
-                                                )
-                                            },
-                                            {
-                                                id: "medical-history",
-                                                label: "Medical History",
-                                                content: <MedicalHistory />
-                                            },
-                                            {
-                                                id: "provider-locator",
-                                                label: "Provider Locator",
-                                                content: <ProviderLocator />
-                                            },
-                                            {
-                                                id: "scheduling",
-                                                label: "Scheduling",
-                                                content: <SchedulingForm />
-                                            },
-                                            {
-                                                id: "settings",
-                                                label: "Settings",
-                                                content: <DatabaseSettings />
-                                            }
-                                        ]}
-                                    />
-                                </Container>
-                            </SpaceBetween>
+                            <Container>
+                                <Tabs
+                                    activeTabId={activeTabId}
+                                    onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                                    tabs={[
+
+                                        {
+                                            id: "medical-history",
+                                            label: "Medical History",
+                                            content: <MedicalHistory />
+                                        },
+                                        {
+                                            id: "provider-locator",
+                                            label: "Provider Locator",
+                                            content: <ProviderLocator />
+                                        },
+                                        {
+                                            id: "scheduling",
+                                            label: "Scheduling",
+                                            content: <SchedulingForm />
+                                        },
+                                        {
+                                            id: "settings",
+                                            label: "Settings",
+                                            content: <DatabaseSettings />
+                                        }
+                                    ]}
+                                />
+                            </Container>
                         </Grid>
 
                         <Modal
