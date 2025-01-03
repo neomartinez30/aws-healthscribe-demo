@@ -15,10 +15,10 @@ import Tabs from '@cloudscape-design/components/tabs';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import HelpPanel from '@cloudscape-design/components/help-panel';
 import 'amazon-connect-streams';
+import { TransferType, AgentStateType } from 'amazon-connect-streams'; // Add these imports
 import { DatabaseSettings } from './DatabaseSettings';
 import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
-import { TransferType, AgentStateType } from 'amazon-connect-streams'; // Add these imports
 import styles from './AgentDesktop.module.css';
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
@@ -307,65 +307,65 @@ export default function AgentDesktop() {
                         </Header>
                     }
                 >
-                    <Grid
-                        gridDefinition={[
-                            { colspan: 3 }, // CCP Container
-                            { colspan: 6 }, // Main Content
-                            { colspan: 3 }  // Help Panel
-                        ]}
-                    >
-                        {/* Left Column - CCP Container */}
-                        <Container>
-                            <div className={styles.ccpContainer}>
-                                <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
-                            </div>
-                        </Container>
+                    <div className={styles.mainContent}>
+                        <Grid
+                            gridDefinition={[
+                                { colspan: 4 },
+                                { colspan: 8 }
+                            ]}
+                        >
+                            <Container>
+                                <div className={styles.ccpContainer}>
+                                    <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
+                                </div>
+                            </Container>
 
-                        {/* Middle Column - Patient Details and Tabs */}
-                        <Container>
                             <SpaceBetween size="l">
                                 <PatientDetails />
-                                <Tabs
-                                    activeTabId={activeTabId}
-                                    onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                                    tabs={[
-                                        {
-                                            id: "medical-history",
-                                            label: "Medical History",
-                                            content: <MedicalHistory />
-                                        },
-                                        {
-                                            id: "provider-locator",
-                                            label: "Provider Locator",
-                                            content: <ProviderLocator />
-                                        },
-                                        {
-                                            id: "scheduling",
-                                            label: "Scheduling",
-                                            content: <SchedulingForm />
-                                        },
-                                        {
-                                            id: "settings",
-                                            label: "Settings",
-                                            content: <DatabaseSettings />
-                                        }
-                                    ]}
-                                />
-                            </SpaceBetween>
-                        </Container>
 
-                        {/* Right Column - Help Panel Content */}
-                        <Container>
-                            <div className={styles.helpPanelContent}>
-                                <SpaceBetween size="l">
-                                    <Header variant="h2">
-                                        Virtual Assistant
-                                    </Header>
-                                    <ChatPanel />
-                                </SpaceBetween>
-                            </div>
-                        </Container>
-                    </Grid>
+                                <Container>
+                                    <Tabs
+                                        activeTabId={activeTabId}
+                                        onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                                        tabs={[
+                                            {
+                                                id: "patient-summary",
+                                                label: "Patient Summary",
+                                                content: (
+                                                    <iframe
+                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8531/"
+                                                        className={styles.summaryIframe}
+                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                                        allow="cross-origin-isolated"
+                                                        title="Patient Summary"
+                                                    />
+                                                )
+                                            },
+                                            {
+                                                id: "medical-history",
+                                                label: "Medical History",
+                                                content: <MedicalHistory />
+                                            },
+                                            {
+                                                id: "provider-locator",
+                                                label: "Provider Locator",
+                                                content: <ProviderLocator />
+                                            },
+                                            {
+                                                id: "scheduling",
+                                                label: "Scheduling",
+                                                content: <SchedulingForm />
+                                            },
+                                            {
+                                                id: "settings",
+                                                label: "Settings",
+                                                content: <DatabaseSettings />
+                                            }
+                                        ]}
+                                    />
+                                </Container>
+                            </SpaceBetween>
+                        </Grid>
 
                         <Modal
                             visible={showReferralModal}
