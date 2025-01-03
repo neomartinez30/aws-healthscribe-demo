@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://54.85.192.249:8000';
+const API_BASE_URL = 'http://54.85.192.249:8000/api/v1';
 
 export interface DatabaseInfo {
   databases: string[];
