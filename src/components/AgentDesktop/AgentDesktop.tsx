@@ -307,33 +307,28 @@ export default function AgentDesktop() {
                         </Header>
                     }
                 >
-                    <div className={styles.mainContent}>
-                        <Grid
-                            gridDefinition={[
-                                { colspan: 12 },
-                                { colspan: { default: 6 } },
-                                { colspan: { default: 6 } }
-                            ]}
-                        >
-                            <Grid
-                                gridDefinition={[
-                                    { colspan: 4 },
-                                    { colspan: 8 }
-                                ]}
-                            >
-                                <div className={styles.ccpContainer}>
-                                    <div id="ccp-container" style={{ width: '400px', height: '600px' }}></div>
-                                </div>
+                    <Grid
+                        gridDefinition={[
+                            { colspan: 3 }, // CCP Container
+                            { colspan: 6 }, // Main Content
+                            { colspan: 3 }  // Help Panel
+                        ]}
+                    >
+                        {/* Left Column - CCP Container */}
+                        <Container>
+                            <div className={styles.ccpContainer}>
+                                <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
+                            </div>
+                        </Container>
 
+                        {/* Middle Column - Patient Details and Tabs */}
+                        <Container>
+                            <SpaceBetween size="l">
                                 <PatientDetails />
-                            </Grid>
-
-                            <Container>
                                 <Tabs
                                     activeTabId={activeTabId}
                                     onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
                                     tabs={[
-
                                         {
                                             id: "medical-history",
                                             label: "Medical History",
@@ -356,8 +351,21 @@ export default function AgentDesktop() {
                                         }
                                     ]}
                                 />
-                            </Container>
-                        </Grid>
+                            </SpaceBetween>
+                        </Container>
+
+                        {/* Right Column - Help Panel Content */}
+                        <Container>
+                            <div className={styles.helpPanelContent}>
+                                <SpaceBetween size="l">
+                                    <Header variant="h2">
+                                        Virtual Assistant
+                                    </Header>
+                                    <ChatPanel />
+                                </SpaceBetween>
+                            </div>
+                        </Container>
+                    </Grid>
 
                         <Modal
                             visible={showReferralModal}
