@@ -14,7 +14,7 @@ import Select from '@cloudscape-design/components/select';
 import Tabs from '@cloudscape-design/components/tabs';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import HelpPanel from '@cloudscape-design/components/help-panel';
-import { connect, TransferType, AgentStateType } from "amazon-connect-streams";
+import { connect, TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
 import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
