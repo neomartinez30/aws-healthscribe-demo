@@ -11,6 +11,7 @@ import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
+import AppLayout from '@cloudscape-design/components/app-layout';
 import 'amazon-connect-streams';
 import { TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
@@ -298,57 +299,68 @@ const AgentDesktop: React.FC = () => {
         </div>
     );
 
+    const mainContent = (
+        <div className={styles.mainContent}>
+            <Grid
+                gridDefinition={[
+                    { colspan: 4 },
+                    { colspan: 8 }
+                ]}
+            >
+                <div className={styles.ccpContainer}>
+                    <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
+                </div>
+                <SpaceBetween size="l">
+                    <PatientDetails />
+                    <Container>
+                        <Tabs
+                            activeTabId={activeTabId}
+                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                            tabs={[
+                                {
+                                    id: "medical-summary",
+                                    label: "Medical Summary",
+                                    content: <MedicalSummary />,
+                                },
+                                {
+                                    id: "fhir-section-summary",
+                                    label: "FHIR Section Summary",
+                                    content: <FHIRSectionSummary />,
+                                }
+                                {
+                                    id: "provider-locator",
+                                    label: "Provider Locator",
+                                    content: <ProviderLocator />
+                                },
+                                {
+                                    id: "scheduling",
+                                    label: "Scheduling",
+                                    content: <SchedulingForm />
+                                },
+                                {
+                                    id: "settings",
+                                    label: "Settings",
+                                    content: <DatabaseSettings />
+                                }
+                            ]}
+                        />
+                    </Container>
+                    <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
+                </SpaceBetween>
+            </Grid>
+        </div>
+    );
+
     return (
-        <React.Fragment>
-            <div className={styles.fullWidthLayout}>
-                <Grid
-                    gridDefinition={[
-                        { colspan: 4 },
-                        { colspan: 8 }
-                    ]}
-                >
-                    <div className={styles.ccpContainer}>
-                        <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
-                    </div>
-                    <SpaceBetween size="l">
-                        <PatientDetails />
-                        <Container>
-                            <Tabs
-                                activeTabId={activeTabId}
-                                onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                                tabs={[
-                                    {
-                                        id: "medical-summary",
-                                        label: "Medical Summary",
-                                        content: <MedicalSummary />,
-                                    },
-                                    {
-                                        id: "provider-locator",
-                                        label: "Provider Locator",
-                                        content: <ProviderLocator />
-                                    },
-                                    {
-                                        id: "scheduling",
-                                        label: "Scheduling",
-                                        content: <SchedulingForm />
-                                    },
-                                    {
-                                        id: "settings",
-                                        label: "Settings",
-                                        content: <DatabaseSettings />
-                                    },
-                                    {
-                                        id: "fhir-section-summary",
-                                        label: "FHIR Section Summary",
-                                        content: <FHIRSectionSummary />,
-                                    }
-                                ]}
-                            />
-                        </Container>
-                        <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
-                    </SpaceBetween>
-                </Grid>
-            </div>
+        <AppLayout
+            content={mainContent}
+            toolsOpen={toolsOpen}
+            tools={helpPanelContent}
+            onToolsChange={({ detail }) => setToolsOpen(detail.open)}
+            toolsWidth={350}
+            navigationHide={true}
+            contentType="default"
+        >
             <Modal
                 visible={showReferralModal}
                 onDismiss={() => setShowReferralModal(false)}
@@ -441,7 +453,7 @@ const AgentDesktop: React.FC = () => {
                     </SpaceBetween>
                 </Form>
             </Modal>
-        </React.Fragment>
+        </AppLayout>
     );
 };
 
