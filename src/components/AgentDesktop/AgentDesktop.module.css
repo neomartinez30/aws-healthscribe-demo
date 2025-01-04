@@ -83,3 +83,6 @@
 .contentSpacing {
     margin-right: 20px;
 }
+.boldLabel {
+    font-weight: bold;
+}

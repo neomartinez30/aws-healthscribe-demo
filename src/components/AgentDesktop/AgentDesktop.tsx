@@ -254,33 +254,32 @@ export default function AgentDesktop() {
         <Container className={styles.patientDetails}>
             <div className={styles.patientDetailsGrid}>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>Name</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Name</span>
                     <span className={styles.patientDetailsValue}>John Smith</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>DOB</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>DOB</span>
                     <span className={styles.patientDetailsValue}>03/15/1985</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>Insurance</span>
-                    <span className={styles.patientDetailsValue}>Blue Cross</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Branch</span>
+                    <span className={styles.patientDetailsValue}>USMC</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
                     <span className={styles.patientDetailsLabel}>Member ID</span>
                     <span className={styles.patientDetailsValue}>BC123456789</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>Last Visit</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Last Visit</span>
                     <span className={styles.patientDetailsValue}>01/10/2024</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>PCP</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>PCP</span>
                     <span className={styles.patientDetailsValue}>Dr. Johnson</span>
                 </div>
             </div>
         </Container>
     );
-
     const helpPanelContent = (
         <div className={styles.helpPanelContent}>
             <SpaceBetween size={'l'}>
