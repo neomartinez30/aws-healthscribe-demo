@@ -352,15 +352,16 @@ const AgentDesktop: React.FC = () => {
     );
 
     return (
-        <AppLayout
-            content={mainContent}
-            toolsOpen={toolsOpen}
-            tools={helpPanelContent}
-            onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-            toolsWidth={350}
-            navigationHide={true}
-            contentType="default"
-        >
+        <>
+            <AppLayout
+                content={mainContent}
+                toolsOpen={toolsOpen}
+                tools={helpPanelContent}
+                onToolsChange={({ detail }) => setToolsOpen(detail.open)}
+                toolsWidth={350}
+                navigationHide={true}
+                contentType="default"
+            />
             <Modal
                 visible={showReferralModal}
                 onDismiss={() => setShowReferralModal(false)}
@@ -451,9 +452,9 @@ const AgentDesktop: React.FC = () => {
                             />
                         </FormField>
                     </SpaceBetween>
-                </Form>
+                    </Form>
             </Modal>
-        </AppLayout>
+        </>
     );
 };
 
