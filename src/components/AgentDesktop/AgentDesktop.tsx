@@ -11,8 +11,6 @@ import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
-import AppLayout from '@cloudscape-design/components/app-layout';
-import HelpPanel from '@cloudscape-design/components/help-panel';
 import 'amazon-connect-streams';
 import { TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
@@ -302,73 +300,55 @@ const AgentDesktop: React.FC = () => {
 
     return (
         <React.Fragment>
-            <AppLayout
-                content={
-                    <ContentLayout
-                        header={
-                            <Header
-                                variant="h1"
-                                description="Advise Health Line"
-                            >
-                                Nurse Workspace
-                            </Header>
-                        }
-                    >
-                        <div className={`${styles.mainContent} ${styles.fullWidthLayout}`}>
-                            <Grid
-                                gridDefinition={[
-                                    { colspan: 4 },
-                                    { colspan: 8 }
+            <div className={styles.mainContent}>
+                <Grid
+                    gridDefinition={[
+                        { colspan: 4 },
+                        { colspan: 8 }
+                    ]}
+                >
+                    <div className={styles.ccpContainer}>
+                        <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
+                    </div>
+                    <SpaceBetween size="l">
+                        <PatientDetails />
+                        <Container>
+                            <Tabs
+                                activeTabId={activeTabId}
+                                onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                                tabs={[
+                                    {
+                                        id: "medical-summary",
+                                        label: "Medical Summary",
+                                        content: <MedicalSummary />,
+                                    },
+                                    {
+                                        id: "provider-locator",
+                                        label: "Provider Locator",
+                                        content: <ProviderLocator />
+                                    },
+                                    {
+                                        id: "scheduling",
+                                        label: "Scheduling",
+                                        content: <SchedulingForm />
+                                    },
+                                    {
+                                        id: "settings",
+                                        label: "Settings",
+                                        content: <DatabaseSettings />
+                                    },
+                                    {
+                                        id: "fhir-section-summary",
+                                        label: "FHIR Section Summary",
+                                        content: <FHIRSectionSummary />,
+                                    }
                                 ]}
-                            >
-                                <div className={styles.ccpContainer}>
-                                    <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
-                                </div>
-                                <SpaceBetween size="l">
-                                    <PatientDetails />
-                                    <Container>
-                                        <Tabs
-                                            activeTabId={activeTabId}
-                                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                                            tabs={[
-                                                {
-                                                    id: "medical-summary",
-                                                    label: "Medical Summary",
-                                                    content: <MedicalSummary />,
-                                                },
-                                                {
-                                                    id: "provider-locator",
-                                                    label: "Provider Locator",
-                                                    content: <ProviderLocator />
-                                                },
-                                                {
-                                                    id: "scheduling",
-                                                    label: "Scheduling",
-                                                    content: <SchedulingForm />
-                                                },
-                                                {
-                                                    id: "settings",
-                                                    label: "Settings",
-                                                    content: <DatabaseSettings />
-                                                },
-                                                {
-                                                    id: "fhir-section-summary",
-                                                    label: "FHIR Section Summary",
-                                                    content: <FHIRSectionSummary />,
-                                                }
-                                            ]}
-                                        />
-                                    </Container>
-                                    <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
-                                </SpaceBetween>
-                            </Grid>
-                        </div>
-                    </ContentLayout>
-                }
-                toolsOpen={toolsOpen}
-                tools={helpPanelContent}
-                onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-            />
+                            />
+                        </Container>
+                        <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
+                    </SpaceBetween>
+                </Grid>
+            </div>
             <Modal
                 visible={showReferralModal}
                 onDismiss={() => setShowReferralModal(false)}
