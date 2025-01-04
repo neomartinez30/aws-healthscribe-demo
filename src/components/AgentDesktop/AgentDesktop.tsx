@@ -306,7 +306,6 @@ const AgentDesktop: React.FC = () => {
         <AppLayout
             content={
                 <ContentLayout
-                    disableContentPaddings={true}
                     header={
                         <Header
                             variant="h1"
@@ -322,8 +321,7 @@ const AgentDesktop: React.FC = () => {
                                 { colspan: 4 },
                                 { colspan: 8 }
                             ]}
-                        >
-                            <Container disablePaddings={true}>
+                        
                                 <div className={styles.ccpContainer}>
                                     <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
                                 </div>
