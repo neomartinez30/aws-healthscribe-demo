@@ -1,15 +1,11 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Container from '@cloudscape-design/components/container';
 import Grid from '@cloudscape-design/components/grid';
 import RadioGroup from '@cloudscape-design/components/radio-group';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-
 import { useAuthContext } from '@/store/auth';
 
 interface WelcomeHeaderProps {
@@ -19,29 +15,34 @@ interface WelcomeHeaderProps {
 export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
     const navigate = useNavigate();
     const { isUserAuthenticated } = useAuthContext();
-    const [getStartedSelection, setGetStartedSelection] = useState<string>('conversations');
+    const [selectedOption, setSelectedOption] = useState('conversations');
 
-    const getStartedSelectionText = useMemo(() => {
-        if (getStartedSelection === 'conversations') {
-            return 'View Conversations';
-        } else if (getStartedSelection === 'newConversation') {
-            return 'View Insights';
-        } else if (getStartedSelection === 'generateAudio') {
-            return 'Find a Provider';
-        } else {
-            return 'Go';
-        }
-    }, [getStartedSelection]);
+    const buttonText = useMemo(() => {
+        const options = {
+            conversations: 'View Conversations',
+            PatientInsights: 'View Insights',
+            AgentDesktop: 'Open Agent Desktop'
+        };
+        return options[selectedOption as keyof typeof options] || 'Go';
+    }, [selectedOption]);
 
-    function handleGetStartedClick() {
-        if (getStartedSelection === 'conversations') {
-            navigate('/conversations');
-        } else if (getStartedSelection === 'newConversation') {
-            navigate('/new');
-        } else if (getStartedSelection === 'generateAudio') {
-            navigate('/generate');
+    const navigationOptions = [
+        {
+            value: 'conversations',
+            label: 'Conversations',
+            description: 'View available conversations'
+        },
+        {
+            value: 'PatientInsights',
+            label: 'Patient Insights',
+            description: 'Interact with patient medical history'
+        },
+        {
+            value: 'AgentDesktop',
+            label: 'Agent Desktop',
+            description: 'Open virtual nurse workspace'
         }
-    }
+    ];
 
     return (
         <Box padding={{ top: 'xs', bottom: 'l' }}>
@@ -66,44 +67,30 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                     <Box fontSize="display-l" fontWeight="bold">
                         Virtual Nurse Experience
                     </Box>
-                    <Box fontSize="display-l">DHA Nurse Advise Health Line</Box>
+                    <Box fontSize="heading-xl">DHA Nurse Advise Health Line</Box>
                 </SpaceBetween>
 
-                <div>
-                    {isUserAuthenticated && (
-                        <Container>
-                            <SpaceBetween size="l">
-                                <Box variant="h1" fontWeight="heavy" padding="n" fontSize="heading-m">
-                                    Get started
-                                </Box>
-                                <RadioGroup
-                                    onChange={({ detail }) => setGetStartedSelection(detail.value)}
-                                    value={getStartedSelection}
-                                    items={[
-                                        {
-                                            value: 'conversations',
-                                            label: 'Conversations',
-                                            description: 'View available conversations',
-                                        },
-                                        {
-                                            value: 'PatientInsights',
-                                            label: 'Patient Insights',
-                                            description: 'Interact with patient medical history',
-                                        },
-                                        {
-                                            value: 'generateAudio',
-                                            label: 'Provider Locator',
-                                            description: 'Find and triage to a provider',
-                                        },
-                                    ]}
-                                />
-                                <Button variant="primary" onClick={handleGetStartedClick}>
-                                    {getStartedSelectionText}
-                                </Button>
-                            </SpaceBetween>
-                        </Container>
-                    )}
-                </div>
+                {isUserAuthenticated && (
+                    <Container>
+                        <SpaceBetween size="l">
+                            <Box variant="h1" fontWeight="heavy" padding="n" fontSize="heading-m">
+                                Get started
+                            </Box>
+                            <RadioGroup
+                                onChange={({ detail }) => setSelectedOption(detail.value)}
+                                value={selectedOption}
+                                items={navigationOptions}
+                            />
+                            <Button 
+                                variant="primary" 
+                                onClick={() => navigate(`/${selectedOption}`)}
+                                iconName="arrow-right"
+                            >
+                                {buttonText}
+                            </Button>
+                        </SpaceBetween>
+                    </Container>
+                )}
             </Grid>
         </Box>
     );

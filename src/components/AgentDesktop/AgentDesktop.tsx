@@ -329,19 +329,6 @@ export default function AgentDesktop() {
                                         onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
                                         tabs={[
                                             {
-                                                id: "patient-summary",
-                                                label: "Patient Summary",
-                                                content: (
-                                                    <iframe
-                                                        src="https://qb0qspckljwjq6q.studio.us-east-1.sagemaker.aws/jupyterlab/default/proxy/8531/"
-                                                        className={styles.summaryIframe}
-                                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                                                        allow="cross-origin-isolated"
-                                                        title="Patient Summary"
-                                                    />
-                                                )
-                                            },
-                                            {
                                                 id: "medical-history",
                                                 label: "Medical History",
                                                 content: <MedicalHistory />
