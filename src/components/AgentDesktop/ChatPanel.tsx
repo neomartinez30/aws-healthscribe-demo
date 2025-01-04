@@ -3,33 +3,84 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Input from '@cloudscape-design/components/input';
 import Button from '@cloudscape-design/components/button';
 import Box from '@cloudscape-design/components/box';
+import Icon from '@cloudscape-design/components/icon';
 import { api } from '@/utils/api';
+
+interface Message {
+  isUser: boolean;
+  text: string;
+}
 
 export function ChatPanel() {
   const [question, setQuestion] = useState('');
-  const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      isUser: true,
+      text: "is this patient at risk of anything?"
+    },
+    {
+      isUser: false,
+      text: "Based on the medical record provided, this patient appears to be at risk for the following:\n\nAllergic reactions - The patient has multiple confirmed allergies to substances like peanuts, animal dander, mold, grass pollen, fish, bee venom, ibuprofen, house dust mites, and tree pollen. Some of these allergies have moderate to severe manifestations like angioedema, dyspnea, and skin eruptions.\n\nObesity-related health issues - The record indicates the patient has a body mass index over 30, which is classified as obesity. Obesity increases the risk of conditions like diabetes, heart disease, stroke, and certain cancers.\n\nSocial isolation and intimate partner abuse - The patient's conditions include social isolation, limited social contact, and being a victim of intimate partner abuse. These can negatively impact mental health and overall well-being.\n\nUnhealthy alcohol use - The record notes the patient has an \"unhealthy alcohol drinking behavior,\" which can lead to various health problems if not addressed.\n\nWhile the record does not explicitly state all potential risks, the information provided suggests the patient may benefit from close monitoring and management of their allergies, weight, social support, and alcohol use to mitigate associated health risks."
+    }
+  ]);
 
   const handleSubmit = async () => {
     if (!question.trim()) return;
     
     setLoading(true);
     try {
+      setMessages(prev => [...prev, { isUser: true, text: question }]);
       const result = await api.chatWithSummary({
         question,
         context: '', // This should be populated with the current patient's summary
       });
-      setResponse(result.response);
+      setMessages(prev => [...prev, { isUser: false, text: result.response }]);
     } catch (error) {
       console.error('Error chatting with summary:', error);
     } finally {
       setLoading(false);
+      setQuestion('');
     }
   };
 
   return (
     <SpaceBetween size="l">
-      <Box>
+      <Box style={{ 
+        maxHeight: 'calc(100vh - 300px)', 
+        overflowY: 'auto',
+        padding: '10px'
+      }}>
+        {messages.map((message, index) => (
+          <Box
+            key={index}
+            margin={{ bottom: 's' }}
+            padding="s"
+            style={{
+              backgroundColor: message.isUser ? '#f2f3f3' : '#ffffff',
+              borderRadius: '8px',
+              maxWidth: '90%',
+              marginLeft: message.isUser ? 'auto' : '0',
+              marginRight: message.isUser ? '0' : 'auto',
+            }}
+          >
+            <Box margin={{ bottom: 'xxxs' }}>
+              <Icon name={message.isUser ? "user-profile" : "status-info"} />
+              <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>
+                {message.isUser ? 'You' : 'Assistant'}
+              </span>
+            </Box>
+            <Box style={{ whiteSpace: 'pre-wrap' }}>{message.text}</Box>
+          </Box>
+        ))}
+      </Box>
+      
+      <Box style={{ 
+        position: 'sticky', 
+        bottom: 0, 
+        backgroundColor: 'white',
+        padding: '10px 0'
+      }}>
         <SpaceBetween size="s">
           <Input
             value={question}
@@ -45,13 +96,6 @@ export function ChatPanel() {
           </Button>
         </SpaceBetween>
       </Box>
-      
-      {response && (
-        <Box>
-          <h4>Response:</h4>
-          <p>{response}</p>
-        </Box>
-      )}
     </SpaceBetween>
   );
 }
