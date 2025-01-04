@@ -11,17 +11,20 @@ import Form from '@cloudscape-design/components/form';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Textarea from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
-import Tabs from '@cloudscape-design/components/tabs';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import HelpPanel from '@cloudscape-design/components/help-panel';
 import 'amazon-connect-streams';
-import { TransferType, AgentStateType } from 'amazon-connect-streams'; // Add these imports
+import { TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
 import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
+import Tabs, { TabsProps } from "@cloudscape-design/components/tabs";
+import FHIRSectionSummary from "./FHIRSectionSummary";
+import MedicalSummary from "./MedicalSummary";
+
 
 interface Provider {
     id: string;
@@ -39,6 +42,11 @@ interface ReferralForm {
     referTo: string;
     details: string;
 }
+interface MyComponentProps {
+    activeTabId: string;
+    setActiveTabId: (id: string) => void;
+}
+
 
 const MOCK_PROVIDERS: Provider[] = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
@@ -255,7 +263,7 @@ export default function AgentDesktop() {
             <div className={styles.patientDetailsGrid}>
                 <div className={styles.patientDetailsItem}>
                     <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Name</span>
-                    <span className={styles.patientDetailsValue}>John Smith</span>
+                    <span className={styles.patientDetailsValue}>Eva Montalvo</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
                     <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>DOB</span>
@@ -266,7 +274,7 @@ export default function AgentDesktop() {
                     <span className={styles.patientDetailsValue}>USMC</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                    <span className={styles.patientDetailsLabel}>Member ID</span>
+                <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Member ID</span>
                     <span className={styles.patientDetailsValue}>BC123456789</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
@@ -297,6 +305,7 @@ export default function AgentDesktop() {
         <AppLayout
             content={
                 <ContentLayout
+                    disableContentPaddings={true}
                     header={
                         <Header
                             variant="h1"
@@ -306,14 +315,14 @@ export default function AgentDesktop() {
                         </Header>
                     }
                 >
-                    <div className={styles.mainContent}>
+                    <div className={`${styles.mainContent} ${styles.fullWidthLayout}`}>
                         <Grid
                             gridDefinition={[
                                 { colspan: 4 },
                                 { colspan: 8 }
                             ]}
                         >
-                            <Container>
+                            <Container disablePaddings={true}>
                                 <div className={styles.ccpContainer}>
                                     <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
                                 </div>
@@ -328,9 +337,9 @@ export default function AgentDesktop() {
                                         onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
                                         tabs={[
                                             {
-                                                id: "medical-history",
-                                                label: "Medical History",
-                                                content: <MedicalHistory />
+                                                id: "medical-summary",
+                                                label: "Medical Summary",
+                                                content: <MedicalSummary />,
                                             },
                                             {
                                                 id: "provider-locator",
@@ -346,6 +355,11 @@ export default function AgentDesktop() {
                                                 id: "settings",
                                                 label: "Settings",
                                                 content: <DatabaseSettings />
+                                            },
+                                            {
+                                                id: "fhir-section-summary",
+                                                label: "FHIR Section Summary",
+                                                content: <FHIRSectionSummary />,
                                             }
                                         ]}
                                     />
