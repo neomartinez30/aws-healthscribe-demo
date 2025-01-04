@@ -1,11 +1,16 @@
 .ccpContainer {
-    width: 400px;
-    min-height: 600px;
+    display: grid;
+    grid-template-rows: auto;
+    width: 100%; /* Adjusts width to the parent container */
+    min-height: 600px; /* Keeps a minimum height */
     border: 1px solid var(--color-border-container-default);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 20px;
+    max-width: 100vw; /* Ensures it doesn't exceed the viewport width */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
 }
+
 
 .mainContent {
     max-width: 100%;
