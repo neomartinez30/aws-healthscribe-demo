@@ -1,6 +1,7 @@
 // MedicalSummary.tsx
 import * as React from "react";
 
+
 const MedicalHistory: React.FC = () => (
     <div>
         <p>

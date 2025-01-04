@@ -1,3 +1,4 @@
+// AgentDesktop.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Header from '@cloudscape-design/components/header';
@@ -23,7 +24,6 @@ import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
 import Tabs, { TabsProps } from "@cloudscape-design/components/tabs";
 import FHIRSectionSummary from "./FHIRSectionSummary";
-import MedicalSummary from "./MedicalSummary";
 
 
 interface Provider {
@@ -42,11 +42,11 @@ interface ReferralForm {
     referTo: string;
     details: string;
 }
+
 interface MyComponentProps {
     activeTabId: string;
     setActiveTabId: (id: string) => void;
 }
-
 
 const MOCK_PROVIDERS: Provider[] = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
@@ -63,8 +63,8 @@ interface CustomerProfile {
     verification: string;
 }
 
-export default function AgentDesktop() {
-    const [agentState, setAgentState] = useState('Offline');
+const AgentDesktop: React.FC = () => {
+    const [agentState, setAgentState] = useState<string>('Offline');
     const [contact, setContact] = useState<any>(null);
     const [agent, setAgent] = useState<any>(null);
     const [customerProfile, setCustomerProfile] = useState<CustomerProfile>({
@@ -74,9 +74,9 @@ export default function AgentDesktop() {
         queue: "",
         verification: ""
     });
-    const [toolsOpen, setToolsOpen] = useState(true);
-    const [activeTabId, setActiveTabId] = useState("patient-summary");
-    const [showReferralModal, setShowReferralModal] = useState(false);
+    const [toolsOpen, setToolsOpen] = useState<boolean>(true);
+    const [activeTabId, setActiveTabId] = useState<string>("patient-summary");
+    const [showReferralModal, setShowReferralModal] = useState<boolean>(false);
     const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
     const [referralForm, setReferralForm] = useState<ReferralForm>({
         patientName: '',
@@ -258,7 +258,7 @@ export default function AgentDesktop() {
         setShowReferralModal(false);
     };
 
-    const PatientDetails = () => (
+    const PatientDetails: React.FC = () => (
         <Container className={styles.patientDetails}>
             <div className={styles.patientDetailsGrid}>
                 <div className={styles.patientDetailsItem}>
@@ -274,7 +274,7 @@ export default function AgentDesktop() {
                     <span className={styles.patientDetailsValue}>USMC</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
-                <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Member ID</span>
+                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Member ID</span>
                     <span className={styles.patientDetailsValue}>BC123456789</span>
                 </div>
                 <div className={styles.patientDetailsItem}>
@@ -288,6 +288,7 @@ export default function AgentDesktop() {
             </div>
         </Container>
     );
+
     const helpPanelContent = (
         <div className={styles.helpPanelContent}>
             <SpaceBetween size={'l'}>
@@ -364,6 +365,7 @@ export default function AgentDesktop() {
                                         ]}
                                     />
                                 </Container>
+                                <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
                             </SpaceBetween>
                         </Grid>
 
@@ -467,4 +469,7 @@ export default function AgentDesktop() {
             onToolsChange={({ detail }) => setToolsOpen(detail.open)}
         />
     );
-}
+};
+
+export default AgentDesktop;
+
