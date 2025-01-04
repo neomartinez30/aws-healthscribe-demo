@@ -301,165 +301,167 @@ const AgentDesktop: React.FC = () => {
     );
 
     return (
-        <AppLayout
-            content={
-                <ContentLayout
-                    header={
-                        <Header
-                            variant="h1"
-                            description="Advise Health Line"
-                        >
-                            Nurse Workspace
-                        </Header>
+        <React.Fragment>
+            <AppLayout
+                content={
+                    <ContentLayout
+                        header={
+                            <Header
+                                variant="h1"
+                                description="Advise Health Line"
+                            >
+                                Nurse Workspace
+                            </Header>
+                        }
+                    >
+                        <div className={`${styles.mainContent} ${styles.fullWidthLayout}`}>
+                            <Grid
+                                gridDefinition={[
+                                    { colspan: 4 },
+                                    { colspan: 8 }
+                                ]}
+                            >
+                                <div className={styles.ccpContainer}>
+                                    <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
+                                </div>
+                                <SpaceBetween size="l">
+                                    <PatientDetails />
+                                    <Container>
+                                        <Tabs
+                                            activeTabId={activeTabId}
+                                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                                            tabs={[
+                                                {
+                                                    id: "medical-summary",
+                                                    label: "Medical Summary",
+                                                    content: <MedicalSummary />,
+                                                },
+                                                {
+                                                    id: "provider-locator",
+                                                    label: "Provider Locator",
+                                                    content: <ProviderLocator />
+                                                },
+                                                {
+                                                    id: "scheduling",
+                                                    label: "Scheduling",
+                                                    content: <SchedulingForm />
+                                                },
+                                                {
+                                                    id: "settings",
+                                                    label: "Settings",
+                                                    content: <DatabaseSettings />
+                                                },
+                                                {
+                                                    id: "fhir-section-summary",
+                                                    label: "FHIR Section Summary",
+                                                    content: <FHIRSectionSummary />,
+                                                }
+                                            ]}
+                                        />
+                                    </Container>
+                                    <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
+                                </SpaceBetween>
+                            </Grid>
+                        </div>
+                    </ContentLayout>
+                }
+                toolsOpen={toolsOpen}
+                tools={helpPanelContent}
+                onToolsChange={({ detail }) => setToolsOpen(detail.open)}
+            />
+            <Modal
+                visible={showReferralModal}
+                onDismiss={() => setShowReferralModal(false)}
+                header="Patient Referral"
+                size="medium"
+            >
+                <Form
+                    actions={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button variant="link" onClick={() => setShowReferralModal(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={handleReferralSubmit}>
+                                Submit
+                            </Button>
+                        </SpaceBetween>
                     }
                 >
-                    <div className={`${styles.mainContent} ${styles.fullWidthLayout}`}>
-                        <Grid
-                            gridDefinition={[
-                                { colspan: 4 },
-                                { colspan: 8 }
-                            ]}
-                        >
-                            <div className={styles.ccpContainer}>
-                                <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
-                            </div>
-                            <SpaceBetween size="l">
-                                <PatientDetails />
-                                <Container>
-                                    <Tabs
-                                        activeTabId={activeTabId}
-                                        onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                                        tabs={[
-                                            {
-                                                id: "medical-summary",
-                                                label: "Medical Summary",
-                                                content: <MedicalSummary />,
-                                            },
-                                            {
-                                                id: "provider-locator",
-                                                label: "Provider Locator",
-                                                content: <ProviderLocator />
-                                            },
-                                            {
-                                                id: "scheduling",
-                                                label: "Scheduling",
-                                                content: <SchedulingForm />
-                                            },
-                                            {
-                                                id: "settings",
-                                                label: "Settings",
-                                                content: <DatabaseSettings />
-                                            },
-                                            {
-                                                id: "fhir-section-summary",
-                                                label: "FHIR Section Summary",
-                                                content: <FHIRSectionSummary />,
-                                            }
-                                        ]}
-                                    />
-                                </Container>
-                                <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
-                            </SpaceBetween>
-                        </Grid>
-                    </div>
-                </ContentLayout>
-            }
-            toolsOpen={toolsOpen}
-            tools={helpPanelContent}
-            onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-        />
-        <Modal
-            visible={showReferralModal}
-            onDismiss={() => setShowReferralModal(false)}
-            header="Patient Referral"
-            size="medium"
-        >
-            <Form
-                actions={
-                    <SpaceBetween direction="horizontal" size="xs">
-                        <Button variant="link" onClick={() => setShowReferralModal(false)}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleReferralSubmit}>
-                            Submit
-                        </Button>
+                    <SpaceBetween size="l">
+                        <FormField label="Patient name">
+                            <input
+                                type="text"
+                                value={referralForm.patientName}
+                                onChange={(e) =>
+                                    setReferralForm(prev => ({ ...prev, patientName: e.target.value }))
+                                }
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    borderRadius: '4px',
+                                    border: '1px solid var(--color-border-input-default)'
+                                }}
+                            />
+                        </FormField>
+
+                        <FormField label="Reason for referral">
+                            <input
+                                type="text"
+                                value={referralForm.illness}
+                                onChange={(e) =>
+                                    setReferralForm(prev => ({ ...prev, illness: e.target.value }))
+                                }
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    borderRadius: '4px',
+                                    border: '1px solid var(--color-border-input-default)'
+                                }}
+                            />
+                        </FormField>
+
+                        <FormField label="Current medications">
+                            <input
+                                type="text"
+                                value={referralForm.medications}
+                                onChange={(e) =>
+                                    setReferralForm(prev => ({ ...prev, medications: e.target.value }))
+                                }
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    borderRadius: '4px',
+                                    border: '1px solid var(--color-border-input-default)'
+                                }}
+                            />
+                        </FormField>
+
+                        <FormField label="Refer to">
+                            <Select
+                                selectedOption={selectedProvider ? { label: selectedProvider.name, value: selectedProvider.id } : null}
+                                onChange={({ detail }) => {
+                                    const provider = MOCK_PROVIDERS.find(p => p.id === detail.selectedOption.value);
+                                    setSelectedProvider(provider || null);
+                                    setReferralForm(prev => ({ ...prev, referTo: provider?.name || '' }));
+                                }}
+                                options={MOCK_PROVIDERS.map(p => ({ label: p.name, value: p.id }))}
+                                placeholder="Select provider"
+                            />
+                        </FormField>
+
+                        <FormField label="Additional notes">
+                            <Textarea
+                                value={referralForm.details}
+                                onChange={(event) => {
+                                    const target = event.target as HTMLTextAreaElement;
+                                    setReferralForm(prev => ({ ...prev, details: target.value }));
+                                }}
+                            />
+                        </FormField>
                     </SpaceBetween>
-                }
-            >
-                <SpaceBetween size="l">
-                    <FormField label="Patient name">
-                        <input
-                            type="text"
-                            value={referralForm.patientName}
-                            onChange={(e) =>
-                                setReferralForm(prev => ({ ...prev, patientName: e.target.value }))
-                            }
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid var(--color-border-input-default)'
-                            }}
-                        />
-                    </FormField>
-
-                    <FormField label="Reason for referral">
-                        <input
-                            type="text"
-                            value={referralForm.illness}
-                            onChange={(e) =>
-                                setReferralForm(prev => ({ ...prev, illness: e.target.value }))
-                            }
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid var(--color-border-input-default)'
-                            }}
-                        />
-                    </FormField>
-
-                    <FormField label="Current medications">
-                        <input
-                            type="text"
-                            value={referralForm.medications}
-                            onChange={(e) =>
-                                setReferralForm(prev => ({ ...prev, medications: e.target.value }))
-                            }
-                            style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid var(--color-border-input-default)'
-                            }}
-                        />
-                    </FormField>
-
-                    <FormField label="Refer to">
-                        <Select
-                            selectedOption={selectedProvider ? { label: selectedProvider.name, value: selectedProvider.id } : null}
-                            onChange={({ detail }) => {
-                                const provider = MOCK_PROVIDERS.find(p => p.id === detail.selectedOption.value);
-                                setSelectedProvider(provider || null);
-                                setReferralForm(prev => ({ ...prev, referTo: provider?.name || '' }));
-                            }}
-                            options={MOCK_PROVIDERS.map(p => ({ label: p.name, value: p.id }))}
-                            placeholder="Select provider"
-                        />
-                    </FormField>
-
-                    <FormField label="Additional notes">
-                        <Textarea
-                            value={referralForm.details}
-                            onChange={(event) => {
-                                const target = event.target as HTMLTextAreaElement;
-                                setReferralForm(prev => ({ ...prev, details: target.value }));
-                            }}
-                        />
-                    </FormField>
-                </SpaceBetween>
-            </Form>
-        </Modal>
+                </Form>
+            </Modal>
+        </React.Fragment>
     );
 };
 
