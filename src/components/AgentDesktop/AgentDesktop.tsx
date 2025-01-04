@@ -326,7 +326,7 @@ const AgentDesktop: React.FC = () => {
                                     id: "fhir-section-summary",
                                     label: "FHIR Section Summary",
                                     content: <FHIRSectionSummary />,
-                                }
+                                },
                                 {
                                     id: "provider-locator",
                                     label: "Provider Locator",
