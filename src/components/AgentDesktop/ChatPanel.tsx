@@ -46,41 +46,36 @@ export function ChatPanel() {
 
   return (
     <SpaceBetween size="l">
-      <Box style={{ 
-        maxHeight: 'calc(100vh - 300px)', 
-        overflowY: 'auto',
-        padding: '10px'
-      }}>
+      <Box
+        padding="s"
+        maxHeight="calc(100vh - 300px)"
+        overflow="auto"
+      >
         {messages.map((message, index) => (
           <Box
             key={index}
             margin={{ bottom: 's' }}
             padding="s"
-            style={{
-              backgroundColor: message.isUser ? '#f2f3f3' : '#ffffff',
-              borderRadius: '8px',
-              maxWidth: '90%',
-              marginLeft: message.isUser ? 'auto' : '0',
-              marginRight: message.isUser ? '0' : 'auto',
-            }}
+            color={message.isUser ? 'text-body-secondary' : 'text-body-default'}
+            backgroundColor={message.isUser ? 'background-paper-default' : 'background-container-default'}
+            borderRadius="s"
+            textAlign={message.isUser ? 'right' : 'left'}
           >
             <Box margin={{ bottom: 'xxxs' }}>
               <Icon name={message.isUser ? "user-profile" : "status-info"} />
-              <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>
+              <Box margin={{ left: 'xs' }} display="inline" fontWeight="bold">
                 {message.isUser ? 'You' : 'Assistant'}
-              </span>
+              </Box>
             </Box>
-            <Box style={{ whiteSpace: 'pre-wrap' }}>{message.text}</Box>
+            <Box whiteSpace="pre-wrap">{message.text}</Box>
           </Box>
         ))}
       </Box>
       
-      <Box style={{ 
-        position: 'sticky', 
-        bottom: 0, 
-        backgroundColor: 'white',
-        padding: '10px 0'
-      }}>
+      <Box
+        padding={{ top: 's', bottom: 's' }}
+        backgroundColor="background-paper-default"
+      >
         <SpaceBetween size="s">
           <Input
             value={question}
