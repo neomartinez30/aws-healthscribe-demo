@@ -46,36 +46,32 @@ export function ChatPanel() {
 
   return (
     <SpaceBetween size="l">
-      <Box
-        padding="s"
-        maxHeight="calc(100vh - 300px)"
-        overflow="auto"
-      >
-        {messages.map((message, index) => (
-          <Box
-            key={index}
-            margin={{ bottom: 's' }}
-            padding="s"
-            color={message.isUser ? 'text-body-secondary' : 'text-body-default'}
-            backgroundColor={message.isUser ? 'background-paper-default' : 'background-container-default'}
-            borderRadius="s"
-            textAlign={message.isUser ? 'right' : 'left'}
-          >
-            <Box margin={{ bottom: 'xxxs' }}>
-              <Icon name={message.isUser ? "user-profile" : "status-info"} />
-              <Box margin={{ left: 'xs' }} display="inline" fontWeight="bold">
-                {message.isUser ? 'You' : 'Assistant'}
+      <Box padding="s">
+        <div style={{ maxHeight: 'calc(100vh - 300px)', overflow: 'auto' }}>
+          {messages.map((message, index) => (
+            <Box
+              key={index}
+              margin={{ bottom: 's' }}
+              padding="s"
+              color={message.isUser ? "text-body-secondary" : "text-status-info"}
+              variant={message.isUser ? "div" : "div"}
+              textAlign={message.isUser ? "right" : "left"}
+            >
+              <Box margin={{ bottom: 'xxxs' }}>
+                <Icon name={message.isUser ? "user-profile" : "status-info"} />
+                <Box margin={{ left: 'xs' }} display="inline" fontWeight="bold">
+                  {message.isUser ? 'You' : 'Assistant'}
+                </Box>
+              </Box>
+              <Box variant="p">
+                <span style={{ whiteSpace: 'pre-wrap' }}>{message.text}</span>
               </Box>
             </Box>
-            <Box whiteSpace="pre-wrap">{message.text}</Box>
-          </Box>
-        ))}
+          ))}
+        </div>
       </Box>
       
-      <Box
-        padding={{ top: 's', bottom: 's' }}
-        backgroundColor="background-paper-default"
-      >
+      <Box padding={{ top: 's', bottom: 's' }} variant="div">
         <SpaceBetween size="s">
           <Input
             value={question}
