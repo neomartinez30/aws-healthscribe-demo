@@ -1,8 +1,6 @@
-// MedicalSummary.tsx
 import * as React from "react";
 
-
-const MedicalHistory: React.FC = () => (
+const MedicalSummary: React.FC = () => (
     <div>
         <p>
             Here is a cohesive paragraph narrative summarizing the medical history of patient 1f528581-7613-2b96-dce3-68c7cf967ea1 based on the provided FHIR resource summaries:
@@ -13,4 +11,4 @@ const MedicalHistory: React.FC = () => (
     </div>
 );
 
-export default MedicalHistory;
+export default MedicalSummary;

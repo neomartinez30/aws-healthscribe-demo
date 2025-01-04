@@ -17,13 +17,13 @@ import HelpPanel from '@cloudscape-design/components/help-panel';
 import 'amazon-connect-streams';
 import { TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
-import { MedicalHistory } from './MedicalHistory';
 import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
 import Tabs, { TabsProps } from "@cloudscape-design/components/tabs";
 import FHIRSectionSummary from "./FHIRSectionSummary";
+import MedicalSummary from './MedicalSummary';
 
 
 interface Provider {
