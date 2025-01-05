@@ -300,7 +300,7 @@ const AgentDesktop: React.FC = () => {
     );
 
     const mainContent = (
-        <div className={styles.mainContent}>
+        <div className={styles.fullWidthLayout}>
             <Grid
                 gridDefinition={[
                     { colspan: 4 },

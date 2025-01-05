@@ -90,4 +90,5 @@
 .fullWidthLayout {
     margin: -20px;
     padding: 0;
+    max-width: 100%;
 }
