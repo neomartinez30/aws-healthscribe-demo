@@ -30,7 +30,7 @@ export function ConversationHeader({ jobDetails, setShowOutputModal }: Conversat
                     const transcriptText = data.Conversation.TranscriptSegments
                         .map((segment: any) => segment.Content.toLowerCase())
                         .join(' ');
-                    const highRiskKeywords = ['suicide', 'kill myself', 'end it all', 'don\'t want to live', 'self harm'];
+                    const highRiskKeywords = ['suicide', 'kill myself', 'end it all', 'don\'t want to live', 'self harm', 'harming myself'];
                     const hasHighRiskContent = highRiskKeywords.some(keyword => transcriptText.includes(keyword));
                     setShowHighRiskAlert(hasHighRiskContent);
                 })
