@@ -104,7 +104,7 @@ export default function SummarizedConcepts({
     const sbarSections = useMemo(() => {
         const sbarMap: Record<OriginalSectionName, SBARSection> = {
             'CHIEF_COMPLIANT': 'SITUATION',
-            'HISTORY_OF_PRESENT_ILLNESS': 'BACKGROUND',
+            'HISTORY_OF_PRESENT_ILLNESS': 'SITUATION',
             'PAST_MEDICAL_HISTORY': 'BACKGROUND',
             'PAST_FAMILY_HISTORY': 'BACKGROUND',
             'PAST_SOCIAL_HISTORY': 'BACKGROUND',
