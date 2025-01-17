@@ -7,7 +7,6 @@ import WaveSurfer from 'wavesurfer.js';
 
 import { ExtractedHealthData, SummarySectionEntityMapping } from '@/types/ComprehendMedical';
 import { IAuraClinicalDocOutputSection, ITranscriptSegments } from '@/types/HealthScribe';
-import toTitleCase from '@/utils/toTitleCase';
 
 import { HighlightId } from '../types';
 import { SummaryListDefault } from './SummaryList';
@@ -25,6 +24,21 @@ type SummarizedConceptsProps = {
     };
     wavesurfer: React.MutableRefObject<WaveSurfer | undefined>;
 };
+
+// Define valid section names type
+type OriginalSectionName = 
+    | 'CHIEF_COMPLIANT'
+    | 'HISTORY_OF_PRESENT_ILLNESS'
+    | 'PAST_MEDICAL_HISTORY'
+    | 'PAST_FAMILY_HISTORY'
+    | 'PAST_SOCIAL_HISTORY'
+    | 'PHYSICAL_EXAMINATION'
+    | 'DIAGNOSTIC_TESTING'
+    | 'ASSESSMENT'
+    | 'PLAN';
+
+// Define SBAR section type
+type SBARSection = 'SITUATION' | 'BACKGROUND' | 'ASSESSMENT' | 'RECOMMENDATION';
 
 export default function SummarizedConcepts({
     sections,
@@ -88,7 +102,7 @@ export default function SummarizedConcepts({
 
     // Transform sections into SBAR format
     const sbarSections = useMemo(() => {
-        const sbarMap = {
+        const sbarMap: Record<OriginalSectionName, SBARSection> = {
             'CHIEF_COMPLIANT': 'SITUATION',
             'HISTORY_OF_PRESENT_ILLNESS': 'BACKGROUND',
             'PAST_MEDICAL_HISTORY': 'BACKGROUND',
@@ -101,7 +115,9 @@ export default function SummarizedConcepts({
         };
 
         const sbarSections = SECTION_ORDER.map(sbarSection => {
-            const relevantSections = sections.filter(section => sbarMap[section.SectionName] === sbarSection);
+            const relevantSections = sections.filter(section => 
+                sbarMap[section.SectionName as OriginalSectionName] === sbarSection
+            );
             return {
                 SectionName: sbarSection,
                 Summary: relevantSections.flatMap(section => section.Summary)
