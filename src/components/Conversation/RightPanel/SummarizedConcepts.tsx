@@ -1,5 +1,3 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useEffect, useMemo, useState } from 'react';
 
 import TextContent from '@cloudscape-design/components/text-content';
@@ -40,7 +38,7 @@ export default function SummarizedConcepts({
     const [currentId, setCurrentId] = useState(0);
     const [currentSegment, setCurrentSegment] = useState<string>('');
 
-    // Unset current segment when the highlight is removed, i.e. the current audio time is outside the summarization
+    // Unset current segment when the highlight is removed
     useEffect(() => {
         if (!highlightId.selectedSegmentId) setCurrentSegment('');
     }, [highlightId]);
@@ -50,13 +48,6 @@ export default function SummarizedConcepts({
         [sections, extractedHealthData]
     );
 
-    /**
-     * Handles the click event on a summarized segment in the UI.
-     *
-     * @param SummarizedSegment - The text of the summarized segment that was clicked.
-     * @param EvidenceLinks - An array of objects containing the SegmentId for each evidence link associated with the summarized segment.
-     * @returns void
-     */
     function handleSegmentClick(SummarizedSegment: string, EvidenceLinks: { SegmentId: string }[]) {
         let currentIdLocal = currentId;
         if (currentSegment !== SummarizedSegment) {
@@ -65,7 +56,6 @@ export default function SummarizedConcepts({
             currentIdLocal = 0;
         }
         const id = EvidenceLinks[currentIdLocal].SegmentId;
-        // Set state back to Conversation, used to highlight the transcript in LeftPanel
         const newHighlightId = {
             allSegmentIds: EvidenceLinks.map((i) => i.SegmentId),
             selectedSegmentId: id,
@@ -96,21 +86,39 @@ export default function SummarizedConcepts({
         }
     }
 
-    const sortedSections = useMemo(() => {
-        return sections.sort(
-            (a, b) => SECTION_ORDER.indexOf(a.SectionName) - SECTION_ORDER.indexOf(b.SectionName) || 1
-        );
+    // Transform sections into SBAR format
+    const sbarSections = useMemo(() => {
+        const sbarMap = {
+            'CHIEF_COMPLIANT': 'SITUATION',
+            'HISTORY_OF_PRESENT_ILLNESS': 'BACKGROUND',
+            'PAST_MEDICAL_HISTORY': 'BACKGROUND',
+            'PAST_FAMILY_HISTORY': 'BACKGROUND',
+            'PAST_SOCIAL_HISTORY': 'BACKGROUND',
+            'PHYSICAL_EXAMINATION': 'ASSESSMENT',
+            'DIAGNOSTIC_TESTING': 'ASSESSMENT',
+            'ASSESSMENT': 'ASSESSMENT',
+            'PLAN': 'RECOMMENDATION'
+        };
+
+        const sbarSections = SECTION_ORDER.map(sbarSection => {
+            const relevantSections = sections.filter(section => sbarMap[section.SectionName] === sbarSection);
+            return {
+                SectionName: sbarSection,
+                Summary: relevantSections.flatMap(section => section.Summary)
+            };
+        });
+
+        return sbarSections;
     }, [sections]);
 
     return (
         <>
-            {sortedSections.map(({ SectionName, Summary }, i) => {
-                // Match this section name to the Comprehend Medical extracted data. Returns undefined if the section doesn't exist
+            {sbarSections.map(({ SectionName, Summary }, i) => {
                 const sectionExtractedHealthData = sectionsWithExtractedData.find((s) => s.SectionName === SectionName);
                 return (
                     <div key={`insightsSection_${i}`}>
                         <TextContent>
-                            <h3>{toTitleCase(SectionName.replace(/_/g, ' '))}</h3>
+                            <h3>{SectionName}</h3>
                         </TextContent>
                         <SummaryListDefault
                             sectionName={SectionName}

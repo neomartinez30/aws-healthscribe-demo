@@ -1,5 +1,3 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useMemo, useState } from 'react';
 
 import { DetectEntitiesV2Response } from '@aws-sdk/client-comprehendmedical';
@@ -88,11 +86,11 @@ export default function RightPanel({
     const clinicalDocumentNereUnits = useMemo(() => calculateNereUnits(clinicalDocument), [clinicalDocument]);
 
     if (jobLoading || clinicalDocument == null) {
-        return <LoadingContainer containerTitle="Insights" text="Loading Insights" />;
+        return <LoadingContainer containerTitle="Clinical Notes" text="Loading Clinical Notes" />;
     } else {
         return (
             <ScrollingContainer
-                containerTitle="Insights"
+                containerTitle="Clinical Notes"
                 containerActions={
                     <RightPanelActions
                         hasInsightSections={hasInsightSections}
