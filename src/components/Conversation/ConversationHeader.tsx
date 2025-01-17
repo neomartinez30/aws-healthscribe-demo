@@ -52,16 +52,17 @@ export function ConversationHeader({ jobDetails, setShowOutputModal }: Conversat
             window.open(presignedUrl, '_blank');
         }
     }
-
     return (
         <Box>
             {showHighRiskAlert && (
-                <Alert type="error" header={
-                    <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                        <span>⚠️ High Risk Call Alert ⚠️</span>
-                        <span>Patient is hinting towards self-harm. Immediate action required.</span>
-                    </div>
-                } />
+                <Box margin={{ top: 'l', bottom: 'l' }}>
+                    <Alert type="error" header={
+                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                            <span>⚠️ High Risk Call Alert ⚠️</span>
+                            <span>Patient is hinting towards self-harm. Immediate action required.</span>
+                        </div>
+                    } />
+                </Box>
             )}
             <Header
                 variant="awsui-h1-sticky"

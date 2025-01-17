@@ -134,7 +134,7 @@ export default function SummarizedConcepts({
                 return (
                     <div key={`insightsSection_${i}`}>
                         <TextContent>
-                            <h3>{SectionName}</h3>
+                            <h4>{SectionName}</h4>
                         </TextContent>
                         <SummaryListDefault
                             sectionName={SectionName}
