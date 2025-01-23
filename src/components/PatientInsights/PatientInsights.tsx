@@ -1,7 +1,10 @@
 // src/App.tsx
 import React, { useState, useEffect } from "react";
 import { Select, Button, Input, Spin, notification } from "antd";
-import { AthenaClient, StartQueryExecutionCommand } from "@aws-sdk/client-athena";
+import { AthenaClient, 
+    StartQueryExecutionCommand, 
+    GetQueryExecutionCommand, 
+    GetQueryResultsCommand } from "@aws-sdk/client-athena";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
 import { parse } from "papaparse";
@@ -49,14 +52,23 @@ const App: React.FC = () => {
       );
       const queryExecutionId = response.QueryExecutionId!;
       const result = await fetchAthenaResults(queryExecutionId);
-      const dbs = result.map((row) => row.Data[0]?.VarCharValue || "");
+  
+      const dbs = result
+        .map((row: { Data?: Array<{ VarCharValue?: string }> }) => row.Data?.[0]?.VarCharValue || "")
+        .filter((db) => db); // Exclude empty values
+  
       setDatabases(dbs);
     } catch (error) {
-      notification.error({ message: "Error fetching databases", description: error.message });
+      if (error instanceof Error) {
+        notification.error({ message: "Error fetching databases", description: error.message });
+      } else {
+        notification.error({ message: "Unknown error occurred" });
+      }
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const fetchAthenaResults = async (executionId: string) => {
     let state = "RUNNING";
@@ -81,9 +93,17 @@ const App: React.FC = () => {
     try {
       const response = await axios.post(`/get-tables`, { database: selectedDatabase });
       setTables(response.data);
-    } catch (error) {
-      notification.error({ message: "Error fetching tables", description: error.message });
-    } finally {
+    } 
+    catch (error) {
+        if (error instanceof Error) {
+          notification.error({ message: "Error fetching tables", description: error.message });
+        } else {
+          notification.error({ message: "Unknown error occurred" });
+        }
+      }
+      
+
+    finally {
       setIsLoading(false);
     }
   };
@@ -107,9 +127,14 @@ const App: React.FC = () => {
     try {
       const response = await axios.post(`/summarize`, params);
       setSummary(response.data);
-    } catch (error) {
-      notification.error({ message: "Error summarizing data", description: error.message });
-    } finally {
+    }  
+    catch (error) {
+        if (error instanceof Error) {
+          notification.error({ message: "Error summarizing data", description: error.message });
+        } else {
+          notification.error({ message: "Unknown error occurred" });
+        }
+      }finally {
       setIsLoading(false);
     }
   };
@@ -119,11 +144,12 @@ const App: React.FC = () => {
       <h1>Medical Insights Dashboard</h1>
       <div style={{ marginBottom: "20px" }}>
         <Select
-          placeholder="Select Database"
-          style={{ width: "100%" }}
-          value={selectedDatabase}
-          onChange={(value) => setSelectedDatabase(value)}
+            placeholder="Select Database"
+            style={{ width: "100%" }}
+            value={selectedDatabase}
+            onChange={(value: string) => setSelectedDatabase(value)}
         >
+
           {databases.map((db) => (
             <Option key={db} value={db}>
               {db}
@@ -150,11 +176,12 @@ const App: React.FC = () => {
         </Select>
       </div>
       <div style={{ marginBottom: "20px" }}>
-        <Input
-          placeholder="Patient ID"
-          value={selectedPatientId}
-          onChange={(e) => setSelectedPatientId(e.target.value)}
-        />
+      <Input
+        placeholder="Patient ID"
+        value={selectedPatientId || ""}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedPatientId(e.target.value)}
+       />
+       
       </div>
       <div style={{ marginBottom: "20px" }}>
         <Select
