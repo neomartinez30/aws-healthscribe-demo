@@ -1,18 +1,17 @@
 {
-    "name": "aws-healthscribe-demo",
-    "version": "1.0.0",
-    "scripts": {
+  "name": "aws-healthscribe-demo",
+  "version": "1.0.0",
+  "scripts": {
       "dev": "vite",
       "build": "tsc && vite build",
       "serve": "vite preview",
       "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --format visualstudio --quiet --fix --ignore-path ./.gitignore",
-      "lint:format": "prettier --log-level warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
-      "lint": "yarn lint:format && yarn lint:fix",
+      "lint:format": "prettier --log-level warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
+      "lint": "yarn lint:format && yarn lint:fix ",
       "type-check": "tsc"
-    },
-    "dependencies": {
+  },
+  "dependencies": {
       "@aws-amplify/ui-react": "^6.5.5",
-      "@aws-sdk/client-athena": "^3.731.1",
       "@aws-sdk/client-comprehendmedical": "^3.679.0",
       "@aws-sdk/client-polly": "^3.679.0",
       "@aws-sdk/client-s3": "^3.679.0",
@@ -23,33 +22,33 @@
       "@cloudscape-design/components": "^3.0.806",
       "@cloudscape-design/design-tokens": "^3.0.47",
       "@cloudscape-design/global-styles": "^1.0.32",
-      "@aws-sdk/client-glue": "^3.731.1",
-      "@aws-sdk/client-bedrock-runtime": "^3.731.1",
-      "amazon-connect-streams": "^2.7.0",
+      "ace-builds": "^1.36.3",
+      "amazon-connect-streams": "^2.0.0",
       "aws-amplify": "^6.6.7",
       "axios": "^1.6.5",
-      "crunker": "^2.3.0",
+      "crunker": "^2.4.0",
       "dayjs": "^1.11.13",
-      "framer-motion": "^11.0.3",
+      "framer-motion": "^11.11.10",
       "lodash": "^4.17.21",
       "react": "^18.3.1",
-      "react-ace": "^10.1.0",
+      "react-ace": "^12.0.0",
       "react-dom": "^18.3.1",
-      "react-dropzone": "^14.2.3",
+      "react-dropzone": "^14.2.10",
       "react-hot-toast": "^2.4.1",
       "react-router-dom": "^6.27.0",
       "timekeeper": "^2.3.1",
-      "use-debounce": "^10.0.0",
+      "use-debounce": "^10.0.4",
       "uuid4": "^2.0.3",
-      "wavesurfer.js": "^7.7.3"
-    },
-    "devDependencies": {
+      "wavesurfer.js": "7.8.8"
+  },
+  "devDependencies": {
+      "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+      "@types/lodash": "^4.17.12", 
       "@types/node": "^22.8.1",
       "@types/react": "^18.3.12",
       "@types/react-dom": "^18.3.1",
-      "@types/lodash": "^4.14.202",
-      "@types/react-dropzone": "^5.1.0",
       "@types/uuid4": "^2.0.3",
+      "@types/wavesurfer.js": "^6.0.12",
       "@typescript-eslint/eslint-plugin": "^8.12.0",
       "@typescript-eslint/parser": "^8.12.0",
       "@vitejs/plugin-react": "^4.3.3",
@@ -57,8 +56,16 @@
       "eslint-config-prettier": "^9.1.0",
       "eslint-plugin-prettier": "^5.2.1",
       "eslint-plugin-react": "^7.37.2",
+      "pre-commit": "^1.2.2",
       "prettier": "^3.3.3",
       "typescript": "^5.6.3",
-      "vite": "^5.4.10"
-    }
-  }
+      "vite": "^5.4.10",
+      "vite-plugin-optimize-css-modules": "^1.1.0"
+  },
+  "resolutions": {
+      "micromatch": "^4.0.8"
+  },
+  "pre-commit": "lint",
+  "license": "MIT",
+  "packageManager": "yarn@1.22.22"
+}
