@@ -51,16 +51,6 @@ def handle_chat_input():
         height=0
     )
 
-def main():
-    st.title("Patient Insights")
-    handle_chat_input()
-    
-    # Your existing Streamlit code here
-    # Copy the provided code and adjust as needed
-
-if __name__ == '__main__':
-    main()
-
 
 
 ATHENA_WORKGROUP_BUCKET_NAME = "athena-203918854345-22hcl401"
