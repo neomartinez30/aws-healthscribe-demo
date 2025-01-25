@@ -5,10 +5,13 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Select from '@cloudscape-design/components/select';
 import Button from '@cloudscape-design/components/button';
 import Box from '@cloudscape-design/components/box';
+import Grid from '@cloudscape-design/components/grid';
 import Spinner from '@cloudscape-design/components/spinner';
 import { useNotificationsContext } from '@/store/notifications';
 import { getDatabases, getTables, executeQuery, getQueryResults } from '@/utils/AthenaApi';
-import { invokeBedrock, streamBedrock } from '@/utils/BedrockApi';
+import { invokeBedrock } from '@/utils/BedrockApi';
+import { PROMPTS } from '@/utils/prompts';
+import Chat from './Chat';
 
 export default function PatientInsights() {
     const { addFlashMessage } = useNotificationsContext();
@@ -19,6 +22,7 @@ export default function PatientInsights() {
     const [selectedTables, setSelectedTables] = useState<string[]>([]);
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [selectedPatientId, setSelectedPatientId] = useState<string>('');
+    const [patientData, setPatientData] = useState<any>(null);
     const [summary, setSummary] = useState<string>('');
 
     useEffect(() => {
@@ -106,13 +110,12 @@ export default function PatientInsights() {
                 })
             );
 
-            // Generate summary using Bedrock
-            const prompt = `Analyze the following patient data and provide a comprehensive medical summary:
-            ${JSON.stringify(tableData, null, 2)}`;
+            setPatientData(tableData);
 
-            const response = await invokeBedrock(prompt, 'anthropic.claude-v2');
-            const summary = JSON.parse(response.body.toString()).completion;
-            setSummary(summary);
+            // Generate summary using Bedrock
+            const prompt = PROMPTS.PATIENT_SUMMARY.replace('{{data}}', JSON.stringify(tableData, null, 2));
+            const response = await invokeBedrock(prompt);
+            setSummary(response.completion);
 
         } catch (error) {
             addFlashMessage({
@@ -137,51 +140,60 @@ export default function PatientInsights() {
             }
         >
             <SpaceBetween size="l">
-                <Select
-                    selectedOption={selectedDatabase ? { label: selectedDatabase, value: selectedDatabase } : null}
-                    onChange={({ detail }) => setSelectedDatabase(detail.selectedOption?.value || '')}
-                    options={databases.map(db => ({ label: db, value: db }))}
-                    placeholder="Select a database"
-                    disabled={loading}
-                />
+                <Grid gridDefinition={[{ colspan: 8 }, { colspan: 4 }]}>
+                    <SpaceBetween size="l">
+                        <Select
+                            selectedOption={selectedDatabase ? { label: selectedDatabase, value: selectedDatabase } : null}
+                            onChange={({ detail }) => setSelectedDatabase(detail.selectedOption?.value || '')}
+                            options={databases.map(db => ({ label: db, value: db }))}
+                            placeholder="Select a database"
+                            disabled={loading}
+                        />
 
-                <Select
-                    selectedOption={selectedTables.map(table => ({ label: table, value: table }))}
-                    onChange={({ detail }) => setSelectedTables(detail.selectedOptions.map(opt => opt.value || ''))}
-                    options={tables.map(table => ({ label: table, value: table }))}
-                    placeholder="Select tables"
-                    disabled={loading || !selectedDatabase}
-                    multiple
-                />
+                        <Select
+                            selectedOption={selectedTables.map(table => ({ label: table, value: table }))}
+                            onChange={({ detail }) => setSelectedTables(detail.selectedOptions.map(opt => opt.value || ''))}
+                            options={tables.map(table => ({ label: table, value: table }))}
+                            placeholder="Select tables"
+                            disabled={loading || !selectedDatabase}
+                            multiple
+                        />
 
-                <Select
-                    selectedOption={selectedPatientId ? { label: selectedPatientId, value: selectedPatientId } : null}
-                    onChange={({ detail }) => setSelectedPatientId(detail.selectedOption?.value || '')}
-                    options={patientIds.map(id => ({ label: id, value: id }))}
-                    placeholder="Select a patient"
-                    disabled={loading || selectedTables.length === 0}
-                />
+                        <Select
+                            selectedOption={selectedPatientId ? { label: selectedPatientId, value: selectedPatientId } : null}
+                            onChange={({ detail }) => setSelectedPatientId(detail.selectedOption?.value || '')}
+                            options={patientIds.map(id => ({ label: id, value: id }))}
+                            placeholder="Select a patient"
+                            disabled={loading || selectedTables.length === 0}
+                        />
 
-                <Button
-                    onClick={generateSummary}
-                    disabled={loading || !selectedPatientId}
-                    loading={loading}
-                >
-                    Generate Summary
-                </Button>
+                        <Button
+                            onClick={generateSummary}
+                            disabled={loading || !selectedPatientId}
+                            loading={loading}
+                        >
+                            Generate Summary
+                        </Button>
 
-                {loading && (
-                    <Box textAlign="center">
-                        <Spinner size="large" />
-                        <Box variant="p">Processing...</Box>
-                    </Box>
-                )}
+                        {loading && (
+                            <Box textAlign="center">
+                                <Spinner size="large" />
+                                <Box variant="p">Processing...</Box>
+                            </Box>
+                        )}
 
-                {summary && (
-                    <Container header={<Header variant="h2">Patient Summary</Header>}>
-                        <Box variant="p">{summary}</Box>
-                    </Container>
-                )}
+                        {summary && (
+                            <Container header={<Header variant="h2">Patient Summary</Header>}>
+                                <Box variant="p">{summary}</Box>
+                            </Container>
+                        )}
+                    </SpaceBetween>
+
+                    <Chat 
+                        patientData={patientData} 
+                        disabled={!patientData || loading}
+                    />
+                </Grid>
             </SpaceBetween>
         </Container>
     );

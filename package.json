@@ -46,7 +46,18 @@
         "@aws-amplify/ui-react": "^6.5.5",
         "@aws-sdk/client-athena": "^3.731.1", 
         "@aws-sdk/client-glue": "^3.731.1",
-        "@aws-sdk/client-bedrock-runtime": "^3.731.1"
+        "@aws-sdk/client-bedrock-runtime": "^3.731.1",
+        "@aws-amplify/ui-react": "^6.5.5",
+        "@aws-sdk/client-athena": "^3.731.1", 
+        "@aws-sdk/client-glue": "^3.731.1",
+        "@aws-sdk/client-bedrock-runtime": "^3.731.1",
+        "@aws-sdk/client-s3": "^3.679.0",
+        "@aws-sdk/lib-storage": "^3.679.0",
+        "@aws-sdk/s3-request-presigner": "^3.679.0",
+        "@cloudscape-design/collection-hooks": "^1.0.55",
+        "@cloudscape-design/components": "^3.0.806",
+        "@cloudscape-design/design-tokens": "^3.0.47",
+        "@cloudscape-design/global-styles": "^1.0.32"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",

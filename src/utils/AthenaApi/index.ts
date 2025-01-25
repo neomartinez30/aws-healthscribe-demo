@@ -1,54 +1,97 @@
-import { AthenaClient, GetQueryExecutionCommand, StartQueryExecutionCommand } from '@aws-sdk/client-athena';
+import { 
+    AthenaClient, 
+    GetQueryExecutionCommand, 
+    GetQueryResultsCommand,
+    StartQueryExecutionCommand,
+    ListDatabasesCommand
+} from '@aws-sdk/client-athena';
 import { GlueClient, GetTablesCommand } from '@aws-sdk/client-glue';
+import { CONFIG } from '../config';
 import { getConfigRegion, getCredentials } from '../Sdk';
 
-const athenaClient = new AthenaClient({
-    region: getConfigRegion(),
-    credentials: await getCredentials()
-});
+let athenaClient: AthenaClient;
+let glueClient: GlueClient;
 
-const glueClient = new GlueClient({
-    region: getConfigRegion(), 
-    credentials: await getCredentials()
-});
+async function initClients() {
+    const credentials = await getCredentials();
+    athenaClient = new AthenaClient({
+        region: getConfigRegion(),
+        credentials
+    });
+    
+    glueClient = new GlueClient({
+        region: getConfigRegion(),
+        credentials
+    });
+}
 
 export async function getDatabases() {
-    const response = await athenaClient.send(new StartQueryExecutionCommand({
-        QueryString: 'SHOW DATABASES',
-        QueryExecutionContext: {
-            Catalog: 'AwsDataCatalog'
-        },
-        WorkGroup: 'primary'
-    }));
+    if (!athenaClient) await initClients();
     
-    return response;
+    const command = new ListDatabasesCommand({
+        CatalogName: 'AwsDataCatalog'
+    });
+    
+    return await athenaClient.send(command);
 }
 
 export async function getTables(database: string) {
-    const response = await glueClient.send(new GetTablesCommand({
-        DatabaseName: database
-    }));
+    if (!glueClient) await initClients();
     
+    const command = new GetTablesCommand({
+        DatabaseName: database
+    });
+    
+    const response = await glueClient.send(command);
     return response.TableList?.map(table => table.Name) || [];
 }
 
 export async function executeQuery(query: string, database: string) {
-    const response = await athenaClient.send(new StartQueryExecutionCommand({
+    if (!athenaClient) await initClients();
+    
+    const command = new StartQueryExecutionCommand({
         QueryString: query,
         QueryExecutionContext: {
             Database: database,
             Catalog: 'AwsDataCatalog'
         },
-        WorkGroup: 'primary'
-    }));
+        WorkGroup: CONFIG.WORKGROUP
+    });
 
-    return response;
+    return await athenaClient.send(command);
+}
+
+export async function getQueryExecution(queryExecutionId: string) {
+    if (!athenaClient) await initClients();
+    
+    const command = new GetQueryExecutionCommand({
+        QueryExecutionId: queryExecutionId
+    });
+
+    return await athenaClient.send(command);
 }
 
 export async function getQueryResults(queryExecutionId: string) {
-    const response = await athenaClient.send(new GetQueryExecutionCommand({
-        QueryExecutionId: queryExecutionId
-    }));
+    if (!athenaClient) await initClients();
+    
+    // Wait for query to complete
+    let status = 'RUNNING';
+    while (status === 'RUNNING' || status === 'QUEUED') {
+        const execution = await getQueryExecution(queryExecutionId);
+        status = execution.QueryExecution?.Status?.State || 'FAILED';
+        
+        if (status === 'FAILED') {
+            throw new Error(execution.QueryExecution?.Status?.StateChangeReason || 'Query failed');
+        }
+        
+        if (status === 'RUNNING' || status === 'QUEUED') {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    }
 
-    return response;
+    const command = new GetQueryResultsCommand({
+        QueryExecutionId: queryExecutionId
+    });
+
+    return await athenaClient.send(command);
 }
