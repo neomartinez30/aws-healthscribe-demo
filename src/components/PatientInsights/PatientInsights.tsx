@@ -1,227 +1,188 @@
-// src/App.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Container from '@cloudscape-design/components/container';
+import Header from '@cloudscape-design/components/header';
+import SpaceBetween from '@cloudscape-design/components/space-between';
+import Select from '@cloudscape-design/components/select';
+import Button from '@cloudscape-design/components/button';
+import Box from '@cloudscape-design/components/box';
+import Spinner from '@cloudscape-design/components/spinner';
+import { useNotificationsContext } from '@/store/notifications';
+import { getDatabases, getTables, executeQuery, getQueryResults } from '@/utils/AthenaApi';
+import { invokeBedrock, streamBedrock } from '@/utils/BedrockApi';
 
-import {
-    AthenaClient,
-    GetQueryExecutionCommand,
-    GetQueryResultsCommand,
-    StartQueryExecutionCommand,
-} from '@aws-sdk/client-athena';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Button, Input, Select, Spin, notification } from 'antd';
-import axios from 'axios';
-import { parse } from 'papaparse';
-
-const { Option } = Select;
-
-const athenaClient = new AthenaClient({ region: 'us-east-1' });
-const s3Client = new S3Client({ region: 'us-east-1' });
-
-interface Params {
-    db: string;
-    table: string[];
-    model: string;
-    summaryModel: string;
-    id: string;
-    template: string;
-}
-
-const App: React.FC = () => {
+export default function PatientInsights() {
+    const { addFlashMessage } = useNotificationsContext();
+    const [loading, setLoading] = useState(false);
     const [databases, setDatabases] = useState<string[]>([]);
-    const [selectedDatabase, setSelectedDatabase] = useState<string | null>(null);
+    const [selectedDatabase, setSelectedDatabase] = useState<string>('');
     const [tables, setTables] = useState<string[]>([]);
     const [selectedTables, setSelectedTables] = useState<string[]>([]);
     const [patientIds, setPatientIds] = useState<string[]>([]);
-    const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
-    const [model, setModel] = useState<string | null>(null);
-    const [summaryModel, setSummaryModel] = useState<string | null>(null);
-    const [promptTemplate, setPromptTemplate] = useState<string>('prompt 1');
-    const [isLoading, setIsLoading] = useState(false);
-    const [summary, setSummary] = useState<string | null>(null);
+    const [selectedPatientId, setSelectedPatientId] = useState<string>('');
+    const [summary, setSummary] = useState<string>('');
 
     useEffect(() => {
-        fetchDatabases();
+        loadDatabases();
     }, []);
 
-    const fetchDatabases = async () => {
-        setIsLoading(true);
+    useEffect(() => {
+        if (selectedDatabase) {
+            loadTables();
+        }
+    }, [selectedDatabase]);
+
+    useEffect(() => {
+        if (selectedDatabase && selectedTables.length > 0) {
+            loadPatientIds();
+        }
+    }, [selectedDatabase, selectedTables]);
+
+    async function loadDatabases() {
         try {
-            const response = await athenaClient.send(
-                new StartQueryExecutionCommand({
-                    QueryString: 'SHOW DATABASES;',
-                    QueryExecutionContext: { Catalog: 'AwsDataCatalog' },
-                    WorkGroup: 'primary',
+            setLoading(true);
+            const response = await getDatabases();
+            const dbList = response.DatabaseList?.map(db => db.Name) || [];
+            setDatabases(dbList);
+        } catch (error) {
+            addFlashMessage({
+                type: 'error',
+                header: 'Error loading databases',
+                content: 'Failed to load databases. Please try again.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function loadTables() {
+        try {
+            setLoading(true);
+            const tableList = await getTables(selectedDatabase);
+            setTables(tableList);
+        } catch (error) {
+            addFlashMessage({
+                type: 'error',
+                header: 'Error loading tables',
+                content: 'Failed to load tables. Please try again.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function loadPatientIds() {
+        try {
+            setLoading(true);
+            const query = `SELECT DISTINCT id FROM ${selectedDatabase}.patient`;
+            const response = await executeQuery(query, selectedDatabase);
+            const results = await getQueryResults(response.QueryExecutionId!);
+            const ids = results.ResultSet?.Rows?.slice(1).map(row => row.Data?.[0].VarCharValue) || [];
+            setPatientIds(ids);
+        } catch (error) {
+            addFlashMessage({
+                type: 'error',
+                header: 'Error loading patient IDs',
+                content: 'Failed to load patient IDs. Please try again.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function generateSummary() {
+        try {
+            setLoading(true);
+            
+            // Get patient data from selected tables
+            const tableData = await Promise.all(
+                selectedTables.map(async (table) => {
+                    const query = `SELECT * FROM ${selectedDatabase}.${table} WHERE id = '${selectedPatientId}'`;
+                    const response = await executeQuery(query, selectedDatabase);
+                    const results = await getQueryResults(response.QueryExecutionId!);
+                    return {
+                        table,
+                        data: results.ResultSet?.Rows || []
+                    };
                 })
             );
-            console.log('Athena Query Execution Response:', response); // Log query execution response
-    
-            const queryExecutionId = response.QueryExecutionId!;
-            const result = await fetchAthenaResults(queryExecutionId);
-    
-            console.log('Athena Query Results:', result); // Log query results
-    
-            const dbs = result
-                .map((row: { Data?: Array<{ VarCharValue?: string }> }) => row.Data?.[0]?.VarCharValue || '')
-                .filter((db) => db); // Exclude empty values
-    
-            setDatabases(dbs);
+
+            // Generate summary using Bedrock
+            const prompt = `Analyze the following patient data and provide a comprehensive medical summary:
+            ${JSON.stringify(tableData, null, 2)}`;
+
+            const response = await invokeBedrock(prompt, 'anthropic.claude-v2');
+            const summary = JSON.parse(response.body.toString()).completion;
+            setSummary(summary);
+
         } catch (error) {
-            console.error('Error fetching databases:', error); // Log error
-            if (error instanceof Error) {
-                notification.error({ message: 'Error fetching databases', description: error.message });
-            } else {
-                notification.error({ message: 'Unknown error occurred' });
-            }
+            addFlashMessage({
+                type: 'error',
+                header: 'Error generating summary',
+                content: 'Failed to generate patient summary. Please try again.'
+            });
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
-    };
-    
-
-    const fetchAthenaResults = async (executionId: string) => {
-        let state = 'RUNNING';
-        while (state === 'RUNNING' || state === 'QUEUED') {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            const response = await athenaClient.send(new GetQueryExecutionCommand({ QueryExecutionId: executionId }));
-            state = response.QueryExecution?.Status?.State || 'FAILED';
-            if (state === 'FAILED') {
-                throw new Error('Athena query failed');
-            }
-        }
-        const results = await athenaClient.send(new GetQueryResultsCommand({ QueryExecutionId: executionId }));
-        return results.ResultSet?.Rows || [];
-    };
-
-    const fetchTables = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.post(`/get-tables`, { database: selectedDatabase });
-            setTables(response.data);
-        } catch (error) {
-            if (error instanceof Error) {
-                notification.error({ message: 'Error fetching tables', description: error.message });
-            } else {
-                notification.error({ message: 'Unknown error occurred' });
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const summarizeData = async () => {
-        if (!selectedDatabase || !selectedTables.length || !selectedPatientId || !model || !summaryModel) {
-            notification.error({ message: 'Missing required fields' });
-            return;
-        }
-
-        const params: Params = {
-            db: selectedDatabase,
-            table: selectedTables,
-            model,
-            summaryModel,
-            id: selectedPatientId,
-            template: promptTemplate,
-        };
-
-        setIsLoading(true);
-        try {
-            const response = await axios.post(`/summarize`, params);
-            setSummary(response.data);
-        } catch (error) {
-            if (error instanceof Error) {
-                notification.error({ message: 'Error summarizing data', description: error.message });
-            } else {
-                notification.error({ message: 'Unknown error occurred' });
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Medical Insights Dashboard</h1>
-            <div style={{ marginBottom: '20px' }}>
-                <Select
-                    placeholder="Select Database"
-                    style={{ width: '100%' }}
-                    value={selectedDatabase}
-                    onChange={(value: string) => setSelectedDatabase(value)}
+        <Container
+            header={
+                <Header
+                    variant="h1"
+                    description="Generate comprehensive patient insights using AWS Bedrock"
                 >
-                    {databases.map((db) => (
-                        <Option key={db} value={db}>
-                            {db}
-                        </Option>
-                    ))}
-                </Select>
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                <Button onClick={fetchTables} disabled={!selectedDatabase}>
-                    Fetch Tables
-                </Button>
+                    Patient Insights
+                </Header>
+            }
+        >
+            <SpaceBetween size="l">
                 <Select
-                    placeholder="Select Tables"
-                    mode="multiple"
-                    style={{ width: '100%' }}
-                    value={selectedTables}
-                    onChange={(value) => setSelectedTables(value)}
-                >
-                    {tables.map((table) => (
-                        <Option key={table} value={table}>
-                            {table}
-                        </Option>
-                    ))}
-                </Select>
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                <Input
-                    placeholder="Patient ID"
-                    value={selectedPatientId || ''}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedPatientId(e.target.value)}
+                    selectedOption={selectedDatabase ? { label: selectedDatabase, value: selectedDatabase } : null}
+                    onChange={({ detail }) => setSelectedDatabase(detail.selectedOption?.value || '')}
+                    options={databases.map(db => ({ label: db, value: db }))}
+                    placeholder="Select a database"
+                    disabled={loading}
                 />
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                <Select
-                    placeholder="Select Model"
-                    style={{ width: '100%' }}
-                    value={model}
-                    onChange={(value) => setModel(value)}
-                >
-                    <Option value="model1">Model 1</Option>
-                    <Option value="model2">Model 2</Option>
-                </Select>
-                <Select
-                    placeholder="Select Summary Model"
-                    style={{ width: '100%', marginTop: '10px' }}
-                    value={summaryModel}
-                    onChange={(value) => setSummaryModel(value)}
-                >
-                    <Option value="summaryModel1">Summary Model 1</Option>
-                    <Option value="summaryModel2">Summary Model 2</Option>
-                </Select>
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                <Select
-                    placeholder="Select Prompt Template"
-                    style={{ width: '100%' }}
-                    value={promptTemplate}
-                    onChange={(value) => setPromptTemplate(value)}
-                >
-                    <Option value="prompt 1">Prompt 1</Option>
-                    <Option value="prompt 2">Prompt 2</Option>
-                </Select>
-            </div>
-            <Button type="primary" onClick={summarizeData} loading={isLoading}>
-                Summarize Data
-            </Button>
-            {summary && (
-                <div style={{ marginTop: '20px' }}>
-                    <h2>Summary</h2>
-                    <p>{summary}</p>
-                </div>
-            )}
-        </div>
-    );
-};
 
-export default App;
+                <Select
+                    selectedOption={selectedTables.map(table => ({ label: table, value: table }))}
+                    onChange={({ detail }) => setSelectedTables(detail.selectedOptions.map(opt => opt.value || ''))}
+                    options={tables.map(table => ({ label: table, value: table }))}
+                    placeholder="Select tables"
+                    disabled={loading || !selectedDatabase}
+                    multiple
+                />
+
+                <Select
+                    selectedOption={selectedPatientId ? { label: selectedPatientId, value: selectedPatientId } : null}
+                    onChange={({ detail }) => setSelectedPatientId(detail.selectedOption?.value || '')}
+                    options={patientIds.map(id => ({ label: id, value: id }))}
+                    placeholder="Select a patient"
+                    disabled={loading || selectedTables.length === 0}
+                />
+
+                <Button
+                    onClick={generateSummary}
+                    disabled={loading || !selectedPatientId}
+                    loading={loading}
+                >
+                    Generate Summary
+                </Button>
+
+                {loading && (
+                    <Box textAlign="center">
+                        <Spinner size="large" />
+                        <Box variant="p">Processing...</Box>
+                    </Box>
+                )}
+
+                {summary && (
+                    <Container header={<Header variant="h2">Patient Summary</Header>}>
+                        <Box variant="p">{summary}</Box>
+                    </Container>
+                )}
+            </SpaceBetween>
+        </Container>
+    );
+}

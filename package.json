@@ -42,7 +42,11 @@
         "timekeeper": "^2.3.1",
         "use-debounce": "^10.0.4",
         "uuid4": "^2.0.3",
-        "wavesurfer.js": "7.8.8"
+        "wavesurfer.js": "7.8.8",
+        "@aws-amplify/ui-react": "^6.5.5",
+        "@aws-sdk/client-athena": "^3.731.1", 
+        "@aws-sdk/client-glue": "^3.731.1",
+        "@aws-sdk/client-bedrock-runtime": "^3.731.1"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",

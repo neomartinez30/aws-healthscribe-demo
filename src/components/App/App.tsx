@@ -8,6 +8,9 @@ import TopNav from '@/components/TopNav';
 import Welcome from '@/components/Welcome';
 import { useAuthContext } from '@/store/auth';
 import { useNotificationsContext } from '@/store/notifications';
+import InsightsContextProvider from '@/store/insights';
+
+const PatientInsights = lazy(() => import('@/components/PatientInsights'));
 
 // Lazy components
 const Debug = lazy(() => import('@/components/Debug'));
@@ -23,29 +26,6 @@ export default function App() {
     const { isUserAuthenticated } = useAuthContext();
     const { flashbarItems } = useNotificationsContext();
 
-    const content = (
-        <Suspense fallback={<SuspenseLoader />}>
-            {isUserAuthenticated ? (
-                <Routes>
-                    <Route index element={<Welcome />} />
-                    <Route path="/debug" element={<Debug />} />
-                    <Route path="/conversations" element={<Conversations />} />
-                    <Route path="/conversation/:conversationName" element={<Conversation />} />
-                    <Route path="/new" element={<NewConversation />} />
-                    <Route path="/generate" element={<GenerateAudio />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/PatientInsights" element={<PatientInsights />} />
-                    <Route path="/AgentDesktop" element={<AgentDesktop/>} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            ) : (
-                <Routes>
-                    <Route path="*" element={<Welcome />} />
-                </Routes>
-            )}
-        </Suspense>
-    );
-
     return (
         <>
             <div id="appTopNav">
@@ -53,7 +33,24 @@ export default function App() {
             </div>
             <AppLayout
                 breadcrumbs={<Breadcrumbs />}
-                content={content}
+                content={
+                    <InsightsContextProvider>
+                        <Suspense fallback={<SuspenseLoader />}>
+                            {isUserAuthenticated ? (
+                                <Routes>
+                                    <Route index element={<Welcome />} />
+                                    <Route path="/patient-insights" element={<PatientInsights />} />
+                                    {/* ... other routes */}
+                                    <Route path="*" element={<Navigate to="/" replace />} />
+                                </Routes>
+                            ) : (
+                                <Routes>
+                                    <Route path="*" element={<Welcome />} />
+                                </Routes>
+                            )}
+                        </Suspense>
+                    </InsightsContextProvider>
+                }
                 headerSelector="#appTopNav"
                 headerVariant="high-contrast"
                 notifications={<Flashbar items={flashbarItems} />}
