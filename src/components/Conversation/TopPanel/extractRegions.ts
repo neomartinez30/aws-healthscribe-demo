@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import { Peaks } from 'wavesurfer.js';
+import Peaks from 'wavesurfer.js';
 
 export const extractRegions = (peaks: Peaks, duration: number) => {
     // Silence params
