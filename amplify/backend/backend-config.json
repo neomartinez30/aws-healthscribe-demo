@@ -44,11 +44,17 @@
         "AdminQueries": {
             "service": "API Gateway",
             "providerPlugin": "awscloudformation",
+            "authorizationType": "AMAZON_COGNITO_USER_POOLS",
             "dependsOn": [
                 {
                     "category": "function",
                     "resourceName": "AdminQueries",
                     "attributes": ["Name", "Arn"]
+                },
+                {
+                    "category": "auth",
+                    "resourceName": "healthScribeDemoAuth",
+                    "attributes": ["UserPoolId"]
                 }
             ]
         }
