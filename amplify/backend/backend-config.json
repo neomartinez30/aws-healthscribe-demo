@@ -27,36 +27,46 @@
         }
     },
     "function": {
-        "AdminQueries": {
+        "addBucketLogging": {
             "build": true,
             "providerPlugin": "awscloudformation",
-            "service": "Lambda",
-            "dependsOn": [
+            "service": "Lambda"
+        }
+    },
+    "parameters": {
+        "AMPLIFY_function_addBucketLogging_deploymentBucketName": {
+            "usedBy": [
                 {
-                    "category": "auth",
-                    "resourceName": "healthScribeDemoAuth",
-                    "attributes": ["UserPoolId"]
+                    "category": "function",
+                    "resourceName": "addBucketLogging"
+                }
+            ]
+        },
+        "AMPLIFY_function_addBucketLogging_s3Key": {
+            "usedBy": [
+                {
+                    "category": "function",
+                    "resourceName": "addBucketLogging"
                 }
             ]
         }
     },
-    "api": {
-        "AdminQueries": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+    "custom": {
+        "addBucketLogging": {
             "dependsOn": [
                 {
-                    "category": "function",
-                    "resourceName": "AdminQueries",
-                    "attributes": ["Name", "Arn"]
+                    "attributes": ["BucketName", "Region", "HealthScribeServiceRoleArn"],
+                    "category": "storage",
+                    "resourceName": "healthScribeDemoStorage"
                 },
                 {
-                    "category": "auth",
-                    "resourceName": "healthScribeDemoAuth",
-                    "attributes": ["UserPoolId"]
+                    "attributes": ["Name", "Arn", "Region", "LambdaExecutionRole", "LambdaExecutionRoleArn"],
+                    "category": "function",
+                    "resourceName": "addBucketLogging"
                 }
-            ]
+            ],
+            "providerPlugin": "awscloudformation",
+            "service": "customCDK"
         }
     }
 }
