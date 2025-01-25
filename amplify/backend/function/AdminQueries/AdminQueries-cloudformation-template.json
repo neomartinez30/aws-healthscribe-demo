@@ -13,6 +13,30 @@
         },
         "authhealthScribeDemoAuthUserPoolId": {
             "Type": "String"
+        },
+        "amplifyawshealthscribedemodevoauthRole": {
+            "Type": "String",
+            "Description": "Auth role for authenticated users"
+        },
+        "amplifyawshealthscribedemodevoauthRoleArn": {
+            "Type": "String",
+            "Description": "Auth role ARN for authenticated users"
+        },
+        "amplifyawshealthscribedemodevoauthRoleName": {
+            "Type": "String",
+            "Description": "Auth role name for authenticated users"
+        },
+        "amplifyawshealthscribedevodevoauthRole": {
+            "Type": "String",
+            "Description": "Auth role for development authenticated users"
+        },
+        "amplifyawshealthscribedevodevoauthRoleArn": {
+            "Type": "String",
+            "Description": "Auth role ARN for development authenticated users"
+        },
+        "amplifyawshealthscribedevodevoauthRoleName": {
+            "Type": "String",
+            "Description": "Auth role name for development authenticated users"
         }
     },
     "Conditions": {
@@ -58,10 +82,10 @@
                             "Ref": "authhealthScribeDemoAuthUserPoolId"
                         },
                         "AUTH_ROLE_NAME": {
-                            "Ref": "amplify-awshealthscribedemo-devo-bfa4c-authRole"
+                            "Ref": "amplifyawshealthscribedevodevoauthRoleName"
                         },
                         "UNAUTH_ROLE_NAME": {
-                            "Ref": "amplify-awshealthscribedemo-devo-bfa4c-unauthRole"
+                            "Ref": "unauthRoleName"
                         }
                     }
                 },
@@ -156,6 +180,14 @@
         "LambdaExecutionRole": {
             "Value": {
                 "Ref": "LambdaExecutionRole"
+            }
+        },
+        "LambdaExecutionRoleArn": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "LambdaExecutionRole",
+                    "Arn"
+                ]
             }
         }
     }
