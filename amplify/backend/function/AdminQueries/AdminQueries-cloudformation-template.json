@@ -56,6 +56,12 @@
                         "GROUP": "Admin",
                         "USERPOOL": {
                             "Ref": "authhealthScribeDemoAuthUserPoolId"
+                        },
+                        "AUTH_ROLE_NAME": {
+                            "Ref": "authRoleName"
+                        },
+                        "UNAUTH_ROLE_NAME": {
+                            "Ref": "unauthRoleName"
                         }
                     }
                 },
@@ -105,7 +111,26 @@
                             ]
                         }
                     ]
-                }
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "AdminQueriesLambdaPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ]
+                        }
+                    }
+                ]
             }
         }
     },
