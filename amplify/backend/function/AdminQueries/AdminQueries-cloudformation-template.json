@@ -10,6 +10,9 @@
         },
         "unauthRoleName": {
             "Type": "String"
+        },
+        "authhealthScribeDemoAuthUserPoolId": {
+            "Type": "String"
         }
     },
     "Conditions": {
@@ -49,6 +52,10 @@
                     "Variables": {
                         "ENV": {
                             "Ref": "env"
+                        },
+                        "GROUP": "Admin",
+                        "USERPOOL": {
+                            "Ref": "authhealthScribeDemoAuthUserPoolId"
                         }
                     }
                 },
@@ -96,65 +103,6 @@
                             "Action": [
                                 "sts:AssumeRole"
                             ]
-                        }
-                    ]
-                }
-            }
-        },
-        "lambdaexecutionpolicy": {
-            "DependsOn": [
-                "LambdaExecutionRole"
-            ],
-            "Type": "AWS::IAM::Policy",
-            "Properties": {
-                "PolicyName": "lambda-execution-policy",
-                "Roles": [
-                    {
-                        "Ref": "LambdaExecutionRole"
-                    }
-                ],
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "logs:CreateLogGroup",
-                                "logs:CreateLogStream",
-                                "logs:PutLogEvents"
-                            ],
-                            "Resource": {
-                                "Fn::Sub": [
-                                    "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
-                                    {
-                                        "region": {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        "account": {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        "lambda": {
-                                            "Ref": "LambdaFunction"
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "athena:StartQueryExecution",
-                                "athena:GetQueryExecution",
-                                "athena:GetQueryResults",
-                                "athena:ListDatabases",
-                                "athena:ListWorkGroups",
-                                "glue:GetTables",
-                                "glue:GetDatabases",
-                                "s3:GetObject",
-                                "s3:ListBucket",
-                                "s3:PutObject"
-                            ],
-                            "Resource": "*"
                         }
                     ]
                 }
