@@ -58,10 +58,10 @@
                             "Ref": "authhealthScribeDemoAuthUserPoolId"
                         },
                         "AUTH_ROLE_NAME": {
-                            "Ref": "authRoleName"
+                            "Ref": "amplify-awshealthscribedemo-devo-bfa4c-authRole"
                         },
                         "UNAUTH_ROLE_NAME": {
-                            "Ref": "unauthRoleName"
+                            "Ref": "amplify-awshealthscribedemo-devo-bfa4c-unauthRole"
                         }
                     }
                 },
