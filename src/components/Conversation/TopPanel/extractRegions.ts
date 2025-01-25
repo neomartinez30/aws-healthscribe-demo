@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import { Peaks } from 'wavesurfer.js/types/backend';
+import { Peaks } from 'wavesurfer.js';
 
 export const extractRegions = (peaks: Peaks, duration: number) => {
     // Silence params
@@ -13,8 +13,8 @@ export const extractRegions = (peaks: Peaks, duration: number) => {
 
     // Gather silence indeces
     const silences: number[] = [];
-    peaks.forEach((val, index) => {
-        if (Math.abs(val as number) < minValue) {
+    peaks.forEach((val: number, index: number) => {
+        if (Math.abs(val) < minValue) {
             silences.push(index);
         }
     });
