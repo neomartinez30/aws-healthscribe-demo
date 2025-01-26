@@ -13,7 +13,7 @@ export default function PatientInsights() {
 
     useEffect(() => {
         // In production, this would be your deployed Streamlit URL
-        setStreamlitUrl('http://localhost:8501');
+        setStreamlitUrl('http://44.198.164.138:8501/');
         setIsLoading(false);
     }, []);
 
