@@ -10,7 +10,7 @@ export default function StreamlitApp() {
             http-equiv="Content-Security-Policy" 
             content="upgrade-insecure-requests"
                 title="Streamlit Application"
-                src="http://44.198.164.138:8501/" // Replace with Streamlit app URL
+                src="streamlit-ALB-1452717339.us-east-1.elb.amazonaws.com" // Replace with Streamlit app URL
                 style={{
                     position: 'absolute',
                     top: 0,
