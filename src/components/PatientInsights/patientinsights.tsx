@@ -1,14 +1,13 @@
 import React from 'react';
+
 import ContentLayout from '@cloudscape-design/components/content-layout';
 
 export default function StreamlitApp() {
     return (
-        <ContentLayout
-            headerVariant={'high-contrast'}
-        >
+        <ContentLayout headerVariant={'high-contrast'}>
             <iframe
-            http-equiv="Content-Security-Policy" 
-            content="upgrade-insecure-requests"
+                httpEquiv="Content-Security-Policy"
+                content="upgrade-insecure-requests"
                 title="Streamlit Application"
                 src="streamlit-ALB-1452717339.us-east-1.elb.amazonaws.com" // Replace with Streamlit app URL
                 style={{
@@ -17,7 +16,7 @@ export default function StreamlitApp() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    border: 'none'
+                    border: 'none',
                 }}
             />
         </ContentLayout>
