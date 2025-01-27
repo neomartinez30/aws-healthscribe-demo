@@ -7,7 +7,7 @@ export default function StreamlitApp() {
         <ContentLayout headerVariant={'high-contrast'}>
             <iframe
                 title="Streamlit Application"
-                src="streamlit-ALB-1452717339.us-east-1.elb.amazonaws.com" // Replace with Streamlit app URL
+                src="https://streamlit-alb-1452717339.us-east-1.elb.amazonaws.com" // Replace with Streamlit app URL
                 style={{
                     position: 'absolute',
                     top: 0,
