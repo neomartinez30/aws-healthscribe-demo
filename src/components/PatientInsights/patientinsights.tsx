@@ -6,8 +6,6 @@ export default function StreamlitApp() {
     return (
         <ContentLayout headerVariant={'high-contrast'}>
             <iframe
-                httpEquiv="Content-Security-Policy"
-                content="upgrade-insecure-requests"
                 title="Streamlit Application"
                 src="streamlit-ALB-1452717339.us-east-1.elb.amazonaws.com" // Replace with Streamlit app URL
                 style={{
