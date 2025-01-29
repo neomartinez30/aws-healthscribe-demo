@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
@@ -9,9 +8,10 @@ import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
-import Textarea from '@cloudscape-design/components/textarea';
+import Textarea, { TextareaProps } from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
 import Alert from '@cloudscape-design/components/alert';
+import MedicalSummary from './MedicalSummary';
 
 interface Message {
   text: string;
@@ -19,12 +19,12 @@ interface Message {
 }
 
 const AgentDesktop: React.FC = () => {
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState<Message[]>([
-      { text: "Hello! How can I help you today?", isUser: false },
-      { text: "What are current prescriptions is the patient taking ", isUser: true },
-      { text: "The active prescriptions for this patient is 10mg propranolol, once daily. Would you like to see the patients prescription history?", isUser: false }
-    ]);
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    { text: "Hello! How can I help you today?", isUser: false },
+    { text: "What are current prescriptions is the patient taking ", isUser: true },
+    { text: "The active prescriptions for this patient is 10mg propranolol, once daily. Would you like to see the patients prescription history?", isUser: false }
+  ]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +32,15 @@ const AgentDesktop: React.FC = () => {
       setMessages([...messages, { text: message, isUser: true }]);
       setMessage('');
     }
+  };
+
+  const [symptoms, setSymptoms] = useState('');
+
+  const textareaProps: TextareaProps = {
+    value: symptoms,
+    onChange: ({ detail }) => setSymptoms(detail.value),
+    placeholder: "Record patient symptoms",
+    rows: 3
   };
 
   return (
@@ -89,20 +98,7 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <SpaceBetween size="l">
-              <Box>
-                <Box variant="awsui-key-label">Last Visit</Box>
-                <Box variant="p">March 15, 2024</Box>
-              </Box>
-              <Box>
-                <Box variant="awsui-key-label">Primary Care</Box>
-                <Box variant="p">Dr. Sarah Johnson</Box>
-              </Box>
-              <Box>
-                <Box variant="awsui-key-label">Allergies</Box>
-                <Box variant="p">Penicillin</Box>
-              </Box>
-            </SpaceBetween>
+            <MedicalSummary /> {/* Use the MedicalSummary component here */}
           </Container>
         </Grid>
 
@@ -113,7 +109,7 @@ const AgentDesktop: React.FC = () => {
               variant="h2"
               description="Tools and resources for patient care"
             >
-              Agent Tools
+              Nurse Toolkit
             </Header>
           }
         >
@@ -122,9 +118,9 @@ const AgentDesktop: React.FC = () => {
               selectedOption={null}
               onChange={({ detail }) => console.log(detail.selectedOption)}
               options={[
-                { label: "FHIR Summary", value: "1" },
+                { label: "Agent Assist", value: "1" },
                 { label: "Provider Locator", value: "2" },
-                { label: "Settings", value: "3" }
+                { label: "Scheduler", value: "3" }
               ]}
               placeholder="Select a tool"
             />
@@ -156,10 +152,7 @@ const AgentDesktop: React.FC = () => {
           >
             <SpaceBetween size="l">
               <FormField label="Current Symptoms">
-                <Textarea
-                  placeholder="Record patient symptoms"
-                  rows={3}
-                />
+                <Textarea {...textareaProps} />
               </FormField>
               <FormField label="Urgency Level">
                 <Select
@@ -200,7 +193,7 @@ const AgentDesktop: React.FC = () => {
                     <Box
                       padding="s"
                       backgroundColor={msg.isUser ? 'blue-600' : 'grey-100'}
-                      color={msg.isUser ? 'white' : 'inherit'}
+                      color={msg.isUser ? 'text-body-inverse' : 'inherit'}
                       borderRadius="s"
                       maxWidth="70%"
                     >
