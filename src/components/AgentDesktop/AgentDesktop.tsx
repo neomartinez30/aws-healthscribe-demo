@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
@@ -18,12 +19,12 @@ interface Message {
 }
 
 const AgentDesktop: React.FC = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    { text: "Hello! How can I help you today?", isUser: false },
-    { text: "I need some assistance please", isUser: true },
-    { text: "Of course! I'm here to help. What do you need?", isUser: false }
-  ]);
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState<Message[]>([
+      { text: "Hello! How can I help you today?", isUser: false },
+      { text: "What are current prescriptions is the patient taking ", isUser: true },
+      { text: "The active prescriptions for this patient is 10mg propranolol, once daily. Would you like to see the patients prescription history?", isUser: false }
+    ]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +42,12 @@ const AgentDesktop: React.FC = () => {
           description="Virtual Nurse Workspace"
           actions={
             <SpaceBetween direction="horizontal" size="xs">
-              <Button>New Session</Button>
-              <Button>End Call</Button>
+              <Button>KnowledgeBase</Button>
+              <Button>PhoneBook</Button>
             </SpaceBetween>
           }
         >
-          Medical Dashboard
+          Nurse Workstation
         </Header>
       }
     >
@@ -84,7 +85,7 @@ const AgentDesktop: React.FC = () => {
                 variant="h2"
                 description="Key medical information and history"
               >
-                Medical Insights
+                Patient Insights
               </Header>
             }
           >
@@ -226,9 +227,6 @@ const AgentDesktop: React.FC = () => {
       </SpaceBetween>
     </ContentLayout>
   );
-};
-
-export default AgentDesktop;
 };
 
 export default AgentDesktop;
