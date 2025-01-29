@@ -1,17 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ContentLayout from '@cloudscape-design/components/content-layout';
-import Header from '@cloudscape-design/components/header';
-import Container from '@cloudscape-design/components/container';
-import Grid from '@cloudscape-design/components/grid';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Form from '@cloudscape-design/components/form';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Textarea from '@cloudscape-design/components/textarea';
-import Select from '@cloudscape-design/components/select';
-import AppLayout from '@cloudscape-design/components/app-layout';
+import React, { useEffect, useState } from 'react';
+import { Settings, Bell, Send } from 'lucide-react';
 import 'amazon-connect-streams';
 import { TransferType, AgentStateType } from 'amazon-connect-streams';
 import { DatabaseSettings } from './DatabaseSettings';
@@ -19,7 +7,6 @@ import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
 import SchedulingForm from './SchedulingForm';
 import { ProviderLocator } from './ProviderLocator';
-import Tabs, { TabsProps } from "@cloudscape-design/components/tabs";
 import FHIRSectionSummary from "./FHIRSectionSummary";
 import MedicalSummary from './MedicalSummary';
 
@@ -32,17 +19,12 @@ interface Provider {
     availability: string;
 }
 
-interface ReferralForm {
-    patientName: string;
-    illness: string;
-    medications: string;
-    referTo: string;
-    details: string;
-}
-
-interface MyComponentProps {
-    activeTabId: string;
-    setActiveTabId: (id: string) => void;
+interface CustomerProfile {
+    name: string;
+    id: string;
+    phone: string;
+    queue: string;
+    verification: string;
 }
 
 const MOCK_PROVIDERS: Provider[] = [
@@ -51,14 +33,6 @@ const MOCK_PROVIDERS: Provider[] = [
     { id: '3', name: 'Dr. Emily Williams', specialty: 'Pediatrics', address: '789 Care Ln', zip: '20003', availability: 'Next available: Friday 10am' },
     { id: '4', name: 'Dr. James Wilson', specialty: 'Orthopedics', address: '321 Wellness Rd', zip: '20004', availability: 'Next available: Monday 9am' },
 ];
-
-interface CustomerProfile {
-    name: string;
-    id: string;
-    phone: string;
-    queue: string;
-    verification: string;
-}
 
 const AgentDesktop: React.FC = () => {
     const [agentState, setAgentState] = useState<string>('Offline');
@@ -71,17 +45,13 @@ const AgentDesktop: React.FC = () => {
         queue: "",
         verification: ""
     });
-    const [toolsOpen, setToolsOpen] = useState<boolean>(true);
-    const [activeTabId, setActiveTabId] = useState<string>("patient-summary");
-    const [showReferralModal, setShowReferralModal] = useState<boolean>(false);
-    const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
-    const [referralForm, setReferralForm] = useState<ReferralForm>({
-        patientName: '',
-        illness: '',
-        medications: '',
-        referTo: '',
-        details: ''
-    });
+    const [activeTab, setActiveTab] = useState(1);
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([
+        { text: "Hello! How can I help you today?", isUser: false },
+        { text: "I need some assistance please", isUser: true },
+        { text: "Of course! I'm here to help. What do you need?", isUser: false }
+    ]);
 
     useEffect(() => {
         // Initialize CCP
@@ -162,299 +132,156 @@ const AgentDesktop: React.FC = () => {
         }
     }, []);
 
-    const handleMute = () => {
-        if (contact) {
-            try {
-                const connection = contact.getInitialConnection();
-                connection.toggleMute();
-            } catch (error) {
-                console.error(`Failed to toggle mute: ${error}`);
-            }
+    const handleSendMessage = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (message.trim()) {
+            setMessages([...messages, { text: message, isUser: true }]);
+            setMessage('');
         }
     };
 
-    const handleHold = () => {
-        if (contact) {
-            try {
-                if (contact.isOnHold()) {
-                    contact.resume();
-                } else {
-                    contact.hold();
-                }
-            } catch (error) {
-                console.error(`Failed to toggle hold: ${error}`);
-            }
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage(e as any);
         }
     };
-
-    const handleEndCall = () => {
-        if (contact) {
-            try {
-                contact.destroy({
-                    success: () => {
-                        console.log('Call has been terminated successfully');
-                    },
-                    failure: (err: any) => {
-                        console.error(`Failed to end call: ${err}`);
-                    }
-                });
-            } catch (error) {
-                console.error(`Failed to end call: ${error}`);
-            }
-        }
-    };
-
-    const handleTransfer = () => {
-        if (contact) {
-            try {
-                // Get the queue ARN from environment variable
-                const queueArn = process.env.CONNECT_QUEUE_ARN;
-                if (!queueArn) {
-                    throw new Error('Queue ARN not configured');
-                }
-
-                contact.transfer(TransferType.QUEUE, {
-                    queueARN: queueArn,
-                    success: () => {
-                        console.log('Call transfer has been initiated');
-                    },
-                    failure: (err: any) => {
-                        console.error(`Failed to transfer call: ${err}`);
-                    }
-                });
-            } catch (error) {
-                console.error(`Failed to transfer call: ${error}`);
-            }
-        }
-    };
-
-    const handleStateChange = async (newState: string) => {
-        if (agent) {
-            try {
-                const stateToSet = {
-                    name: newState,
-                    type: AgentStateType.ROUTABLE
-                };
-
-                await agent.setState(stateToSet, {
-                    success: () => {
-                        console.log(`Agent state changed to ${newState}`);
-                    },
-                    failure: (err: any) => {
-                        console.error(`Failed to change state: ${err}`);
-                    }
-                });
-            } catch (error) {
-                console.error(`Failed to change state: ${error}`);
-            }
-        }
-    };
-
-    const handleReferralSubmit = () => {
-        // Handle referral submission logic here
-        setShowReferralModal(false);
-    };
-
-    const PatientDetails: React.FC = () => (
-        <Container className={styles.patientDetails}>
-            <div className={styles.patientDetailsGrid}>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Name</span>
-                    <span className={styles.patientDetailsValue}>Eva Montalvo</span>
-                </div>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>DOB</span>
-                    <span className={styles.patientDetailsValue}>03/15/1985</span>
-                </div>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Branch</span>
-                    <span className={styles.patientDetailsValue}>USMC</span>
-                </div>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Member ID</span>
-                    <span className={styles.patientDetailsValue}>BC123456789</span>
-                </div>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>Last Visit</span>
-                    <span className={styles.patientDetailsValue}>01/10/2024</span>
-                </div>
-                <div className={styles.patientDetailsItem}>
-                    <span className={`${styles.patientDetailsLabel} ${styles.boldLabel}`}>PCP</span>
-                    <span className={styles.patientDetailsValue}>Dr. Johnson</span>
-                </div>
-            </div>
-        </Container>
-    );
-
-    const helpPanelContent = (
-        <div className={styles.helpPanelContent}>
-            <SpaceBetween size={'l'}>
-                <Header variant="h2">
-                    Virtual Assistant
-                </Header>
-                <Container>
-                    <ChatPanel />
-                </Container>
-            </SpaceBetween>
-        </div>
-    );
-
-    const mainContent = (
-        <div className={styles.fullWidthLayout}>
-            <Grid
-                gridDefinition={[
-                    { colspan: 4 },
-                    { colspan: 8 }
-                ]}
-            >
-                <div className={styles.ccpContainer}>
-                    <div id="ccp-container" style={{ width: '100%', height: '600px' }}></div>
-                </div>
-                <SpaceBetween size="l">
-                    <PatientDetails />
-                    <Container>
-                        <Tabs
-                            activeTabId={activeTabId}
-                            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-                            tabs={[
-                                {
-                                    id: "medical-summary",
-                                    label: "Medical Summary",
-                                    content: <MedicalSummary />,
-                                },
-                                {
-                                    id: "fhir-section-summary",
-                                    label: "FHIR Section Summary",
-                                    content: <FHIRSectionSummary />,
-                                },
-                                {
-                                    id: "provider-locator",
-                                    label: "Provider Locator",
-                                    content: <ProviderLocator />
-                                },
-                                {
-                                    id: "scheduling",
-                                    label: "Scheduling",
-                                    content: <SchedulingForm />
-                                },
-                                {
-                                    id: "settings",
-                                    label: "Settings",
-                                    content: <DatabaseSettings />
-                                }
-                            ]}
-                        />
-                    </Container>
-                    <Button onClick={() => setShowReferralModal(true)}>Patient Referral</Button>
-                </SpaceBetween>
-            </Grid>
-        </div>
-    );
 
     return (
-        <>
-            <AppLayout
-                content={mainContent}
-                toolsOpen={toolsOpen}
-                tools={helpPanelContent}
-                onToolsChange={({ detail }) => setToolsOpen(detail.open)}
-                toolsWidth={350}
-                navigationHide={true}
-                contentType="default"
-            />
-            <Modal
-                visible={showReferralModal}
-                onDismiss={() => setShowReferralModal(false)}
-                header="Patient Referral"
-                size="medium"
-            >
-                <Form
-                    actions={
-                        <SpaceBetween direction="horizontal" size="xs">
-                            <Button variant="link" onClick={() => setShowReferralModal(false)}>
-                                Cancel
-                            </Button>
-                            <Button variant="primary" onClick={handleReferralSubmit}>
-                                Submit
-                            </Button>
-                        </SpaceBetween>
-                    }
-                >
-                    <SpaceBetween size="l">
-                        <FormField label="Patient name">
-                            <input
-                                type="text"
-                                value={referralForm.patientName}
-                                onChange={(e) =>
-                                    setReferralForm(prev => ({ ...prev, patientName: e.target.value }))
-                                }
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    borderRadius: '4px',
-                                    border: '1px solid var(--color-border-input-default)'
-                                }}
-                            />
-                        </FormField>
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <header className="bg-white shadow-sm">
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                    <h1 className="text-2xl font-semibold text-gray-800">Medical Dashboard</h1>
+                </div>
+            </header>
 
-                        <FormField label="Reason for referral">
-                            <input
-                                type="text"
-                                value={referralForm.illness}
-                                onChange={(e) =>
-                                    setReferralForm(prev => ({ ...prev, illness: e.target.value }))
-                                }
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    borderRadius: '4px',
-                                    border: '1px solid var(--color-border-input-default)'
-                                }}
-                            />
-                        </FormField>
+            {/* Main Content */}
+            <main className="max-w-7xl mx-auto px-4 py-6">
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4 mb-6">
+                    <button 
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                       // onClick={() => handleStateChange('Available')}
+                    >
+                        New Session
+                    </button>
+                    <button 
+                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                       // onClick={handleEndCall}
+                    >
+                        End Call
+                    </button>
+                </div>
 
-                        <FormField label="Current medications">
-                            <input
-                                type="text"
-                                value={referralForm.medications}
-                                onChange={(e) =>
-                                    setReferralForm(prev => ({ ...prev, medications: e.target.value }))
-                                }
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    borderRadius: '4px',
-                                    border: '1px solid var(--color-border-input-default)'
-                                }}
-                            />
-                        </FormField>
+                {/* First Row */}
+                <div className="grid grid-cols-2 gap-6 mb-6">
+                    {/* Caller Attributes */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <Settings className="w-5 h-5 mr-2 text-blue-600" />
+                            Caller Attributes
+                        </h2>
+                        <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
+                            <div id="ccp-container" style={{ width: '100%', height: '100%' }}></div>
+                        </div>
+                    </div>
 
-                        <FormField label="Refer to">
-                            <Select
-                                selectedOption={selectedProvider ? { label: selectedProvider.name, value: selectedProvider.id } : null}
-                                onChange={({ detail }) => {
-                                    const provider = MOCK_PROVIDERS.find(p => p.id === detail.selectedOption.value);
-                                    setSelectedProvider(provider || null);
-                                    setReferralForm(prev => ({ ...prev, referTo: provider?.name || '' }));
-                                }}
-                                options={MOCK_PROVIDERS.map(p => ({ label: p.name, value: p.id }))}
-                                placeholder="Select provider"
-                            />
-                        </FormField>
+                    {/* Medical Insights */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <Bell className="w-5 h-5 mr-2 text-blue-600" />
+                            Medical Insights
+                        </h2>
+                        <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
+                            <MedicalSummary />
+                        </div>
+                    </div>
+                </div>
 
-                        <FormField label="Additional notes">
-                            <Textarea
-                                value={referralForm.details}
-                                onChange={(event) => {
-                                    const target = event.target as HTMLTextAreaElement;
-                                    setReferralForm(prev => ({ ...prev, details: target.value }));
-                                }}
-                            />
-                        </FormField>
-                    </SpaceBetween>
-                    </Form>
-            </Modal>
-        </>
+                {/* Agent Tools Section */}
+                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Agent Tools</h2>
+                    <div className="border-b border-gray-200">
+                        <nav className="-mb-px flex space-x-8">
+                            {[
+                                { id: 1, label: "FHIR Summary" },
+                                { id: 2, label: "Provider Locator" },
+                                { id: 3, label: "Settings" }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                                        activeTab === tab.id
+                                            ? 'border-blue-500 text-blue-600'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4 mt-4 min-h-[150px]">
+                        {activeTab === 1 && <FHIRSectionSummary />}
+                        {activeTab === 2 && <ProviderLocator />}
+                        {activeTab === 3 && <DatabaseSettings />}
+                    </div>
+                </div>
+
+                {/* Last Row */}
+                <div className="grid grid-cols-2 gap-6">
+                    {/* Triage */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-4">Triage</h2>
+                        <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
+                            <SchedulingForm />
+                        </div>
+                    </div>
+
+                    {/* Chat Box */}
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <div className="flex flex-col h-[400px]">
+                            <div className="flex-1 overflow-y-auto mb-4">
+                                {messages.map((msg, index) => (
+                                    <div
+                                        key={index}
+                                        className={`mb-4 flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+                                    >
+                                        <div
+                                            className={`max-w-[70%] rounded-lg px-4 py-2 ${
+                                                msg.isUser
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}
+                                        >
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <form onSubmit={handleSendMessage} className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Type your message..."
+                                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                <button
+                                    type="submit"
+                                    className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-colors"
+                                >
+                                    <Send className="w-5 h-5" />
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     );
 };
 
