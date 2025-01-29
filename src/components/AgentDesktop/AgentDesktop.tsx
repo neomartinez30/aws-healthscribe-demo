@@ -1,34 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Settings, Bell, Send } from 'lucide-react';
-import 'amazon-connect-streams';
-
-type Contact = any;
-type Agent = any;
 
 interface Message {
   text: string;
   isUser: boolean;
 }
 
-interface CustomerProfile {
-  name: string;
-  id: string;
-  phone: string;
-  queue: string;
-  verification: string;
-}
-
 const AgentDesktop: React.FC = () => {
-  const [agentState, setAgentState] = useState<string>('Offline');
-  const [contact, setContact] = useState<Contact | null>(null);
-  const [agent, setAgent] = useState<Agent | null>(null);
-  const [customerProfile, setCustomerProfile] = useState<CustomerProfile>({
-    name: "",
-    id: "",
-    phone: "",
-    queue: "",
-    verification: ""
-  });
   const [activeTab, setActiveTab] = useState(1);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([
@@ -36,128 +14,6 @@ const AgentDesktop: React.FC = () => {
     { text: "I need some assistance please", isUser: true },
     { text: "Of course! I'm here to help. What do you need?", isUser: false }
   ]);
-
-  useEffect(() => {
-    const connectUrl = process.env.CONNECT_INSTANCE_URL || "https://neoathome2024.my.connect.aws";
-    const containerDiv = document.getElementById("ccp-container");
-
-    if (!containerDiv) {
-      console.error('CCP container element not found');
-      return;
-    }
-
-    try {
-      const ccpParams = {
-        ccpUrl: `${connectUrl}/ccp-v2/`,
-        loginPopup: true,
-        loginPopupAutoClose: true,
-        loginOptions: {
-          autoClose: true,
-          height: 600,
-          width: 400,
-        },
-        softphone: {
-          allowFramedSoftphone: true,
-          disableRingtone: false
-        },
-        region: process.env.CONNECT_REGION || "us-east-1"
-      };
-
-      // @ts-ignore
-      connect.core.initCCP(containerDiv, ccpParams);
-
-      // @ts-ignore
-      connect.agent((agent: Agent) => {
-        setAgent(agent);
-        agent.onStateChange((state: { name: string }) => {
-          setAgentState(state.name);
-        });
-
-        const initialState = agent.getState();
-        if (initialState) {
-          setAgentState(initialState.name);
-        }
-      });
-
-      // @ts-ignore
-      connect.contact((contact: Contact) => {
-        setContact(contact);
-
-        contact.onConnecting(() => {
-          console.log('Incoming contact connecting...');
-        });
-
-        contact.onConnected(() => {
-          const attributes = contact.getAttributes();
-          setCustomerProfile({
-            name: attributes.name?.value || "Unknown",
-            id: attributes.customerId?.value || "Unknown",
-            phone: contact.getInitialConnection().getAddress() || "",
-            queue: contact.getQueue()?.name || "",
-            verification: attributes.verified?.value || "Pending"
-          });
-        });
-
-        contact.onEnded(() => {
-          setContact(null);
-          setCustomerProfile({
-            name: "",
-            id: "",
-            phone: "",
-            queue: "",
-            verification: ""
-          });
-        });
-      });
-
-    } catch (error) {
-      console.error(`Failed to initialize CCP: ${error}`);
-    }
-  }, []);
-
-  const handleNewSession = () => {
-    handleStateChange('Available');
-  };
-
-  const handleEndCall = () => {
-    if (contact) {
-      try {
-        contact.destroy({
-          success: () => {
-            console.log('Call has been terminated successfully');
-          },
-          failure: (err: any) => {
-            console.error(`Failed to end call: ${err}`);
-          }
-        });
-      } catch (error) {
-        console.error(`Failed to end call: ${error}`);
-      }
-    }
-  };
-
-  const handleStateChange = async (newState: string) => {
-    if (agent) {
-      try {
-        const stateToSet = {
-          name: newState,
-          // @ts-ignore
-          type: connect.AgentStateType.ROUTABLE
-        };
-
-        await agent.setState(stateToSet, {
-          success: () => {
-            console.log(`Agent state changed to ${newState}`);
-          },
-          failure: (err: any) => {
-            console.error(`Failed to change state: ${err}`);
-          }
-        });
-      } catch (error) {
-        console.error(`Failed to change state: ${error}`);
-      }
-    }
-  };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -188,13 +44,11 @@ const AgentDesktop: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex justify-end space-x-4 mb-6">
           <button 
-            onClick={handleNewSession}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             New Session
           </button>
           <button 
-            onClick={handleEndCall}
             className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
           >
             End Call
@@ -210,7 +64,20 @@ const AgentDesktop: React.FC = () => {
               Caller Attributes
             </h2>
             <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
-              <div id="ccp-container" style={{ width: '100%', height: '200px' }}></div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Name</p>
+                  <p className="font-medium">John Doe</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">ID</p>
+                  <p className="font-medium">12345</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Phone</p>
+                  <p className="font-medium">+1 (555) 123-4567</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -221,7 +88,20 @@ const AgentDesktop: React.FC = () => {
               Medical Insights
             </h2>
             <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
-              {/* Content will go here */}
+              <div className="space-y-4">
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
+                  <p className="text-sm font-medium text-gray-900">Last Visit</p>
+                  <p className="text-sm text-gray-500">March 15, 2024</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
+                  <p className="text-sm font-medium text-gray-900">Primary Care</p>
+                  <p className="text-sm text-gray-500">Dr. Sarah Johnson</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border border-gray-200">
+                  <p className="text-sm font-medium text-gray-900">Allergies</p>
+                  <p className="text-sm text-gray-500">Penicillin</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -231,25 +111,65 @@ const AgentDesktop: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Agent Tools</h2>
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
-              {[1, 2, 3].map((tab) => (
+              {[
+                { id: 1, name: "FHIR Summary" },
+                { id: 2, name: "Provider Locator" },
+                { id: 3, name: "Settings" }
+              ].map((tab) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab
+                    activeTab === tab.id
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Tab {tab}
+                  {tab.name}
                 </button>
               ))}
             </nav>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 mt-4 min-h-[150px]">
-            {activeTab === 1 && <div>Content for Tab 1</div>}
-            {activeTab === 2 && <div>Content for Tab 2</div>}
-            {activeTab === 3 && <div>Content for Tab 3</div>}
+            {activeTab === 1 && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <h3 className="font-medium text-gray-900">Patient History</h3>
+                  <p className="text-sm text-gray-500">View detailed patient history</p>
+                </div>
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <h3 className="font-medium text-gray-900">Medications</h3>
+                  <p className="text-sm text-gray-500">Current prescriptions</p>
+                </div>
+              </div>
+            )}
+            {activeTab === 2 && (
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Search providers..."
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-white rounded-lg border border-gray-200">
+                    <h3 className="font-medium text-gray-900">Dr. Smith</h3>
+                    <p className="text-sm text-gray-500">Cardiologist</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-lg border border-gray-200">
+                    <h3 className="font-medium text-gray-900">Dr. Johnson</h3>
+                    <p className="text-sm text-gray-500">Primary Care</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {activeTab === 3 && (
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <h3 className="font-medium text-gray-900">Preferences</h3>
+                  <p className="text-sm text-gray-500">Configure dashboard settings</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -259,7 +179,20 @@ const AgentDesktop: React.FC = () => {
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Triage</h2>
             <div className="bg-gray-50 rounded-lg p-4 min-h-[200px]">
-              {/* Content will go here */}
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <h3 className="font-medium text-gray-900">Current Symptoms</h3>
+                  <p className="text-sm text-gray-500">Record patient symptoms</p>
+                </div>
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <h3 className="font-medium text-gray-900">Urgency Level</h3>
+                  <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
