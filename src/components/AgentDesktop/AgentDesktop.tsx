@@ -98,7 +98,7 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <MedicalSummary /> {/* Use the MedicalSummary component here */}
+            <MedicalSummary />
           </Container>
         </Grid>
 
@@ -193,7 +193,7 @@ const AgentDesktop: React.FC = () => {
                     <Box
                       padding="s"
                       backgroundColor={msg.isUser ? 'blue-600' : 'grey-100'}
-                      color={msg.isUser ? 'text-body-inverse' : 'inherit'}
+                      color={msg.isUser ? 'inherit' : 'inherit'}
                       borderRadius="s"
                       maxWidth="70%"
                     >
