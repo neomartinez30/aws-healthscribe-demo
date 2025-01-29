@@ -19,6 +19,7 @@ export default defineConfig({
                 global: 'globalThis',
             },
         },
+        exclude: ['lucide-react'],
     },
     resolve: {
         alias: {
