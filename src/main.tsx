@@ -1,13 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 import React from 'react';
-
 import { BrowserRouter } from 'react-router-dom';
-
 import Box from '@cloudscape-design/components/box';
 import { I18nProvider, importMessages } from '@cloudscape-design/components/i18n';
 import '@cloudscape-design/global-styles/index.css';
-
+import './index.css'; // Import global styles
 import { Authenticator } from '@aws-amplify/ui-react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';

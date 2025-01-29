@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure Tailwind styles take precedence */
+#root {
+  @apply min-h-screen;
+}
+
+/* Custom base styles */
+body {
+  @apply antialiased text-gray-900 bg-gray-50;
+}
+
+/* Ensure proper button styling */
+button {
+  @apply cursor-pointer;
+}
+
+/* Form element styling */
+input, select, textarea {
+  @apply border-gray-300;
+}
