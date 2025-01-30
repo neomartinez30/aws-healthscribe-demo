@@ -8,42 +8,12 @@ import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
-import Textarea, { TextareaProps } from '@cloudscape-design/components/textarea';
-import Select from '@cloudscape-design/components/select';
-import Alert from '@cloudscape-design/components/alert';
 import Tabs from '@cloudscape-design/components/tabs';
+import Alert from '@cloudscape-design/components/alert';
 import MedicalSummary from './MedicalSummary';
 
-interface Message {
-  text: string;
-  isUser: boolean;
-}
-
 const AgentDesktop: React.FC = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    { text: "Hello! How can I help you today?", isUser: false },
-    { text: "What are current prescriptions is the patient taking ", isUser: true },
-    { text: "The active prescriptions for this patient is 10mg propranolol, once daily. Would you like to see the patients prescription history?", isUser: false }
-  ]);
-
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      setMessages([...messages, { text: message, isUser: true }]);
-      setMessage('');
-    }
-  };
-
-  const [symptoms, setSymptoms] = useState('');
   const [activeTabId, setActiveTabId] = useState("tool1");
-
-  const textareaProps: TextareaProps = {
-    value: symptoms,
-    onChange: ({ detail }) => setSymptoms(detail.value),
-    placeholder: "Record patient symptoms",
-    rows: 3
-  };
 
   return (
     <ContentLayout
@@ -136,9 +106,46 @@ const AgentDesktop: React.FC = () => {
             onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
             tabs={[
               {
-                label: "Clinical Decision Support",
+                label: "Agent Assist",
                 id: "tool1",
-                content: <div style={{ height: '200px', padding: '20px' }}>Clinical Decision Support Tool Content</div>
+                content: (
+                  <div style={{ padding: '20px' }}>
+                    <SpaceBetween size="l">
+                      <Alert type="info">
+                        Based on the conversation, here are my recommendations:
+                      </Alert>
+                      <Box>
+                        <SpaceBetween size="m">
+                          <div>
+                            <Box variant="h4">Key Points:</Box>
+                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
+                              <li>Patient is expressing thoughts of self-harm</li>
+                              <li>Immediate intervention required</li>
+                              <li>Has support system (sister) available</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <Box variant="h4">Recommended Actions:</Box>
+                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
+                              <li>Keep patient on the line</li>
+                              <li>Connect with crisis counselor immediately</li>
+                              <li>Encourage contacting sister for support</li>
+                              <li>Document suicide risk assessment</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <Box variant="h4">Resources to Share:</Box>
+                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
+                              <li>National Suicide Prevention Lifeline: 988</li>
+                              <li>Local Crisis Center: (555) 123-4567</li>
+                              <li>Emergency Services if needed: 911</li>
+                            </ul>
+                          </div>
+                        </SpaceBetween>
+                      </Box>
+                    </SpaceBetween>
+                  </div>
+                )
               },
               {
                 label: "Resource Locator",
@@ -158,106 +165,6 @@ const AgentDesktop: React.FC = () => {
             ]}
           />
         </Container>
-
-        {/* Last Row */}
-        <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-          {/* Triage */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Patient triage information"
-              >
-                Triage
-              </Header>
-            }
-          >
-            <div style={{ height: '300px', overflowY: 'auto' }}>
-              <SpaceBetween size="l">
-                <FormField label="Current Symptoms">
-                  <Textarea {...textareaProps} />
-                </FormField>
-                <FormField label="Urgency Level">
-                  <Select
-                    selectedOption={null}
-                    options={[
-                      { label: "Low", value: "low" },
-                      { label: "Medium", value: "medium" },
-                      { label: "High", value: "high" }
-                    ]}
-                    placeholder="Select urgency level"
-                  />
-                </FormField>
-                <FormField label="Notes">
-                  <Textarea
-                    value=""
-                    onChange={() => {}}
-                    placeholder="Additional notes"
-                    rows={4}
-                  />
-                </FormField>
-              </SpaceBetween>
-            </div>
-          </Container>
-
-          {/* Chat Box */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Communication log"
-              >
-                Chat
-              </Header>
-            }
-          >
-            <div style={{ height: '300px', overflowY: 'auto' }}>
-              <SpaceBetween size="l">
-                <div>
-                  {messages.map((msg, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        display: 'flex',
-                        justifyContent: msg.isUser ? 'flex-end' : 'flex-start',
-                        marginBottom: '10px'
-                      }}
-                    >
-                      <Box
-                        padding="s"
-                        variant="div"
-                        textAlign={msg.isUser ? "right" : "left"}
-                        fontSize="body-m"
-                        margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
-                      >
-                        <div style={{
-                          backgroundColor: msg.isUser ? "#0972d3" : "#f2f3f3",
-                          padding: "8px 12px",
-                          borderRadius: "4px",
-                          color: msg.isUser ? "#ffffff" : "#000000"
-                        }}>
-                          {msg.text}
-                        </div>
-                      </Box>
-                    </div>
-                  ))}
-                </div>
-                <form onSubmit={handleSendMessage}>
-                  <SpaceBetween direction="horizontal" size="xs">
-                    <Input
-                      value={message}
-                      onChange={({ detail }) => setMessage(detail.value)}
-                      placeholder="Type your message..."
-                    />
-                    <Button formAction="submit" variant="primary" iconName="send">
-                      Send
-                    </Button>
-                  </SpaceBetween>
-                </form>
-              </SpaceBetween>
-            </div>
-          </Container>
-        </Grid>
       </SpaceBetween>
     </ContentLayout>
   );
