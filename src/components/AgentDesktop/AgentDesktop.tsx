@@ -49,7 +49,6 @@ const AgentDesktop: React.FC = () => {
   return (
     <div className={styles.fullWidthLayout}>
       <ContentLayout
-        disableContentPaddings
         header={
           <Header
             variant="h1"
