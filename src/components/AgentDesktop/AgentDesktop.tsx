@@ -47,7 +47,7 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <div style={{ height: '300px', overflowY: 'auto' }}>
+            <div style={{ height: '300px' }}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />

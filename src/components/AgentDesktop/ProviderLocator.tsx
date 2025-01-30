@@ -6,6 +6,10 @@ import FormField from '@cloudscape-design/components/form-field';
 import Cards from '@cloudscape-design/components/cards';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
+import Modal from '@cloudscape-design/components/modal';
+import Form from '@cloudscape-design/components/form-field';
+import Input from '@cloudscape-design/components/input';
+import Textarea from '@cloudscape-design/components/textarea';
 
 const MOCK_PROVIDERS = [
     { id: '1', name: 'Dr. Sarah Johnson', specialty: 'Cardiology', address: '123 Medical Ave', zip: '20001', availability: 'Next available: Tomorrow 2pm' },
@@ -90,6 +94,45 @@ export function ProviderLocator() {
                     }
                 />
             </SpaceBetween>
+
+            <Modal
+                visible={showReferralModal}
+                onDismiss={() => setShowReferralModal(false)}
+                header="Create Referral"
+                footer={
+                    <Box float="right">
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button variant="link" onClick={() => setShowReferralModal(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={() => setShowReferralModal(false)}>
+                                Create Referral
+                            </Button>
+                        </SpaceBetween>
+                    </Box>
+                }
+            >
+                <SpaceBetween size="l">
+                    <FormField label="Provider">
+                        <Input 
+                            value={selectedProvider?.name || ''} 
+                            disabled 
+                        />
+                    </FormField>
+                    <FormField label="Reason for Referral">
+                        <Textarea
+                            placeholder="Enter reason for referral"
+                            rows={3}
+                        />
+                    </FormField>
+                    <FormField label="Additional Notes">
+                        <Textarea
+                            placeholder="Enter any additional notes"
+                            rows={3}
+                        />
+                    </FormField>
+                </SpaceBetween>
+            </Modal>
         </Container>
     );
 }
