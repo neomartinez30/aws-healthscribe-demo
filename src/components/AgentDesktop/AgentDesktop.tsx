@@ -11,6 +11,7 @@ import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
 import Alert from '@cloudscape-design/components/alert';
 import MedicalSummary from './MedicalSummary';
+import { ProviderLocator } from './ProviderLocator';
 
 const AgentDesktop: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("tool1");
@@ -47,7 +48,7 @@ const AgentDesktop: React.FC = () => {
             }
           >
             <div style={{ height: '300px', overflowY: 'auto' }}>
-              <SpaceBetween size="l">
+              <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
                 </FormField>
@@ -60,16 +61,13 @@ const AgentDesktop: React.FC = () => {
                 <FormField label="Email">
                   <Input value="john.doe@example.com" disabled />
                 </FormField>
-                <FormField label="Address">
-                  <Input value="123 Main St, Anytown, USA" disabled />
-                </FormField>
                 <FormField label="Insurance">
                   <Input value="Blue Cross Blue Shield" disabled />
                 </FormField>
                 <FormField label="Primary Care">
                   <Input value="Dr. Sarah Johnson" disabled />
                 </FormField>
-              </SpaceBetween>
+              </Grid>
             </div>
           </Container>
 
@@ -150,7 +148,7 @@ const AgentDesktop: React.FC = () => {
               {
                 label: "Resource Locator",
                 id: "tool2",
-                content: <div style={{ height: '200px', padding: '20px' }}>Resource Locator Tool Content</div>
+                content: <ProviderLocator />
               },
               {
                 label: "Care Protocols",
