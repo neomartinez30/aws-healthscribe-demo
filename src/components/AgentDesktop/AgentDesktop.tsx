@@ -192,12 +192,13 @@ const AgentDesktop: React.FC = () => {
                   >
                     <Box
                       padding="s"
-                      variant={msg.isUser ? "primary" : "default"}
+                      variant="div"
                       color="inherit"
                       borderRadius="s"
                       textAlign={msg.isUser ? "right" : "left"}
                       fontSize="body-m"
                       margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
+                      backgroundColor={msg.isUser ? "blue" : "grey"}
                     >
                       {msg.text}
                     </Box>
