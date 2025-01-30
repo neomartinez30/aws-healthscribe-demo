@@ -7,14 +7,19 @@
     flex-direction: column;
   }
   
-  .fullWidthLayout :global(.awsui-content-layout) {
-    max-width: none !important;
-    padding: 20px !important;
-    flex: 1;
+  .contentWrapper {
+    padding: 20px;
+    width: 100%;
   }
   
-  .fullWidthLayout :global(.awsui-content-layout-container) {
+  /* Override Cloudscape default max-width */
+  .fullWidthLayout :global(.awsui-content-layout) {
     max-width: none !important;
+  }
+  
+  .fullWidthLayout :global(.awsui-content-layout-content) {
+    max-width: none !important;
+    width: 100% !important;
   }
   
   .fullWidthLayout :global(.awsui-grid) {
