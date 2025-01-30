@@ -1,71 +1,86 @@
 .fullWidthLayout {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    overflow-y: auto;
   }
   
   .contentWrapper {
-    padding: 0;
+    flex: 1;
     width: 100%;
+    padding: 20px;
+    overflow-y: auto;
   }
   
-  /* Override Cloudscape default max-width and padding */
-  .fullWidthLayout :global(.awsui-content-layout) {
+  /* Override Cloudscape styles */
+  .fullWidthLayout :global([class*="awsui_content-layout-container"]) {
     max-width: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
   
-  .fullWidthLayout :global(.awsui-content-layout-content) {
+  .fullWidthLayout :global([class*="awsui_content-layout"]) {
     max-width: none !important;
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
   
-  /* Remove default padding from header */
-  .fullWidthLayout :global(.awsui-header) {
+  .fullWidthLayout :global([class*="awsui_layout"]) {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  
+  /* Grid and container styles */
+  .fullWidthLayout :global([class*="awsui_grid"]) {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .fullWidthLayout :global([class*="awsui_container"]) {
+    width: 100% !important;
+    margin-bottom: 20px !important;
+    height: auto !important;
+  }
+  
+  /* Content area styles */
+  .fullWidthLayout :global([class*="awsui_content"]) {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+  
+  /* Header styles */
+  .fullWidthLayout :global([class*="awsui_header"]) {
     padding: 20px !important;
-  }
-  
-  /* Ensure grid takes full width */
-  .fullWidthLayout :global(.awsui-grid) {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 20px !important;
-  }
-  
-  .fullWidthLayout :global(.awsui-container) {
-    height: 100%;
-    margin: 0 !important;
-  }
-  
-  /* Ensure containers take full width */
-  .fullWidthLayout :global(.awsui-container-content) {
-    height: 100%;
     width: 100% !important;
   }
   
-  /* Remove extra margins from grid items */
-  .fullWidthLayout :global(.awsui-grid-item) {
-    margin: 0 !important;
-    padding: 10px !important;
+  /* Ensure proper spacing between grid items */
+  .fullWidthLayout :global([class*="awsui_grid-container"]) {
+    gap: 20px !important;
+  }
+  
+  /* Fix container heights */
+  .fullWidthLayout :global([class*="awsui_root"]) {
+    height: auto !important;
+    min-height: 0 !important;
   }
   
   /* Ensure proper spacing in SpaceBetween components */
-  .fullWidthLayout :global(.awsui-space-between) {
-    width: 100%;
-    margin: 0 !important;
-  }
-  
-  /* Override any root level margins */
-  .fullWidthLayout :global(#root) {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100vw !important;
-    overflow-x: hidden !important;
+  .fullWidthLayout :global([class*="awsui_space-between"]) {
+    margin-bottom: 20px !important;
   }
