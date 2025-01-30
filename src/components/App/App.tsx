@@ -47,7 +47,7 @@ export default function App() {
     );
 
     return (
-        <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
             <div id="appTopNav">
                 <TopNav />
             </div>

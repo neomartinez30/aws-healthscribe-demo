@@ -12,7 +12,7 @@
 /* Force full width and height */
 html, body, #root {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   overflow-x: hidden;
 }
 
@@ -26,7 +26,7 @@ div[class*="awsui_root_"] {
   width: 100% !important;
   max-width: none !important;
   height: auto !important;
-  min-height: 100vh !important;
+  min-height: 0 !important;
 }
 
 div[class*="awsui_content-wrapper_"] {
@@ -34,14 +34,12 @@ div[class*="awsui_content-wrapper_"] {
   max-width: none !important;
   padding: 0 !important;
   height: auto !important;
-  min-height: 100vh !important;
 }
 
 div[class*="awsui_content-layout_"] {
   max-width: none !important;
   padding: 0 !important;
   height: auto !important;
-  min-height: 100vh !important;
 }
 
 div[class*="awsui_layout_"] {
@@ -49,7 +47,6 @@ div[class*="awsui_layout_"] {
   margin: 0 !important;
   padding: 0 !important;
   height: auto !important;
-  min-height: 100vh !important;
 }
 
 /* Ensure proper button styling */
