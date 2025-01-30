@@ -5,34 +5,49 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
   
   .contentWrapper {
-    padding: 20px;
+    padding: 0;
     width: 100%;
   }
   
-  /* Override Cloudscape default max-width */
+  /* Override Cloudscape default max-width and padding */
   .fullWidthLayout :global(.awsui-content-layout) {
     max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
   .fullWidthLayout :global(.awsui-content-layout-content) {
     max-width: none !important;
     width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
+  /* Remove default padding from header */
+  .fullWidthLayout :global(.awsui-header) {
+    padding: 20px !important;
+  }
+  
+  /* Ensure grid takes full width */
   .fullWidthLayout :global(.awsui-grid) {
     width: 100% !important;
+    margin: 0 !important;
+    padding: 0 20px !important;
   }
   
   .fullWidthLayout :global(.awsui-container) {
     height: 100%;
+    margin: 0 !important;
   }
   
   /* Ensure containers take full width */
   .fullWidthLayout :global(.awsui-container-content) {
     height: 100%;
+    width: 100% !important;
   }
   
   /* Remove extra margins from grid items */
@@ -44,4 +59,13 @@
   /* Ensure proper spacing in SpaceBetween components */
   .fullWidthLayout :global(.awsui-space-between) {
     width: 100%;
+    margin: 0 !important;
+  }
+  
+  /* Override any root level margins */
+  .fullWidthLayout :global(#root) {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    overflow-x: hidden !important;
   }
