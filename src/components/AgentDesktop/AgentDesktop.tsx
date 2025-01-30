@@ -64,7 +64,7 @@ const AgentDesktop: React.FC = () => {
         }
       >
         <div className={styles.contentWrapper}>
-          <SpaceBetween size="l">
+          <SpaceBetween size="xl">
             {/* First Row */}
             <Grid
               gridDefinition={[
@@ -73,58 +73,62 @@ const AgentDesktop: React.FC = () => {
               ]}
             >
               {/* Caller Attributes */}
-              <Container
-                header={
-                  <Header
-                    variant="h2"
-                    description="Patient information and attributes"
-                  >
-                    Caller Attributes
-                  </Header>
-                }
-              >
-                <div style={{ height: '300px', overflowY: 'auto' }}>
-                  <SpaceBetween size="l">
-                    <FormField label="Name">
-                      <Input value="John Doe" disabled />
-                    </FormField>
-                    <FormField label="ID">
-                      <Input value="12345" disabled />
-                    </FormField>
-                    <FormField label="Phone">
-                      <Input value="+1 (555) 123-4567" disabled />
-                    </FormField>
-                    <FormField label="Email">
-                      <Input value="john.doe@example.com" disabled />
-                    </FormField>
-                    <FormField label="Address">
-                      <Input value="123 Main St, Anytown, USA" disabled />
-                    </FormField>
-                    <FormField label="Insurance">
-                      <Input value="Blue Cross Blue Shield" disabled />
-                    </FormField>
-                    <FormField label="Primary Care">
-                      <Input value="Dr. Sarah Johnson" disabled />
-                    </FormField>
-                  </SpaceBetween>
-                </div>
-              </Container>
+              <div className={styles.gridItem}>
+                <Container
+                  header={
+                    <Header
+                      variant="h2"
+                      description="Patient information and attributes"
+                    >
+                      Caller Attributes
+                    </Header>
+                  }
+                >
+                  <div className={styles.scrollContainer}>
+                    <SpaceBetween size="l">
+                      <FormField label="Name">
+                        <Input value="John Doe" disabled />
+                      </FormField>
+                      <FormField label="ID">
+                        <Input value="12345" disabled />
+                      </FormField>
+                      <FormField label="Phone">
+                        <Input value="+1 (555) 123-4567" disabled />
+                      </FormField>
+                      <FormField label="Email">
+                        <Input value="john.doe@example.com" disabled />
+                      </FormField>
+                      <FormField label="Address">
+                        <Input value="123 Main St, Anytown, USA" disabled />
+                      </FormField>
+                      <FormField label="Insurance">
+                        <Input value="Blue Cross Blue Shield" disabled />
+                      </FormField>
+                      <FormField label="Primary Care">
+                        <Input value="Dr. Sarah Johnson" disabled />
+                      </FormField>
+                    </SpaceBetween>
+                  </div>
+                </Container>
+              </div>
 
               {/* Medical Insights */}
-              <Container
-                header={
-                  <Header
-                    variant="h2"
-                    description="Key medical information and history"
-                  >
-                    Patient Insights
-                  </Header>
-                }
-              >
-                <div style={{ height: '300px', overflowY: 'auto' }}>
-                  <MedicalSummary />
-                </div>
-              </Container>
+              <div className={styles.gridItem}>
+                <Container
+                  header={
+                    <Header
+                      variant="h2"
+                      description="Key medical information and history"
+                    >
+                      Patient Insights
+                    </Header>
+                  }
+                >
+                  <div className={styles.scrollContainer}>
+                    <MedicalSummary />
+                  </div>
+                </Container>
+              </div>
             </Grid>
 
             {/* Agent Tools Panel */}
@@ -145,22 +149,22 @@ const AgentDesktop: React.FC = () => {
                   {
                     label: "Clinical Decision Support",
                     id: "tool1",
-                    content: <div style={{ height: '200px', padding: '20px' }}>Clinical Decision Support Tool Content</div>
+                    content: <div className={styles.tabContent}>Clinical Decision Support Tool Content</div>
                   },
                   {
                     label: "Resource Locator",
                     id: "tool2",
-                    content: <div style={{ height: '200px', padding: '20px' }}>Resource Locator Tool Content</div>
+                    content: <div className={styles.tabContent}>Resource Locator Tool Content</div>
                   },
                   {
                     label: "Care Protocols",
                     id: "tool3",
-                    content: <div style={{ height: '200px', padding: '20px' }}>Care Protocols Tool Content</div>
+                    content: <div className={styles.tabContent}>Care Protocols Tool Content</div>
                   },
                   {
                     label: "Documentation Helper",
                     id: "tool4",
-                    content: <div style={{ height: '200px', padding: '20px' }}>Documentation Helper Tool Content</div>
+                    content: <div className={styles.tabContent}>Documentation Helper Tool Content</div>
                   }
                 ]}
               />
@@ -174,101 +178,105 @@ const AgentDesktop: React.FC = () => {
               ]}
             >
               {/* Triage */}
-              <Container
-                header={
-                  <Header
-                    variant="h2"
-                    description="Patient triage information"
-                  >
-                    Triage
-                  </Header>
-                }
-              >
-                <div style={{ height: '300px', overflowY: 'auto' }}>
-                  <SpaceBetween size="l">
-                    <FormField label="Current Symptoms">
-                      <Textarea {...textareaProps} />
-                    </FormField>
-                    <FormField label="Urgency Level">
-                      <Select
-                        selectedOption={null}
-                        options={[
-                          { label: "Low", value: "low" },
-                          { label: "Medium", value: "medium" },
-                          { label: "High", value: "high" }
-                        ]}
-                        placeholder="Select urgency level"
-                      />
-                    </FormField>
-                    <FormField label="Notes">
-                      <Textarea
-                        value=""
-                        onChange={() => {}}
-                        placeholder="Additional notes"
-                        rows={4}
-                      />
-                    </FormField>
-                  </SpaceBetween>
-                </div>
-              </Container>
+              <div className={styles.gridItem}>
+                <Container
+                  header={
+                    <Header
+                      variant="h2"
+                      description="Patient triage information"
+                    >
+                      Triage
+                    </Header>
+                  }
+                >
+                  <div className={styles.scrollContainer}>
+                    <SpaceBetween size="l">
+                      <FormField label="Current Symptoms">
+                        <Textarea {...textareaProps} />
+                      </FormField>
+                      <FormField label="Urgency Level">
+                        <Select
+                          selectedOption={null}
+                          options={[
+                            { label: "Low", value: "low" },
+                            { label: "Medium", value: "medium" },
+                            { label: "High", value: "high" }
+                          ]}
+                          placeholder="Select urgency level"
+                        />
+                      </FormField>
+                      <FormField label="Notes">
+                        <Textarea
+                          value=""
+                          onChange={() => {}}
+                          placeholder="Additional notes"
+                          rows={4}
+                        />
+                      </FormField>
+                    </SpaceBetween>
+                  </div>
+                </Container>
+              </div>
 
               {/* Chat Box */}
-              <Container
-                header={
-                  <Header
-                    variant="h2"
-                    description="Communication log"
-                  >
-                    Chat
-                  </Header>
-                }
-              >
-                <div style={{ height: '300px', overflowY: 'auto' }}>
-                  <SpaceBetween size="l">
-                    <div>
-                      {messages.map((msg, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            display: 'flex',
-                            justifyContent: msg.isUser ? 'flex-end' : 'flex-start',
-                            marginBottom: '10px'
-                          }}
-                        >
-                          <Box
-                            padding="s"
-                            variant="div"
-                            textAlign={msg.isUser ? "right" : "left"}
-                            fontSize="body-m"
-                            margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
+              <div className={styles.gridItem}>
+                <Container
+                  header={
+                    <Header
+                      variant="h2"
+                      description="Communication log"
+                    >
+                      Chat
+                    </Header>
+                  }
+                >
+                  <div className={styles.scrollContainer}>
+                    <SpaceBetween size="l">
+                      <div className={styles.chatMessages}>
+                        {messages.map((msg, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              display: 'flex',
+                              justifyContent: msg.isUser ? 'flex-end' : 'flex-start',
+                              marginBottom: '10px'
+                            }}
                           >
-                            <div style={{
-                              backgroundColor: msg.isUser ? "#0972d3" : "#f2f3f3",
-                              padding: "8px 12px",
-                              borderRadius: "4px",
-                              color: msg.isUser ? "#ffffff" : "#000000"
-                            }}>
-                              {msg.text}
-                            </div>
-                          </Box>
-                        </div>
-                      ))}
-                    </div>
-                    <form onSubmit={handleSendMessage}>
-                      <SpaceBetween direction="horizontal" size="xs">
-                        <Input
-                          value={message}
-                          onChange={({ detail }) => setMessage(detail.value)}
-                          placeholder="Type your message..."
-                        />
-                        <Button formAction="submit" variant="primary" iconName="send">
-                          Send
-                        </Button>
-                      </SpaceBetween>
-                    </form>
-                  </SpaceBetween>
-                </div>
-              </Container>
+                            <Box
+                              padding="s"
+                              variant="div"
+                              textAlign={msg.isUser ? "right" : "left"}
+                              fontSize="body-m"
+                              margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
+                            >
+                              <div style={{
+                                backgroundColor: msg.isUser ? "#0972d3" : "#f2f3f3",
+                                padding: "8px 12px",
+                                borderRadius: "4px",
+                                color: msg.isUser ? "#ffffff" : "#000000"
+                              }}>
+                                {msg.text}
+                              </div>
+                            </Box>
+                          </div>
+                        ))}
+                      </div>
+                      <form onSubmit={handleSendMessage} className={styles.chatForm}>
+                        <SpaceBetween direction="horizontal" size="xs">
+                          <Input
+                            value={message}
+                            onChange={({ detail }) => setMessage(detail.value)}
+                            placeholder="Type your message..."
+                          />
+                          <Button formAction="submit" variant="primary" iconName="send">
+                            Send
+                          </Button>
+                        </SpaceBetween>
+                      </form>
+                    </SpaceBetween>
+                  </div>
+                </Container>
+              </div>
             </Grid>
           </SpaceBetween>
         </div>
