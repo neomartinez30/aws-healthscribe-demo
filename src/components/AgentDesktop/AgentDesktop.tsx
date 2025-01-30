@@ -11,6 +11,7 @@ import FormField from '@cloudscape-design/components/form-field';
 import Textarea, { TextareaProps } from '@cloudscape-design/components/textarea';
 import Select from '@cloudscape-design/components/select';
 import Alert from '@cloudscape-design/components/alert';
+import Tabs from '@cloudscape-design/components/tabs';
 import MedicalSummary from './MedicalSummary';
 
 interface Message {
@@ -35,6 +36,7 @@ const AgentDesktop: React.FC = () => {
   };
 
   const [symptoms, setSymptoms] = useState('');
+  const [activeTabId, setActiveTabId] = useState("tool1");
 
   const textareaProps: TextareaProps = {
     value: symptoms,
@@ -117,6 +119,45 @@ const AgentDesktop: React.FC = () => {
             </div>
           </Container>
         </Grid>
+
+        {/* Agent Tools Panel */}
+        <Container
+          header={
+            <Header
+              variant="h2"
+              description="Available tools and resources"
+            >
+              Agent Tools
+            </Header>
+          }
+        >
+          <Tabs
+            activeTabId={activeTabId}
+            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+            tabs={[
+              {
+                label: "Clinical Decision Support",
+                id: "tool1",
+                content: <div style={{ height: '200px', padding: '20px' }}>Clinical Decision Support Tool Content</div>
+              },
+              {
+                label: "Resource Locator",
+                id: "tool2",
+                content: <div style={{ height: '200px', padding: '20px' }}>Resource Locator Tool Content</div>
+              },
+              {
+                label: "Care Protocols",
+                id: "tool3",
+                content: <div style={{ height: '200px', padding: '20px' }}>Care Protocols Tool Content</div>
+              },
+              {
+                label: "Documentation Helper",
+                id: "tool4",
+                content: <div style={{ height: '200px', padding: '20px' }}>Documentation Helper Tool Content</div>
+              }
+            ]}
+          />
+        </Container>
 
         {/* Last Row */}
         <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
