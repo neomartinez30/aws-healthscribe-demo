@@ -74,17 +74,31 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <SpaceBetween size="l">
-              <FormField label="Name">
-                <Input value="John Doe" disabled />
-              </FormField>
-              <FormField label="ID">
-                <Input value="12345" disabled />
-              </FormField>
-              <FormField label="Phone">
-                <Input value="+1 (555) 123-4567" disabled />
-              </FormField>
-            </SpaceBetween>
+            <div style={{ height: '300px', overflowY: 'auto' }}>
+              <SpaceBetween size="l">
+                <FormField label="Name">
+                  <Input value="John Doe" disabled />
+                </FormField>
+                <FormField label="ID">
+                  <Input value="12345" disabled />
+                </FormField>
+                <FormField label="Phone">
+                  <Input value="+1 (555) 123-4567" disabled />
+                </FormField>
+                <FormField label="Email">
+                  <Input value="john.doe@example.com" disabled />
+                </FormField>
+                <FormField label="Address">
+                  <Input value="123 Main St, Anytown, USA" disabled />
+                </FormField>
+                <FormField label="Insurance">
+                  <Input value="Blue Cross Blue Shield" disabled />
+                </FormField>
+                <FormField label="Primary Care">
+                  <Input value="Dr. Sarah Johnson" disabled />
+                </FormField>
+              </SpaceBetween>
+            </div>
           </Container>
 
           {/* Medical Insights */}
@@ -98,44 +112,11 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <MedicalSummary />
+            <div style={{ height: '300px', overflowY: 'auto' }}>
+              <MedicalSummary />
+            </div>
           </Container>
         </Grid>
-
-        {/* Agent Tools Section */}
-        <Container
-          header={
-            <Header
-              variant="h2"
-              description="Tools and resources for patient care"
-            >
-              Nurse Toolkit
-            </Header>
-          }
-        >
-          <SpaceBetween size="l">
-            <Select
-              selectedOption={null}
-              onChange={({ detail }) => console.log(detail.selectedOption)}
-              options={[
-                { label: "Agent Assist", value: "1" },
-                { label: "Provider Locator", value: "2" },
-                { label: "Scheduler", value: "3" }
-              ]}
-              placeholder="Select a tool"
-            />
-            <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-              <Box>
-                <Header variant="h3">Patient History</Header>
-                <Box variant="p">View detailed patient history</Box>
-              </Box>
-              <Box>
-                <Header variant="h3">Medications</Header>
-                <Box variant="p">Current prescriptions</Box>
-              </Box>
-            </Grid>
-          </SpaceBetween>
-        </Container>
 
         {/* Last Row */}
         <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
@@ -150,22 +131,32 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <SpaceBetween size="l">
-              <FormField label="Current Symptoms">
-                <Textarea {...textareaProps} />
-              </FormField>
-              <FormField label="Urgency Level">
-                <Select
-                  selectedOption={null}
-                  options={[
-                    { label: "Low", value: "low" },
-                    { label: "Medium", value: "medium" },
-                    { label: "High", value: "high" }
-                  ]}
-                  placeholder="Select urgency level"
-                />
-              </FormField>
-            </SpaceBetween>
+            <div style={{ height: '300px', overflowY: 'auto' }}>
+              <SpaceBetween size="l">
+                <FormField label="Current Symptoms">
+                  <Textarea {...textareaProps} />
+                </FormField>
+                <FormField label="Urgency Level">
+                  <Select
+                    selectedOption={null}
+                    options={[
+                      { label: "Low", value: "low" },
+                      { label: "Medium", value: "medium" },
+                      { label: "High", value: "high" }
+                    ]}
+                    placeholder="Select urgency level"
+                  />
+                </FormField>
+                <FormField label="Notes">
+                  <Textarea
+                    value=""
+                    onChange={() => {}}
+                    placeholder="Additional notes"
+                    rows={4}
+                  />
+                </FormField>
+              </SpaceBetween>
+            </div>
           </Container>
 
           {/* Chat Box */}
@@ -179,49 +170,51 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <SpaceBetween size="l">
-              <div style={{ height: '300px', overflowY: 'auto' }}>
-                {messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      justifyContent: msg.isUser ? 'flex-end' : 'flex-start',
-                      marginBottom: '10px'
-                    }}
-                  >
-                    <Box
-                      padding="s"
-                      variant="div"
-                      textAlign={msg.isUser ? "right" : "left"}
-                      fontSize="body-m"
-                      margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
+            <div style={{ height: '300px', overflowY: 'auto' }}>
+              <SpaceBetween size="l">
+                <div>
+                  {messages.map((msg, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        display: 'flex',
+                        justifyContent: msg.isUser ? 'flex-end' : 'flex-start',
+                        marginBottom: '10px'
+                      }}
                     >
-                      <div style={{
-                        backgroundColor: msg.isUser ? "#0972d3" : "#f2f3f3",
-                        padding: "8px 12px",
-                        borderRadius: "4px",
-                        color: msg.isUser ? "#ffffff" : "#000000"
-                      }}>
-                        {msg.text}
-                      </div>
-                    </Box>
-                  </div>
-                ))}
-              </div>
-              <form onSubmit={handleSendMessage}>
-                <SpaceBetween direction="horizontal" size="xs">
-                  <Input
-                    value={message}
-                    onChange={({ detail }) => setMessage(detail.value)}
-                    placeholder="Type your message..."
-                  />
-                  <Button formAction="submit" variant="primary" iconName="send">
-                    Send
-                  </Button>
-                </SpaceBetween>
-              </form>
-            </SpaceBetween>
+                      <Box
+                        padding="s"
+                        variant="div"
+                        textAlign={msg.isUser ? "right" : "left"}
+                        fontSize="body-m"
+                        margin={{ right: msg.isUser ? "s" : "xxxl", left: msg.isUser ? "xxxl" : "s" }}
+                      >
+                        <div style={{
+                          backgroundColor: msg.isUser ? "#0972d3" : "#f2f3f3",
+                          padding: "8px 12px",
+                          borderRadius: "4px",
+                          color: msg.isUser ? "#ffffff" : "#000000"
+                        }}>
+                          {msg.text}
+                        </div>
+                      </Box>
+                    </div>
+                  ))}
+                </div>
+                <form onSubmit={handleSendMessage}>
+                  <SpaceBetween direction="horizontal" size="xs">
+                    <Input
+                      value={message}
+                      onChange={({ detail }) => setMessage(detail.value)}
+                      placeholder="Type your message..."
+                    />
+                    <Button formAction="submit" variant="primary" iconName="send">
+                      Send
+                    </Button>
+                  </SpaceBetween>
+                </form>
+              </SpaceBetween>
+            </div>
           </Container>
         </Grid>
       </SpaceBetween>
