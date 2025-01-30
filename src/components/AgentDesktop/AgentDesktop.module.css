@@ -15,13 +15,55 @@
     overflow-y: auto;
   }
   
+  /* Grid item styles */
+  .gridItem {
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .gridItem > :global([class*="awsui_container"]) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .gridItem > :global([class*="awsui_container"]) > :global([class*="awsui_content"]) {
+    flex: 1;
+    padding: 20px !important;
+  }
+  
+  /* Scroll container for content */
+  .scrollContainer {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 16px;
+  }
+  
+  /* Chat specific styles */
+  .chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    min-height: 200px;
+  }
+  
+  .chatForm {
+    margin-top: auto;
+  }
+  
+  /* Tab content styles */
+  .tabContent {
+    padding: 20px;
+    min-height: 200px;
+  }
+  
   /* Override Cloudscape styles */
   .fullWidthLayout :global([class*="awsui_content-layout-container"]) {
     max-width: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
   }
   
   .fullWidthLayout :global([class*="awsui_content-layout"]) {
@@ -29,8 +71,6 @@
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
   }
   
   .fullWidthLayout :global([class*="awsui_layout"]) {
@@ -38,8 +78,6 @@
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
   }
   
   /* Grid and container styles */
@@ -52,21 +90,21 @@
   .fullWidthLayout :global([class*="awsui_container"]) {
     width: 100% !important;
     margin-bottom: 20px !important;
-    height: auto !important;
   }
   
   /* Content area styles */
   .fullWidthLayout :global([class*="awsui_content"]) {
     width: 100% !important;
     max-width: none !important;
-    padding: 0 !important;
-    height: auto !important;
+    padding: 20px !important;
   }
   
   /* Header styles */
   .fullWidthLayout :global([class*="awsui_header"]) {
     padding: 20px !important;
     width: 100% !important;
+    background-color: #f8f8f8 !important;
+    border-bottom: 1px solid #eaeded !important;
   }
   
   /* Ensure proper spacing between grid items */
@@ -74,13 +112,18 @@
     gap: 20px !important;
   }
   
-  /* Fix container heights */
-  .fullWidthLayout :global([class*="awsui_root"]) {
-    height: auto !important;
-    min-height: 0 !important;
+  /* Form field alignment */
+  .fullWidthLayout :global([class*="awsui_form-field"]) {
+    margin-bottom: 16px !important;
   }
   
-  /* Ensure proper spacing in SpaceBetween components */
-  .fullWidthLayout :global([class*="awsui_space-between"]) {
-    margin-bottom: 20px !important;
+  .fullWidthLayout :global([class*="awsui_form-field"]) :global([class*="awsui_label"]) {
+    margin-bottom: 8px !important;
+  }
+  
+  /* Input and control styles */
+  .fullWidthLayout :global([class*="awsui_input"]),
+  .fullWidthLayout :global([class*="awsui_select"]),
+  .fullWidthLayout :global([class*="awsui_textarea"]) {
+    width: 100% !important;
   }
