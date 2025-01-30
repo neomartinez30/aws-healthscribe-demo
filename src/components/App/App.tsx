@@ -47,7 +47,7 @@ export default function App() {
     );
 
     return (
-        <>
+        <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
             <div id="appTopNav">
                 <TopNav />
             </div>
@@ -60,9 +60,9 @@ export default function App() {
                 toolsHide={true}
                 navigationHide={true}
                 contentType="default"
-                disableContentPaddings={false}
-                maxContentWidth={1280}
+                disableContentPaddings={true}
+                maxContentWidth={Number.MAX_VALUE}
             />
-        </>
+        </div>
     );
 }
