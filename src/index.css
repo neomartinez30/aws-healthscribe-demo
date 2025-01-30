@@ -2,14 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ensure Tailwind styles take precedence */
-#root {
-  @apply min-h-screen;
+/* Reset default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Custom base styles */
-body {
-  @apply antialiased text-gray-900 bg-gray-50;
+/* Force full width and height */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Override Cloudscape container styles */
+:root {
+  --aws-components-content-layout-width: 100% !important;
+}
+
+/* Override Cloudscape layout containers */
+div[class*="awsui_root_"] {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+div[class*="awsui_content-wrapper_"] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+div[class*="awsui_content-layout_"] {
+  max-width: none !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+div[class*="awsui_layout_"] {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
 }
 
 /* Ensure proper button styling */
