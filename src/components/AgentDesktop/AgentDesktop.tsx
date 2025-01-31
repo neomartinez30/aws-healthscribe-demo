@@ -18,6 +18,7 @@ import LeftPanel from '@/components/Conversation/LeftPanel';
 import RightPanel from '@/components/Conversation/RightPanel';
 import { IAuraClinicalDocOutput, IAuraTranscriptOutput } from '@/types/HealthScribe';
 import WaveSurfer from 'wavesurfer.js';
+import { ChatPanel } from './ChatPanel';
 
 interface ConversationData {
   jobLoading: boolean;
@@ -225,6 +226,11 @@ const AgentDesktop: React.FC = () => {
                     )}
                   </div>
                 )
+              },
+              {
+                label: "Chat Assistant",
+                id: "tool5",
+                content: <ChatPanel />
               }
             ]}
           />
