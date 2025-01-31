@@ -151,9 +151,24 @@ const AgentDesktop: React.FC = () => {
                 content: <ProviderLocator />
               },
               {
-                label: "Care Protocols",
+                label: "Clear Triage",
                 id: "tool3",
-                content: <div style={{ height: '200px', padding: '20px' }}>Care Protocols Tool Content</div>
+                content: (
+                  <div style={{ height: 'calc(100vh - 400px)', padding: '20px' }}>
+                    <iframe 
+                      src="https://app.cleartriage.com/app/login" 
+                      id="myIframe"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none',
+                        borderRadius: '4px',
+                        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                      }}
+                      title="Clear Triage"
+                    />
+                  </div>
+                )
               },
               {
                 label: "Documentation Helper",
