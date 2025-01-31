@@ -7,7 +7,6 @@ import Cards from '@cloudscape-design/components/cards';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Modal from '@cloudscape-design/components/modal';
-import Form from '@cloudscape-design/components/form-field';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 
@@ -22,6 +21,8 @@ export function ProviderLocator() {
     const [zipCode, setZipCode] = useState('');
     const [selectedProvider, setSelectedProvider] = useState<any>(null);
     const [showReferralModal, setShowReferralModal] = useState(false);
+    const [referralReason, setReferralReason] = useState('');
+    const [additionalNotes, setAdditionalNotes] = useState('');
 
     const filteredProviders = MOCK_PROVIDERS.filter(provider =>
         zipCode ? provider.zip.includes(zipCode) : true
@@ -121,12 +122,16 @@ export function ProviderLocator() {
                     </FormField>
                     <FormField label="Reason for Referral">
                         <Textarea
+                            value={referralReason}
+                            onChange={({ detail }) => setReferralReason(detail.value)}
                             placeholder="Enter reason for referral"
                             rows={3}
                         />
                     </FormField>
                     <FormField label="Additional Notes">
                         <Textarea
+                            value={additionalNotes}
+                            onChange={({ detail }) => setAdditionalNotes(detail.value)}
                             placeholder="Enter any additional notes"
                             rows={3}
                         />
