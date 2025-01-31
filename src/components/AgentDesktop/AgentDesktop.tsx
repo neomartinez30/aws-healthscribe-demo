@@ -10,15 +10,34 @@ import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
 import Alert from '@cloudscape-design/components/alert';
+import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
 import Conversations from '@/components/Conversations';
 import LeftPanel from '@/components/Conversation/LeftPanel';
 import RightPanel from '@/components/Conversation/RightPanel';
+import { IAuraClinicalDocOutput, IAuraTranscriptOutput } from '@/types/HealthScribe';
+import WaveSurfer from 'wavesurfer.js';
+
+interface ConversationData {
+  jobLoading: boolean;
+  jobDetails: MedicalScribeJob | null;
+  transcriptFile: IAuraTranscriptOutput | null;
+  clinicalDocument: IAuraClinicalDocOutput | null;
+  highlightId: {
+    allSegmentIds: string[];
+    selectedSegmentId: string;
+  };
+  setHighlightId: React.Dispatch<React.SetStateAction<{
+    allSegmentIds: string[];
+    selectedSegmentId: string;
+  }>>;
+  wavesurfer: React.MutableRefObject<WaveSurfer | undefined>;
+}
 
 const AgentDesktop: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("tool1");
-  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedConversation, setSelectedConversation] = useState<ConversationData | null>(null);
 
   return (
     <ContentLayout
@@ -180,11 +199,28 @@ const AgentDesktop: React.FC = () => {
                 content: (
                   <div style={{ padding: '20px' }}>
                     {!selectedConversation ? (
-                      <Conversations onSelect={setSelectedConversation} />
+                      <Conversations />
                     ) : (
                       <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-                        <LeftPanel {...selectedConversation} />
-                        <RightPanel {...selectedConversation} />
+                        <LeftPanel 
+                          jobLoading={selectedConversation.jobLoading}
+                          transcriptFile={selectedConversation.transcriptFile}
+                          highlightId={selectedConversation.highlightId}
+                          setHighlightId={selectedConversation.setHighlightId}
+                          wavesurfer={selectedConversation.wavesurfer}
+                          smallTalkCheck={false}
+                          audioTime={0}
+                          setAudioTime={() => {}}
+                          audioReady={false}
+                        />
+                        <RightPanel 
+                          jobLoading={selectedConversation.jobLoading}
+                          clinicalDocument={selectedConversation.clinicalDocument}
+                          transcriptFile={selectedConversation.transcriptFile}
+                          highlightId={selectedConversation.highlightId}
+                          setHighlightId={selectedConversation.setHighlightId}
+                          wavesurfer={selectedConversation.wavesurfer}
+                        />
                       </Grid>
                     )}
                   </div>
