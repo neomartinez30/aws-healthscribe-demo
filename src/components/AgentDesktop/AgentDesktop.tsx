@@ -12,9 +12,13 @@ import Tabs from '@cloudscape-design/components/tabs';
 import Alert from '@cloudscape-design/components/alert';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
+import Conversations from '@/components/Conversations';
+import LeftPanel from '@/components/Conversation/LeftPanel';
+import RightPanel from '@/components/Conversation/RightPanel';
 
 const AgentDesktop: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("tool1");
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
   return (
     <ContentLayout
@@ -171,9 +175,20 @@ const AgentDesktop: React.FC = () => {
                 )
               },
               {
-                label: "Documentation Helper",
+                label: "Medical Notes",
                 id: "tool4",
-                content: <div style={{ height: '200px', padding: '20px' }}>Documentation Helper Tool Content</div>
+                content: (
+                  <div style={{ padding: '20px' }}>
+                    {!selectedConversation ? (
+                      <Conversations onSelect={setSelectedConversation} />
+                    ) : (
+                      <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+                        <LeftPanel {...selectedConversation} />
+                        <RightPanel {...selectedConversation} />
+                      </Grid>
+                    )}
+                  </div>
+                )
               }
             ]}
           />
