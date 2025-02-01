@@ -10,6 +10,8 @@ import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
 import Alert from '@cloudscape-design/components/alert';
+import Badge from '@cloudscape-design/components/badge';
+import StatusIndicator from '@cloudscape-design/components/status-indicator';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -39,6 +41,22 @@ interface ConversationData {
 const AgentDesktop: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState("tool1");
   const [selectedConversation, setSelectedConversation] = useState<ConversationData | null>(null);
+  const [patientRiskLevel, setPatientRiskLevel] = useState<'low' | 'medium' | 'high'>('low');
+  const [callTimer, setCallTimer] = useState(0);
+
+  // Start timer when component mounts
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCallTimer(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <ContentLayout
@@ -46,10 +64,19 @@ const AgentDesktop: React.FC = () => {
         <Header
           variant="h1"
           description="Virtual Nurse Workspace"
+          info={
+            <StatusIndicator type="success">
+              Connected
+            </StatusIndicator>
+          }
           actions={
             <SpaceBetween direction="horizontal" size="xs">
-              <Button>KnowledgeBase</Button>
-              <Button>PhoneBook</Button>
+              <Box>Call Duration: {formatTime(callTimer)}</Box>
+              <Badge color={patientRiskLevel === 'high' ? 'red' : patientRiskLevel === 'medium' ? 'blue' : 'green'}>
+                Risk Level: {patientRiskLevel.toUpperCase()}
+              </Badge>
+              <Button iconName="external" href="/knowledgebase" target="_blank">KnowledgeBase</Button>
+              <Button iconName="contact" href="/phonebook" target="_blank">PhoneBook</Button>
             </SpaceBetween>
           }
         >
@@ -66,6 +93,9 @@ const AgentDesktop: React.FC = () => {
               <Header
                 variant="h2"
                 description="Patient information and attributes"
+                actions={
+                  <Button iconName="edit">Edit</Button>
+                }
               >
                 Caller Attributes
               </Header>
@@ -101,8 +131,11 @@ const AgentDesktop: React.FC = () => {
               <Header
                 variant="h2"
                 description="Key medical information and history"
+                actions={
+                  <Button iconName="refresh">Refresh</Button>
+                }
               >
-                Placeholder
+                Medical Summary
               </Header>
             }
           >
