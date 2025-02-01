@@ -102,7 +102,7 @@ const AgentDesktop: React.FC = () => {
                 variant="h2"
                 description="Key medical information and history"
               >
-                Patient Insights
+                Placeholder
               </Header>
             }
           >
