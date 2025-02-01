@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
-import { DetectEntitiesV2Response } from '@aws-sdk/client-comprehendmedical';
+import Button from '@cloudscape-design/components/button';
+import Modal from '@cloudscape-design/components/modal';
+import SpaceBetween from '@cloudscape-design/components/space-between';
+import Textarea from '@cloudscape-design/components/textarea';
 import WaveSurfer from 'wavesurfer.js';
 
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -41,6 +44,8 @@ export default function RightPanel({
     const [extractingData, setExtractingData] = useState<boolean>(false);
     const [extractedHealthData, setExtractedHealthData] = useState<ExtractedHealthData[]>([]);
     const [rightPanelSettingsOpen, setRightPanelSettingsOpen] = useState<boolean>(false);
+    const [showNotesModal, setShowNotesModal] = useState<boolean>(false);
+    const [editableNotes, setEditableNotes] = useState<string>('');
     const [acceptableConfidence, setAcceptableConfidence] = useLocalStorage<number>(
         'Insights-Comprehend-Medical-Confidence-Threshold',
         75.0
@@ -78,46 +83,84 @@ export default function RightPanel({
             });
         }
         setExtractedHealthData(buildExtractedHealthData);
-
         setExtractingData(false);
     }
 
-    // Calculate the number of CM units (100-character segments) in the clinical document.
     const clinicalDocumentNereUnits = useMemo(() => calculateNereUnits(clinicalDocument), [clinicalDocument]);
+
+    const handleEditNotes = () => {
+        // Convert clinical document sections to text format
+        const notesText = clinicalDocument?.ClinicalDocumentation?.Sections
+            .map(section => {
+                return `${section.SectionName}:\n${section.Summary.map(s => s.SummarizedSegment).join('\n')}\n`;
+            })
+            .join('\n') || '';
+        setEditableNotes(notesText);
+        setShowNotesModal(true);
+    };
 
     if (jobLoading || clinicalDocument == null) {
         return <LoadingContainer containerTitle="Clinical Notes" text="Loading Clinical Notes" />;
     } else {
         return (
-            <ScrollingContainer
-                containerTitle="Clinical Notes"
-                containerActions={
-                    <RightPanelActions
-                        hasInsightSections={hasInsightSections}
-                        dataExtracted={extractedHealthData.length > 0}
-                        extractingData={extractingData}
-                        clinicalDocumentNereUnits={clinicalDocumentNereUnits}
+            <>
+                <ScrollingContainer
+                    containerTitle="Clinical Notes"
+                    containerActions={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button onClick={handleEditNotes}>Edit Notes</Button>
+                            <RightPanelActions
+                                hasInsightSections={hasInsightSections}
+                                dataExtracted={extractedHealthData.length > 0}
+                                extractingData={extractingData}
+                                clinicalDocumentNereUnits={clinicalDocumentNereUnits}
+                                setRightPanelSettingsOpen={setRightPanelSettingsOpen}
+                                handleExtractHealthData={handleExtractHealthData}
+                            />
+                        </SpaceBetween>
+                    }
+                >
+                    <RightPanelSettings
+                        rightPanelSettingsOpen={rightPanelSettingsOpen}
                         setRightPanelSettingsOpen={setRightPanelSettingsOpen}
-                        handleExtractHealthData={handleExtractHealthData}
+                        acceptableConfidence={acceptableConfidence}
+                        setAcceptableConfidence={setAcceptableConfidence}
                     />
-                }
-            >
-                <RightPanelSettings
-                    rightPanelSettingsOpen={rightPanelSettingsOpen}
-                    setRightPanelSettingsOpen={setRightPanelSettingsOpen}
-                    acceptableConfidence={acceptableConfidence}
-                    setAcceptableConfidence={setAcceptableConfidence}
-                />
-                <SummarizedConcepts
-                    sections={clinicalDocument.ClinicalDocumentation.Sections as IAuraClinicalDocOutputSection[]}
-                    extractedHealthData={extractedHealthData}
-                    acceptableConfidence={acceptableConfidence}
-                    highlightId={highlightId}
-                    setHighlightId={setHighlightId}
-                    segmentById={segmentById}
-                    wavesurfer={wavesurfer}
-                />
-            </ScrollingContainer>
+                    <SummarizedConcepts
+                        sections={clinicalDocument.ClinicalDocumentation.Sections as IAuraClinicalDocOutputSection[]}
+                        extractedHealthData={extractedHealthData}
+                        acceptableConfidence={acceptableConfidence}
+                        highlightId={highlightId}
+                        setHighlightId={setHighlightId}
+                        segmentById={segmentById}
+                        wavesurfer={wavesurfer}
+                    />
+                </ScrollingContainer>
+
+                <Modal
+                    visible={showNotesModal}
+                    onDismiss={() => setShowNotesModal(false)}
+                    header="Edit Clinical Notes"
+                    size="large"
+                    footer={
+                        <SpaceBetween direction="horizontal" size="xs">
+                            <Button variant="link" onClick={() => setShowNotesModal(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={() => setShowNotesModal(false)}>
+                                Save
+                            </Button>
+                        </SpaceBetween>
+                    }
+                >
+                    <Textarea
+                        value={editableNotes}
+                        onChange={({ detail }) => setEditableNotes(detail.value)}
+                        rows={20}
+                        spellcheck
+                    />
+                </Modal>
+            </>
         );
     }
 }

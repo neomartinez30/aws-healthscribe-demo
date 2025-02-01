@@ -126,20 +126,21 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
 
     const handleSelectionChange = async ({ detail }: { detail: { selectedItems: MedicalScribeJobSummary[] } }) => {
         setSelectedHealthScribeJob(detail.selectedItems);
-        if (onConversationSelect && detail.selectedItems.length > 0) {
+        if (onConversationSelect && detail.selectedItems.length > 0 && detail.selectedItems[0].MedicalScribeJobName) {
             const jobName = detail.selectedItems[0].MedicalScribeJobName;
             try {
                 const jobDetails = await getHealthScribeJob({ MedicalScribeJobName: jobName });
                 const medicalScribeJob = jobDetails?.MedicalScribeJob;
 
                 if (medicalScribeJob) {
-                    const clinicalDocumentUri = medicalScribeJob.MedicalScribeOutput?.ClinicalDocumentUri;
-                    const clinicalDocumentRsp = await getObject(getS3Object(clinicalDocumentUri || ''));
-                    const clinicalDocument = JSON.parse((await clinicalDocumentRsp?.Body?.transformToString()) || '');
+                    const clinicalDocumentUri = medicalScribeJob.MedicalScribeOutput?.ClinicalDocumentUri || '';
+                    const transcriptFileUri = medicalScribeJob.MedicalScribeOutput?.TranscriptFileUri || '';
 
-                    const transcriptFileUri = medicalScribeJob.MedicalScribeOutput?.TranscriptFileUri;
-                    const transcriptFileRsp = await getObject(getS3Object(transcriptFileUri || ''));
-                    const transcriptFile = JSON.parse((await transcriptFileRsp?.Body?.transformToString()) || '');
+                    const clinicalDocumentRsp = await getObject(getS3Object(clinicalDocumentUri));
+                    const transcriptFileRsp = await getObject(getS3Object(transcriptFileUri));
+
+                    const clinicalDocument = JSON.parse((await clinicalDocumentRsp?.Body?.transformToString()) || '{}');
+                    const transcriptFile = JSON.parse((await transcriptFileRsp?.Body?.transformToString()) || '{}');
 
                     onConversationSelect({
                         jobLoading: false,
