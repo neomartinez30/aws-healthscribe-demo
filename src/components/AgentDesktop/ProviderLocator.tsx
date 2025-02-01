@@ -9,6 +9,7 @@ import Button from '@cloudscape-design/components/button';
 import Modal from '@cloudscape-design/components/modal';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
+import ExpandableSection from '@cloudscape-design/components/expandable-section';
 
 const MOCK_PROVIDERS = [
     {
@@ -17,7 +18,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Cardiology',
         address: '123 Medical Ave, Suite 200, Washington DC',
         zip: '20001',
-        availability: 'Next available: Tomorrow 2pm',
+        availableTimes: [
+            'Tomorrow 2:00 PM',
+            'Tomorrow 3:30 PM',
+            'Friday 9:00 AM',
+            'Friday 11:30 AM',
+            'Monday 10:00 AM'
+        ],
         phone: '(202) 555-0123',
         education: 'Harvard Medical School',
         languages: 'English, Spanish',
@@ -31,7 +38,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Family Medicine',
         address: '456 Health St, Building B, Washington DC',
         zip: '20002',
-        availability: 'Next available: Today 4pm',
+        availableTimes: [
+            'Today 4:00 PM',
+            'Tomorrow 1:30 PM',
+            'Thursday 9:00 AM',
+            'Thursday 2:30 PM',
+            'Friday 11:00 AM'
+        ],
         phone: '(202) 555-0124',
         education: 'Johns Hopkins University',
         languages: 'English, Mandarin',
@@ -45,7 +58,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Pediatrics',
         address: '789 Care Ln, Washington DC',
         zip: '20003',
-        availability: 'Next available: Friday 10am',
+        availableTimes: [
+            'Friday 10:00 AM',
+            'Friday 2:30 PM',
+            'Monday 9:00 AM',
+            'Monday 3:30 PM',
+            'Tuesday 11:00 AM'
+        ],
         phone: '(202) 555-0125',
         education: 'Stanford Medical School',
         languages: 'English, French',
@@ -59,7 +78,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Orthopedics',
         address: '321 Wellness Rd, Washington DC',
         zip: '20004',
-        availability: 'Next available: Monday 9am',
+        availableTimes: [
+            'Monday 9:00 AM',
+            'Monday 2:30 PM',
+            'Wednesday 10:00 AM',
+            'Wednesday 1:30 PM',
+            'Friday 11:00 AM'
+        ],
         phone: '(202) 555-0126',
         education: 'Yale School of Medicine',
         languages: 'English',
@@ -73,7 +98,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Internal Medicine',
         address: '567 Health Parkway, Washington DC',
         zip: '20005',
-        availability: 'Next available: Wednesday 1pm',
+        availableTimes: [
+            'Wednesday 1:00 PM',
+            'Wednesday 3:30 PM',
+            'Thursday 9:00 AM',
+            'Thursday 2:30 PM',
+            'Friday 10:00 AM'
+        ],
         phone: '(202) 555-0127',
         education: 'Columbia University',
         languages: 'English, Spanish, Portuguese',
@@ -87,7 +118,13 @@ const MOCK_PROVIDERS = [
         specialty: 'Dermatology',
         address: '890 Medical Center Dr, Washington DC',
         zip: '20006',
-        availability: 'Next available: Thursday 3pm',
+        availableTimes: [
+            'Thursday 3:00 PM',
+            'Thursday 4:30 PM',
+            'Friday 9:00 AM',
+            'Friday 2:30 PM',
+            'Monday 11:00 AM'
+        ],
         phone: '(202) 555-0128',
         education: 'UCLA Medical School',
         languages: 'English, Korean',
@@ -142,43 +179,57 @@ export function ProviderLocator() {
                     items={filteredProviders}
                     cardDefinition={{
                         header: item => (
-                            <SpaceBetween size="xs">
-                                <Box variant="h3">{item.name}</Box>
-                                <Box color="text-status-info" float="right">{item.rating}</Box>
-                            </SpaceBetween>
+                            <Box variant="h3">{item.name}</Box>
                         ),
                         sections: [
                             {
-                                id: "specialty",
-                                header: "Specialty",
-                                content: item => item.specialty
-                            },
-                            {
-                                id: "contact",
-                                header: "Contact",
+                                id: "location",
                                 content: item => (
                                     <SpaceBetween size="xs">
-                                        <div>{item.phone}</div>
                                         <div>{item.address}</div>
+                                        <div>{item.phone}</div>
                                     </SpaceBetween>
                                 )
                             },
                             {
                                 id: "details",
-                                header: "Details",
                                 content: item => (
-                                    <SpaceBetween size="xs">
-                                        <div><strong>Education:</strong> {item.education}</div>
-                                        <div><strong>Experience:</strong> {item.experience}</div>
-                                        <div><strong>Languages:</strong> {item.languages}</div>
-                                        <div><strong>Insurance:</strong> {item.insurance.join(', ')}</div>
-                                    </SpaceBetween>
+                                    <ExpandableSection headerText="View Details">
+                                        <SpaceBetween size="m">
+                                            <div>
+                                                <Box variant="h4">Specialty</Box>
+                                                <div>{item.specialty}</div>
+                                            </div>
+                                            <div>
+                                                <Box variant="h4">Education & Experience</Box>
+                                                <div>{item.education}</div>
+                                                <div>{item.experience} of experience</div>
+                                            </div>
+                                            <div>
+                                                <Box variant="h4">Languages</Box>
+                                                <div>{item.languages}</div>
+                                            </div>
+                                            <div>
+                                                <Box variant="h4">Insurance Accepted</Box>
+                                                <div>{item.insurance.join(', ')}</div>
+                                            </div>
+                                            <div>
+                                                <Box variant="h4">Available Appointments</Box>
+                                                <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                                    {item.availableTimes.map((time, index) => (
+                                                        <li key={index} style={{ marginBottom: '4px' }}>
+                                                            {time}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <Box variant="h4">Rating</Box>
+                                                <div>{item.rating}</div>
+                                            </div>
+                                        </SpaceBetween>
+                                    </ExpandableSection>
                                 )
-                            },
-                            {
-                                id: "availability",
-                                header: "Availability",
-                                content: item => item.availability
                             }
                         ]
                     }}
