@@ -119,7 +119,7 @@ const AgentDesktop: React.FC = () => {
               variant="h2"
               description="Available tools and resources"
             >
-              Agent Tools
+              Nurse's Toolkit
             </Header>
           }
         >
@@ -228,7 +228,7 @@ const AgentDesktop: React.FC = () => {
                 )
               },
               {
-                label: "Chat Assistant",
+                label: "Patient Insights",
                 id: "tool5",
                 content: <ChatPanel />
               }

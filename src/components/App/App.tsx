@@ -47,24 +47,22 @@ export default function App() {
     );
 
     return (
-        <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <>
             <div id="appTopNav">
                 <TopNav />
             </div>
-            <div style={{ flex: 1, overflow: 'auto' }}>
-                <AppLayout
-                    breadcrumbs={<Breadcrumbs />}
-                    content={content}
-                    headerSelector="#appTopNav"
-                    headerVariant="high-contrast"
-                    notifications={<Flashbar items={flashbarItems} />}
-                    toolsHide={true}
-                    navigationHide={true}
-                    contentType="default"
-                    disableContentPaddings={true}
-                    maxContentWidth={Number.MAX_VALUE}
-                />
-            </div>
-        </div>
+            <AppLayout
+                breadcrumbs={<Breadcrumbs />}
+                content={content}
+                headerSelector="#appTopNav"
+                headerVariant="high-contrast"
+                notifications={<Flashbar items={flashbarItems} />}
+                toolsHide={true}
+                navigationHide={true}
+                contentType="default"
+                disableContentPaddings={false}
+                maxContentWidth={1280}
+            />
+        </>
     );
 }
