@@ -11,7 +11,22 @@ import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 
-const MOCK_PROVIDERS = [
+interface Provider {
+    id: string;
+    name: string;
+    specialty: string;
+    address: string;
+    zip: string;
+    availableTimes: string[];
+    phone: string;
+    education: string;
+    languages: string;
+    insurance: string[];
+    rating: string;
+    experience: string;
+}
+
+const MOCK_PROVIDERS: Provider[] = [
     {
         id: '1',
         name: 'Dr. Sarah Johnson',
@@ -136,7 +151,7 @@ const MOCK_PROVIDERS = [
 
 export function ProviderLocator() {
     const [zipCode, setZipCode] = useState('');
-    const [selectedProvider, setSelectedProvider] = useState<any>(null);
+    const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
     const [showReferralModal, setShowReferralModal] = useState(false);
     const [referralReason, setReferralReason] = useState('');
     const [additionalNotes, setAdditionalNotes] = useState('');
@@ -216,7 +231,7 @@ export function ProviderLocator() {
                                             <div>
                                                 <Box variant="h4">Available Appointments</Box>
                                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                                    {item.availableTimes.map((time, index) => (
+                                                    {item.availableTimes.map((time: string, index: number) => (
                                                         <li key={index} style={{ marginBottom: '4px' }}>
                                                             {time}
                                                         </li>
