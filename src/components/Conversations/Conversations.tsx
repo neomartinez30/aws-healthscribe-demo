@@ -5,17 +5,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCollection } from '@cloudscape-design/collection-hooks';
 import Button from '@cloudscape-design/components/button';
 import { CollectionPreferencesProps } from '@cloudscape-design/components/collection-preferences';
-import ContentLayout from '@cloudscape-design/components/content-layout';
-import Header from '@cloudscape-design/components/header';
-import Pagination from '@cloudscape-design/components/pagination';
 import Table from '@cloudscape-design/components/table';
+import Pagination from '@cloudscape-design/components/pagination';
 
 import { MedicalScribeJobSummary } from '@aws-sdk/client-transcribe';
 
 import { ConversationsFilter } from '@/components/Conversations/ConversationsFilter';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useNotificationsContext } from '@/store/notifications';
-import { ListHealthScribeJobsProps, listHealthScribeJobs } from '@/utils/HealthScribeApi';
+import { ListHealthScribeJobsProps, listHealthScribeJobs, getHealthScribeJob } from '@/utils/HealthScribeApi';
+import { getObject, getS3Object } from '@/utils/S3Api';
 
 import { ConversationsHeaderActions } from './ConversationsHeaderActions';
 import TableEmptyState from './TableEmptyState';
@@ -35,34 +34,30 @@ interface ConversationsProps {
 export default function Conversations({ onConversationSelect }: ConversationsProps) {
     const { addFlashMessage } = useNotificationsContext();
 
-    const [healthScribeJobs, setHealthScribeJobs] = useState<MedicalScribeJobSummary[]>([]); // HealthScribe jobs from API
-    const [moreHealthScribeJobs, setMoreHealthScribeJobs] = useState<MoreHealthScribeJobs>({}); // More HealthScribe jobs from API (NextToken returned)
-    const [selectedHealthScribeJob, setSelectedHealthScribeJob] = useState<MedicalScribeJobSummary[] | []>([]); // Selected HealthScribe job
+    const [healthScribeJobs, setHealthScribeJobs] = useState<MedicalScribeJobSummary[]>([]);
+    const [moreHealthScribeJobs, setMoreHealthScribeJobs] = useState<MoreHealthScribeJobs>({});
+    const [selectedHealthScribeJob, setSelectedHealthScribeJob] = useState<MedicalScribeJobSummary[] | []>([]);
 
-    const [tableLoading, setTableLoading] = useState(false); // Loading state for table
+    const [tableLoading, setTableLoading] = useState(false);
 
     const [preferences, setPreferences] = useLocalStorage<CollectionPreferencesProps.Preferences>(
         'Conversations-Table-Preferences',
         DEFAULT_PREFERENCES
-    ); // Conversation table preferences
+    );
 
     const [searchParams, setSearchParams] = useState<ListHealthScribeJobsProps>({});
 
-    // Header counter for the number of HealthScribe jobs
     const headerCounterText = `(${healthScribeJobs.length}${Object.keys(moreHealthScribeJobs).length > 0 ? '+' : ''})`;
 
-    // Call Transcribe API to list HealthScribe jobs - optional search filter
     const listHealthScribeJobsWrapper = useCallback(async (searchFilter: ListHealthScribeJobsProps) => {
         setTableLoading(true);
         try {
-            // TableHeader may set a Status of 'ALL' - remove this as it's not a valid status
             const processedSearchFilter = { ...searchFilter };
             if (processedSearchFilter.Status === 'ALL') {
                 processedSearchFilter.Status = undefined;
             }
             const listHealthScribeJobsRsp = await listHealthScribeJobs(processedSearchFilter);
 
-            // Handle undefined MedicalScribeJobSummaries (the service should return an empty array)
             if (typeof listHealthScribeJobsRsp.MedicalScribeJobSummaries === 'undefined') {
                 setHealthScribeJobs([]);
                 setTableLoading(false);
@@ -71,14 +66,12 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
 
             const listResults: MedicalScribeJobSummary[] = listHealthScribeJobsRsp.MedicalScribeJobSummaries;
 
-            // if NextToken is specified, append search results to existing results
             if (processedSearchFilter.NextToken) {
                 setHealthScribeJobs((prevHealthScribeJobs) => prevHealthScribeJobs.concat(listResults));
             } else {
                 setHealthScribeJobs(listResults);
             }
 
-            //If the research returned NextToken, there are additional jobs. Set moreHealthScribeJobs to enable pagination
             if (listHealthScribeJobsRsp?.NextToken) {
                 setMoreHealthScribeJobs({
                     searchFilter: searchFilter,
@@ -99,7 +92,6 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
         setTableLoading(false);
     }, []);
 
-    // Property for <Pagination /> to enable ... on navigation if there are additional HealthScribe jobs
     const openEndPaginationProp = useMemo(() => {
         if (Object.keys(moreHealthScribeJobs).length > 0) {
             return { openEnd: true };
@@ -108,12 +100,10 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
         }
     }, [moreHealthScribeJobs]);
 
-    // Refresh healthscribe jobs with search params
     async function refreshTable() {
         await listHealthScribeJobsWrapper(searchParams);
     }
 
-    // Table collection
     const { items, actions, collectionProps, paginationProps } = useCollection(healthScribeJobs, {
         filtering: {
             empty: <TableEmptyState title="No HealthScribe jobs" subtitle="Try clearing the search filter." />,
@@ -130,26 +120,49 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
         selection: {},
     });
 
-    // List conversations initially
     useEffect(() => {
         void refreshTable();
     }, []);
 
-    const handleSelectionChange = ({ detail }: { detail: { selectedItems: MedicalScribeJobSummary[] } }) => {
+    const handleSelectionChange = async ({ detail }: { detail: { selectedItems: MedicalScribeJobSummary[] } }) => {
         setSelectedHealthScribeJob(detail.selectedItems);
         if (onConversationSelect && detail.selectedItems.length > 0) {
-            onConversationSelect({
-                jobLoading: false,
-                jobDetails: detail.selectedItems[0],
-                transcriptFile: null,
-                clinicalDocument: null,
-                highlightId: {
-                    allSegmentIds: [],
-                    selectedSegmentId: '',
-                },
-                setHighlightId: () => {},
-                wavesurfer: { current: undefined },
-            });
+            const jobName = detail.selectedItems[0].MedicalScribeJobName;
+            try {
+                const jobDetails = await getHealthScribeJob({ MedicalScribeJobName: jobName });
+                const medicalScribeJob = jobDetails?.MedicalScribeJob;
+
+                if (medicalScribeJob) {
+                    const clinicalDocumentUri = medicalScribeJob.MedicalScribeOutput?.ClinicalDocumentUri;
+                    const clinicalDocumentRsp = await getObject(getS3Object(clinicalDocumentUri || ''));
+                    const clinicalDocument = JSON.parse((await clinicalDocumentRsp?.Body?.transformToString()) || '');
+
+                    const transcriptFileUri = medicalScribeJob.MedicalScribeOutput?.TranscriptFileUri;
+                    const transcriptFileRsp = await getObject(getS3Object(transcriptFileUri || ''));
+                    const transcriptFile = JSON.parse((await transcriptFileRsp?.Body?.transformToString()) || '');
+
+                    onConversationSelect({
+                        jobLoading: false,
+                        jobDetails: medicalScribeJob,
+                        transcriptFile,
+                        clinicalDocument,
+                        highlightId: {
+                            allSegmentIds: [],
+                            selectedSegmentId: '',
+                        },
+                        setHighlightId: () => {},
+                        wavesurfer: { current: undefined },
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading conversation details:', error);
+                addFlashMessage({
+                    id: 'load-conversation-error',
+                    header: 'Error',
+                    content: 'Failed to load conversation details',
+                    type: 'error',
+                });
+            }
         }
     };
 
