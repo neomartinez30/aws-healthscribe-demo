@@ -28,7 +28,11 @@ type MoreHealthScribeJobs = {
     NextToken?: string;
 };
 
-export default function Conversations() {
+interface ConversationsProps {
+    onConversationSelect?: (conversation: any) => void;
+}
+
+export default function Conversations({ onConversationSelect }: ConversationsProps) {
     const { addFlashMessage } = useNotificationsContext();
 
     const [healthScribeJobs, setHealthScribeJobs] = useState<MedicalScribeJobSummary[]>([]); // HealthScribe jobs from API
@@ -131,67 +135,66 @@ export default function Conversations() {
         void refreshTable();
     }, []);
 
+    const handleSelectionChange = ({ detail }: { detail: { selectedItems: MedicalScribeJobSummary[] } }) => {
+        setSelectedHealthScribeJob(detail.selectedItems);
+        if (onConversationSelect && detail.selectedItems.length > 0) {
+            onConversationSelect({
+                jobLoading: false,
+                jobDetails: detail.selectedItems[0],
+                transcriptFile: null,
+                clinicalDocument: null,
+                highlightId: {
+                    allSegmentIds: [],
+                    selectedSegmentId: '',
+                },
+                setHighlightId: () => {},
+                wavesurfer: { current: undefined },
+            });
+        }
+    };
+
     return (
-        <ContentLayout
-            headerVariant={'high-contrast'}
-            header={
-                <Header
-                    variant="awsui-h1-sticky"
-                    description="View existing AWS HealthScribe conversations"
-                    counter={headerCounterText}
-                    actions={
-                        <ConversationsHeaderActions
-                            selectedHealthScribeJob={selectedHealthScribeJob}
-                            refreshTable={refreshTable}
-                        />
-                    }
-                >
-                    Conversations
-                </Header>
+        <Table
+            {...collectionProps}
+            columnDefinitions={columnDefs}
+            columnDisplay={preferences.contentDisplay}
+            contentDensity={preferences.contentDensity}
+            filter={
+                <ConversationsFilter
+                    listHealthScribeJobs={listHealthScribeJobsWrapper}
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                />
             }
-        >
-            <Table
-                {...collectionProps}
-                columnDefinitions={columnDefs}
-                columnDisplay={preferences.contentDisplay}
-                contentDensity={preferences.contentDensity}
-                filter={
-                    <ConversationsFilter
-                        listHealthScribeJobs={listHealthScribeJobsWrapper}
-                        searchParams={searchParams}
-                        setSearchParams={setSearchParams}
-                    />
-                }
-                items={items}
-                loading={tableLoading}
-                loadingText="Loading HealthScribe jobs"
-                onSelectionChange={({ detail }) => setSelectedHealthScribeJob(detail.selectedItems)}
-                pagination={
-                    <Pagination
-                        {...openEndPaginationProp}
-                        {...paginationProps}
-                        onChange={(event) => {
-                            if (event.detail?.currentPageIndex > paginationProps.pagesCount) {
-                                listHealthScribeJobsWrapper({
-                                    ...moreHealthScribeJobs.searchFilter,
-                                    NextToken: moreHealthScribeJobs.NextToken,
-                                }).catch(console.error);
-                            }
-                            paginationProps.onChange(event);
-                        }}
-                    />
-                }
-                preferences={<TablePreferences preferences={preferences} setPreferences={setPreferences} />}
-                resizableColumns={true}
-                selectedItems={selectedHealthScribeJob}
-                selectionType="single"
-                stickyColumns={preferences.stickyColumns}
-                stickyHeader={true}
-                stripedRows={preferences.stripedRows}
-                trackBy="MedicalScribeJobName"
-                variant="container"
-                wrapLines={preferences.wrapLines}
-            />
-        </ContentLayout>
+            items={items}
+            loading={tableLoading}
+            loadingText="Loading HealthScribe jobs"
+            onSelectionChange={handleSelectionChange}
+            pagination={
+                <Pagination
+                    {...openEndPaginationProp}
+                    {...paginationProps}
+                    onChange={(event) => {
+                        if (event.detail?.currentPageIndex > paginationProps.pagesCount) {
+                            listHealthScribeJobsWrapper({
+                                ...moreHealthScribeJobs.searchFilter,
+                                NextToken: moreHealthScribeJobs.NextToken,
+                            }).catch(console.error);
+                        }
+                        paginationProps.onChange(event);
+                    }}
+                />
+            }
+            preferences={<TablePreferences preferences={preferences} setPreferences={setPreferences} />}
+            resizableColumns={true}
+            selectedItems={selectedHealthScribeJob}
+            selectionType="single"
+            stickyColumns={preferences.stickyColumns}
+            stickyHeader={true}
+            stripedRows={preferences.stripedRows}
+            trackBy="MedicalScribeJobName"
+            variant="container"
+            wrapLines={preferences.wrapLines}
+        />
     );
 }

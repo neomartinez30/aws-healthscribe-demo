@@ -233,7 +233,7 @@ const AgentDesktop: React.FC = () => {
                 content: (
                   <div style={{ padding: '20px' }}>
                     {!selectedConversation ? (
-                      <Conversations />
+                      <Conversations onConversationSelect={setSelectedConversation} />
                     ) : (
                       <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                         <LeftPanel 
