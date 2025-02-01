@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: MIT-0
 import React from 'react';
 
-import { Link } from 'react-router-dom';
-
 import StatusIndicator from '@cloudscape-design/components/status-indicator';
 import TextContent from '@cloudscape-design/components/text-content';
 
@@ -16,17 +14,7 @@ import toTitleCase from '@/utils/toTitleCase';
 dayjs.extend(duration);
 
 function JobName(healthScribeJob: MedicalScribeJobSummary) {
-    if (healthScribeJob.MedicalScribeJobStatus === 'COMPLETED') {
-        return (
-            <TextContent>
-                <Link to={`/conversation/${healthScribeJob.MedicalScribeJobName}`}>
-                    {healthScribeJob.MedicalScribeJobName}
-                </Link>
-            </TextContent>
-        );
-    } else {
-        return healthScribeJob.MedicalScribeJobName;
-    }
+    return healthScribeJob.MedicalScribeJobName;
 }
 
 function JobStatus(status: string) {
