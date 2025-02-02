@@ -74,15 +74,14 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
             disableContentPaddings={false}
-            fitHeight
           >
-            <Box padding="s">
+            <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px' }}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
                 </FormField>
                 <FormField label="Date of Birth">
-                  <Input value="03/15/1985" disabled />
+                  <Input value="03/15/1985" disabled style={{ maxWidth: '150px' }} />
                 </FormField>
                 <FormField label="Phone">
                   <Input value="+1 (555) 123-4567" disabled />
@@ -109,7 +108,7 @@ const AgentDesktop: React.FC = () => {
                   <Input value="01/15/2024" disabled />
                 </FormField>
               </Grid>
-            </Box>
+            </div>
           </Container>
 
           {/* Video Conference Panel */}
@@ -126,11 +125,10 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
             disableContentPaddings={false}
-            fitHeight
           >
-            <Box padding="xxl" textAlign="center">
+            <Box padding="xxl" textAlign="center" style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <SpaceBetween size="l">
-                <FormField label="Meeting ID">
+                <FormField label="Meeting ID" style={{ maxWidth: '300px', margin: '0 auto' }}>
                   <Input value={meetingId} readOnly />
                 </FormField>
                 <Button variant="primary" iconName="call">Start Video Call</Button>
