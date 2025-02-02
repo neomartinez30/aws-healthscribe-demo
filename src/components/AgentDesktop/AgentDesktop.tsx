@@ -73,8 +73,9 @@ const AgentDesktop: React.FC = () => {
                 Patient Information
               </Header>
             }
+            style={{ height: '400px' }}
           >
-            <div style={{ maxHeight: '300px', overflowY: 'auto', padding: '8px' }}>
+            <div style={{ height: 'calc(100% - 20px)', overflowY: 'auto', padding: '8px' }}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
@@ -123,20 +124,19 @@ const AgentDesktop: React.FC = () => {
                 Video Call
               </Header>
             }
+            style={{ height: '400px' }}
           >
-            <SpaceBetween size="l">
-              <Box padding="s">
-                <SpaceBetween size="m">
-                  <FormField label="Meeting ID">
-                    <Input value={meetingId} readOnly />
-                  </FormField>
-                  <Button variant="primary" iconName="call">Start Video Call</Button>
-                  <Box color="text-status-info">
-                    Waiting for patient to join...
-                  </Box>
-                </SpaceBetween>
-              </Box>
-            </SpaceBetween>
+            <div style={{ height: 'calc(100% - 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SpaceBetween size="l">
+                <FormField label="Meeting ID">
+                  <Input value={meetingId} readOnly />
+                </FormField>
+                <Button variant="primary" iconName="call">Start Video Call</Button>
+                <Box color="text-status-info">
+                  Waiting for patient to join...
+                </Box>
+              </SpaceBetween>
+            </div>
           </Container>
         </Grid>
 
