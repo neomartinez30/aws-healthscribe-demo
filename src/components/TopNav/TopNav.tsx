@@ -12,11 +12,11 @@ import { useAuthContext } from '@/store/auth';
 
 import './TopNav.css';
 
-type TopNavClick = {
+interface TopNavClick {
     detail: {
         id: string;
     };
-};
+}
 
 export default function TopNav() {
     const navigate = useNavigate();
@@ -64,7 +64,7 @@ export default function TopNav() {
         }
     }
 
-    const mainMenuItems: TopNavigationProps.MenuDropdownItem[] = [
+    const mainMenuItems = [
         {
             text: 'Conversations',
             href: '/conversations',
@@ -80,7 +80,7 @@ export default function TopNav() {
             href: '/AgentDesktop',
             id: 'desktop'
         },
-        { type: 'divider' },
+        { id: 'divider-1', text: '-' },
         {
             text: 'Settings',
             href: '/settings',
@@ -89,7 +89,7 @@ export default function TopNav() {
         }
     ];
 
-    const utilVisual: TopNavigationProps.MenuDropdownUtility = {
+    const utilVisual: TopNavigationProps.Utility = {
         type: 'menu-dropdown',
         iconName: 'settings',
         ariaLabel: 'Settings',
@@ -135,20 +135,20 @@ export default function TopNav() {
         onItemClick: (e) => handleUtilVisualClick(e),
     };
 
-    const utilHelp: TopNavigationProps.MenuDropdownUtility = {
+    const utilHelp: TopNavigationProps.Utility = {
         type: 'menu-dropdown',
-        iconName: 'help',
+        iconName: 'external',
         ariaLabel: 'Help',
         title: 'Help',
         items: [
             { id: 'documentation', text: 'Documentation', href: '#', external: true },
             { id: 'feedback', text: 'Feedback', href: '#', external: true },
-            { type: 'divider' },
+            { id: 'divider-1', text: '-' },
             { id: 'support', text: 'Support', href: '#', external: true }
         ]
     };
 
-    const utilUser: TopNavigationProps.ButtonUtility | TopNavigationProps.MenuDropdownUtility = isUserAuthenticated
+    const utilUser: TopNavigationProps.Utility = isUserAuthenticated
         ? {
               type: 'menu-dropdown',
               text: user?.signInDetails?.loginId || user?.username,
@@ -157,7 +157,7 @@ export default function TopNav() {
               items: [
                   { id: 'profile', text: 'Your Profile' },
                   { id: 'preferences', text: 'Preferences' },
-                  { type: 'divider' },
+                  { id: 'divider-1', text: '-' },
                   { id: 'signout', text: 'Sign out' }
               ],
               onItemClick: (e) => {
@@ -197,13 +197,6 @@ export default function TopNav() {
                     overflowMenuBackIconAriaLabel: 'Back',
                     overflowMenuDismissIconAriaLabel: 'Close menu'
                 }}
-                search={
-                    <TopNavigation.Search
-                        placeholder="Search"
-                        ariaLabel="Search"
-                        onSubmit={({ detail }) => console.log('Search submitted:', detail.value)}
-                    />
-                }
             />
         </>
     );
