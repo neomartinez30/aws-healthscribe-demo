@@ -123,24 +123,26 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
             disableContentPaddings={false}
+            className={styles.container}
           >
             <div className={styles.meetingContainer}>
-              <Box padding="xxl" textAlign="center">
+              <div className={styles.meetingContent}>
                 <SpaceBetween size="l">
-                  <div className={styles.meetingIdField}>
-                    <FormField label="Meeting ID">
-                      <Input value={meetingId} readOnly />
-                    </FormField>
-                  </div>
+                  <FormField label="Meeting ID">
+                    <Input 
+                      value={meetingId} 
+                      readOnly
+                      className={styles.meetingIdField}
+                    />
+                  </FormField>
                   <Button variant="primary" iconName="call">Start Video Call</Button>
                   <Box color="text-status-info">
                     Waiting for patient to join...
                   </Box>
                 </SpaceBetween>
-              </Box>
+              </div>
             </div>
           </Container>
-        </Grid>
 
         {/* Agent Tools Panel */}
         <Container

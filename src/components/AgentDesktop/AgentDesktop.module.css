@@ -181,7 +181,7 @@
     background: #555;
   }
   .scrollableContent {
-    height: 400px;
+    height: 300px;
     overflow-y: auto;
     padding: 10px;
   }
@@ -191,10 +191,11 @@
   }
   
   .meetingContainer {
-    height: 400px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
   
   .meetingIdField {
@@ -203,5 +204,10 @@
   }
   
   .container {
-    height: 400px;
+    height: 300px;
+  }
+  
+  .meetingContent {
+    text-align: center;
+    width: 100%;
   }
