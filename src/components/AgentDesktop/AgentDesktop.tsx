@@ -9,6 +9,7 @@ import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
+import ScrollableContainer from '@cloudscape-design/components/container/scrollable-container';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -38,6 +39,7 @@ interface ConversationData {
 const AgentDesktop: React.FC = () => {
   const [activeTabId, setActiveTabId] = React.useState("tool1");
   const [selectedConversation, setSelectedConversation] = React.useState<ConversationData | null>(null);
+  const [meetingId] = React.useState("meeting-" + Math.random().toString(36).substr(2, 9));
 
   return (
     <ContentLayout
@@ -73,57 +75,73 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-              <FormField label="Name">
-                <Input value="John Doe" disabled />
-              </FormField>
-              <FormField label="Date of Birth">
-                <Input value="03/15/1985" disabled />
-              </FormField>
-              <FormField label="Phone">
-                <Input value="+1 (555) 123-4567" disabled />
-              </FormField>
-              <FormField label="Email">
-                <Input value="john.doe@example.com" disabled />
-              </FormField>
-              <FormField label="Insurance">
-                <Input value="Blue Cross Blue Shield" disabled />
-              </FormField>
-              <FormField label="Member ID">
-                <Input value="BCBS123456789" disabled />
-              </FormField>
-              <FormField label="Primary Care">
-                <Input value="Dr. Sarah Johnson" disabled />
-              </FormField>
-              <FormField label="Emergency Contact">
-                <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
-              </FormField>
-              <FormField label="Preferred Language">
-                <Input value="English" disabled />
-              </FormField>
-              <FormField label="Last Visit">
-                <Input value="01/15/2024" disabled />
-              </FormField>
-            </Grid>
+            <ScrollableContainer height={300}>
+              <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+                <FormField label="Name">
+                  <Input value="John Doe" disabled />
+                </FormField>
+                <FormField label="Date of Birth">
+                  <Input value="03/15/1985" disabled />
+                </FormField>
+                <FormField label="Phone">
+                  <Input value="+1 (555) 123-4567" disabled />
+                </FormField>
+                <FormField label="Email">
+                  <Input value="john.doe@example.com" disabled />
+                </FormField>
+                <FormField label="Insurance">
+                  <Input value="Blue Cross Blue Shield" disabled />
+                </FormField>
+                <FormField label="Member ID">
+                  <Input value="BCBS123456789" disabled />
+                </FormField>
+                <FormField label="Primary Care">
+                  <Input value="Dr. Sarah Johnson" disabled />
+                </FormField>
+                <FormField label="Emergency Contact">
+                  <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
+                </FormField>
+                <FormField label="Preferred Language">
+                  <Input value="English" disabled />
+                </FormField>
+                <FormField label="Last Visit">
+                  <Input value="01/15/2024" disabled />
+                </FormField>
+              </Grid>
+            </ScrollableContainer>
           </Container>
 
-          {/* Medical Insights */}
+          {/* Video Conference Panel */}
           <Container
             header={
               <Header
                 variant="h2"
-                description="Key medical information and history"
+                description="Video conference controls"
                 actions={
                   <Button iconName="refresh">Refresh</Button>
                 }
               >
-                Medical Summary
+                Video Call
               </Header>
             }
           >
-            <div style={{ height: '300px', overflowY: 'auto' }}>
-              <MedicalSummary />
-            </div>
+            <SpaceBetween size="l">
+              <Box padding="s">
+                <SpaceBetween size="m">
+                  <FormField label="Meeting ID">
+                    <Input value={meetingId} readOnly />
+                  </FormField>
+                  <SpaceBetween direction="horizontal" size="xs">
+                    <Button iconName="camera">Start Video</Button>
+                    <Button iconName="microphone">Unmute</Button>
+                    <Button iconName="share" variant="primary">Share Screen</Button>
+                  </SpaceBetween>
+                  <Box color="text-status-info">
+                    Waiting for patient to join...
+                  </Box>
+                </SpaceBetween>
+              </Box>
+            </SpaceBetween>
           </Container>
         </Grid>
 
