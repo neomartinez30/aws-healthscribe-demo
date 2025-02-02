@@ -1,6 +1,5 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import TopNavigation from '@cloudscape-design/components/top-navigation';
 import { TopNavigationProps } from '@cloudscape-design/components/top-navigation';
@@ -20,12 +19,12 @@ type TopNavClick = {
 };
 
 export default function TopNav() {
+    const navigate = useNavigate();
     const { isUserAuthenticated, user, signOut } = useAuthContext();
     const { appTheme, setAppThemeColor, setAppThemeDensity } = useAppThemeContext();
+    const [authVisible, setAuthVisible] = useState(false);
 
-    const [authVisible, setAuthVisible] = useState(false); // authentication modal visibility
-
-    // Set app appTheme
+    // Set app theme
     useEffect(() => {
         if (appTheme.color === 'appTheme.light') {
             applyMode(Mode.Light);
@@ -40,15 +39,12 @@ export default function TopNav() {
         }
     }, [appTheme]);
 
-    // When user authenticates, close authentication modal window
     useEffect(() => {
         if (isUserAuthenticated) {
             setAuthVisible(false);
         }
-        // no else because we want the appAuth window to only pop up by clicking sign in, not automatically
     }, [isUserAuthenticated]);
 
-    // Change visualization
     function handleUtilVisualClick(e: TopNavClick) {
         switch (e.detail.id) {
             case 'appTheme.light':
@@ -68,12 +64,36 @@ export default function TopNav() {
         }
     }
 
-    // App appTheme dropdown
+    const mainMenuItems: TopNavigationProps.MenuDropdownItem[] = [
+        {
+            text: 'Conversations',
+            href: '/conversations',
+            id: 'conversations'
+        },
+        {
+            text: 'Patient Insights',
+            href: '/PatientInsights',
+            id: 'insights'
+        },
+        {
+            text: 'Agent Desktop',
+            href: '/AgentDesktop',
+            id: 'desktop'
+        },
+        { type: 'divider' },
+        {
+            text: 'Settings',
+            href: '/settings',
+            id: 'settings',
+            iconName: 'settings'
+        }
+    ];
+
     const utilVisual: TopNavigationProps.MenuDropdownUtility = {
         type: 'menu-dropdown',
         iconName: 'settings',
         ariaLabel: 'Settings',
-        title: 'Settings',
+        title: 'Preferences',
         items: [
             {
                 id: 'appTheme',
@@ -115,23 +135,42 @@ export default function TopNav() {
         onItemClick: (e) => handleUtilVisualClick(e),
     };
 
-    // User appAuth dropdown (if appAuth) else sign-in
+    const utilHelp: TopNavigationProps.MenuDropdownUtility = {
+        type: 'menu-dropdown',
+        iconName: 'help',
+        ariaLabel: 'Help',
+        title: 'Help',
+        items: [
+            { id: 'documentation', text: 'Documentation', href: '#', external: true },
+            { id: 'feedback', text: 'Feedback', href: '#', external: true },
+            { type: 'divider' },
+            { id: 'support', text: 'Support', href: '#', external: true }
+        ]
+    };
+
     const utilUser: TopNavigationProps.ButtonUtility | TopNavigationProps.MenuDropdownUtility = isUserAuthenticated
         ? {
               type: 'menu-dropdown',
               text: user?.signInDetails?.loginId || user?.username,
               description: user?.signInDetails?.loginId,
               iconName: 'user-profile',
-              items: [{ id: 'signout', text: 'Sign out' }],
-              onItemClick: () => signOut(),
+              items: [
+                  { id: 'profile', text: 'Your Profile' },
+                  { id: 'preferences', text: 'Preferences' },
+                  { type: 'divider' },
+                  { id: 'signout', text: 'Sign out' }
+              ],
+              onItemClick: (e) => {
+                  if (e.detail.id === 'signout') {
+                      signOut();
+                  }
+              }
           }
         : {
               type: 'button',
               text: 'Sign In',
               onClick: () => setAuthVisible(true),
           };
-
-    const navUtils = [utilVisual, utilUser];
 
     return (
         <>
@@ -144,8 +183,27 @@ export default function TopNav() {
                 identity={{
                     href: '/',
                     title: 'Virtual Nurse Workspace',
+                    logo: {
+                        src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
+                        alt: "DHA Logo"
+                    }
                 }}
-                utilities={navUtils}
+                utilities={[utilHelp, utilVisual, utilUser]}
+                i18nStrings={{
+                    searchIconAriaLabel: 'Search',
+                    searchDismissIconAriaLabel: 'Close search',
+                    overflowMenuTriggerText: 'More',
+                    overflowMenuTitleText: 'All',
+                    overflowMenuBackIconAriaLabel: 'Back',
+                    overflowMenuDismissIconAriaLabel: 'Close menu'
+                }}
+                search={
+                    <TopNavigation.Search
+                        placeholder="Search"
+                        ariaLabel="Search"
+                        onSubmit={({ detail }) => console.log('Search submitted:', detail.value)}
+                    />
+                }
             />
         </>
     );
