@@ -53,12 +53,51 @@
 }
 
 /* Chat specific styles */
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  padding: 16px;
+}
+
 .chatMessages {
   flex: 1;
   overflow-y: auto;
   margin-bottom: 16px;
   padding-right: 8px;
-  height: calc(100% - 80px);
+}
+
+.messageBox {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
+.nurseMessage {
+  background-color: #f0f2f5;
+  margin-right: auto;
+}
+
+.patientMessage {
+  background-color: #e3f2fd;
+  margin-left: auto;
+}
+
+.messageSender {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.messageContent {
+  margin-bottom: 4px;
+}
+
+.messageTime {
+  font-size: 0.7rem;
+  color: #666;
+  text-align: right;
 }
 
 .chatForm {
