@@ -9,7 +9,6 @@ import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
-import ScrollableContainer from '@cloudscape-design/components/container/scrollable-container';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -76,7 +75,7 @@ const AgentDesktop: React.FC = () => {
               </Header>
             }
           >
-            <ScrollableContainer height={300}>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', padding: '8px' }}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
@@ -109,7 +108,7 @@ const AgentDesktop: React.FC = () => {
                   <Input value="01/15/2024" disabled />
                 </FormField>
               </Grid>
-            </ScrollableContainer>
+            </div>
           </Container>
 
           {/* Video Conference Panel */}
@@ -132,11 +131,7 @@ const AgentDesktop: React.FC = () => {
                   <FormField label="Meeting ID">
                     <Input value={meetingId} readOnly />
                   </FormField>
-                  <SpaceBetween direction="horizontal" size="xs">
-                    <Button iconName="camera">Start Video</Button>
-                    <Button iconName="microphone">Unmute</Button>
-                    <Button iconName="share" variant="primary">Share Screen</Button>
-                  </SpaceBetween>
+                  <Button variant="primary" iconName="call">Start Video Call</Button>
                   <Box color="text-status-info">
                     Waiting for patient to join...
                   </Box>
