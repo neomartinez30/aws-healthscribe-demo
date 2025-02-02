@@ -24,7 +24,6 @@ export default function TopNav() {
     const { appTheme, setAppThemeColor, setAppThemeDensity } = useAppThemeContext();
     const [authVisible, setAuthVisible] = useState(false);
 
-    // Set app theme
     useEffect(() => {
         if (appTheme.color === 'appTheme.light') {
             applyMode(Mode.Light);
@@ -63,31 +62,6 @@ export default function TopNav() {
                 break;
         }
     }
-
-    const mainMenuItems: TopNavigationProps.MenuDropdownItem[] = [
-        {
-            text: 'Conversations',
-            href: '/conversations',
-            id: 'conversations'
-        },
-        {
-            text: 'Patient Insights',
-            href: '/PatientInsights',
-            id: 'insights'
-        },
-        {
-            text: 'Agent Desktop',
-            href: '/AgentDesktop',
-            id: 'desktop'
-        },
-        { type: 'divider' },
-        {
-            text: 'Settings',
-            href: '/settings',
-            id: 'settings',
-            iconName: 'settings'
-        }
-    ];
 
     const utilVisual: TopNavigationProps.MenuDropdownUtility = {
         type: 'menu-dropdown',
@@ -137,13 +111,12 @@ export default function TopNav() {
 
     const utilHelp: TopNavigationProps.MenuDropdownUtility = {
         type: 'menu-dropdown',
-        iconName: 'help',
+        iconName: 'info',
         ariaLabel: 'Help',
         title: 'Help',
         items: [
             { id: 'documentation', text: 'Documentation', href: '#', external: true },
             { id: 'feedback', text: 'Feedback', href: '#', external: true },
-            { type: 'divider' },
             { id: 'support', text: 'Support', href: '#', external: true }
         ]
     };
@@ -157,7 +130,6 @@ export default function TopNav() {
               items: [
                   { id: 'profile', text: 'Your Profile' },
                   { id: 'preferences', text: 'Preferences' },
-                  { type: 'divider' },
                   { id: 'signout', text: 'Sign out' }
               ],
               onItemClick: (e) => {
@@ -197,13 +169,6 @@ export default function TopNav() {
                     overflowMenuBackIconAriaLabel: 'Back',
                     overflowMenuDismissIconAriaLabel: 'Close menu'
                 }}
-                search={
-                    <TopNavigation.Search
-                        placeholder="Search"
-                        ariaLabel="Search"
-                        onSubmit={({ detail }) => console.log('Search submitted:', detail.value)}
-                    />
-                }
             />
         </>
     );
