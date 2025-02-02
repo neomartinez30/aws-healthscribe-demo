@@ -73,9 +73,10 @@ const AgentDesktop: React.FC = () => {
                 Patient Information
               </Header>
             }
-            style={{ height: '400px' }}
+            disableContentPaddings={false}
+            fitHeight
           >
-            <div style={{ height: 'calc(100% - 20px)', overflowY: 'auto', padding: '8px' }}>
+            <Box padding="s">
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
@@ -108,7 +109,7 @@ const AgentDesktop: React.FC = () => {
                   <Input value="01/15/2024" disabled />
                 </FormField>
               </Grid>
-            </div>
+            </Box>
           </Container>
 
           {/* Video Conference Panel */}
@@ -124,9 +125,10 @@ const AgentDesktop: React.FC = () => {
                 Video Call
               </Header>
             }
-            style={{ height: '400px' }}
+            disableContentPaddings={false}
+            fitHeight
           >
-            <div style={{ height: 'calc(100% - 20px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Box padding="xxl" textAlign="center">
               <SpaceBetween size="l">
                 <FormField label="Meeting ID">
                   <Input value={meetingId} readOnly />
@@ -136,7 +138,7 @@ const AgentDesktop: React.FC = () => {
                   Waiting for patient to join...
                 </Box>
               </SpaceBetween>
-            </div>
+            </Box>
           </Container>
         </Grid>
 
