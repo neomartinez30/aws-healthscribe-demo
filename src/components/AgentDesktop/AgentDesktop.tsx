@@ -18,6 +18,7 @@ import RightPanel from '@/components/Conversation/RightPanel';
 import { IAuraClinicalDocOutput, IAuraTranscriptOutput } from '@/types/HealthScribe';
 import WaveSurfer from 'wavesurfer.js';
 import { ChatPanel } from './ChatPanel';
+import styles from './AgentDesktop.module.css';
 
 interface ConversationData {
   jobLoading: boolean;
@@ -75,13 +76,15 @@ const AgentDesktop: React.FC = () => {
             }
             disableContentPaddings={false}
           >
-            <div style={{ maxHeight: '400px', overflowY: 'auto', padding: '10px' }}>
+            <div className={styles.scrollableContent}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
                 <FormField label="Name">
                   <Input value="John Doe" disabled />
                 </FormField>
                 <FormField label="Date of Birth">
-                  <Input value="03/15/1985" disabled style={{ maxWidth: '150px' }} />
+                  <div className={styles.dateField}>
+                    <Input value="03/15/1985" disabled />
+                  </div>
                 </FormField>
                 <FormField label="Phone">
                   <Input value="+1 (555) 123-4567" disabled />
@@ -126,17 +129,21 @@ const AgentDesktop: React.FC = () => {
             }
             disableContentPaddings={false}
           >
-            <Box padding="xxl" textAlign="center" style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <SpaceBetween size="l">
-                <FormField label="Meeting ID" style={{ maxWidth: '300px', margin: '0 auto' }}>
-                  <Input value={meetingId} readOnly />
-                </FormField>
-                <Button variant="primary" iconName="call">Start Video Call</Button>
-                <Box color="text-status-info">
-                  Waiting for patient to join...
-                </Box>
-              </SpaceBetween>
-            </Box>
+            <div className={styles.meetingContainer}>
+              <Box padding="xxl" textAlign="center">
+                <SpaceBetween size="l">
+                  <div className={styles.meetingIdField}>
+                    <FormField label="Meeting ID">
+                      <Input value={meetingId} readOnly />
+                    </FormField>
+                  </div>
+                  <Button variant="primary" iconName="call">Start Video Call</Button>
+                  <Box color="text-status-info">
+                    Waiting for patient to join...
+                  </Box>
+                </SpaceBetween>
+              </Box>
+            </div>
           </Container>
         </Grid>
 
