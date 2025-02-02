@@ -42,7 +42,6 @@ const AgentDesktop: React.FC = () => {
 
   return (
     <ContentLayout
-      disableContentPaddings
       header={
         <Header
           variant="h1"
