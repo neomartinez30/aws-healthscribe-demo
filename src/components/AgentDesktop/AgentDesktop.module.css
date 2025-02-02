@@ -141,89 +141,13 @@
   gap: 0 !important;
 }
 
-.fullWidthLayout :global([class*="awsui_container"]) {
-  width: 100% !important;
-  margin: 0 !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-}
-
-/* Content area styles */
-.fullWidthLayout :global([class*="awsui_content"]) {
-  width: 100% !important;
-  max-width: none !important;
-  padding: 16px !important;
-  height: 100% !important;
-}
-
-/* Header styles */
-.fullWidthLayout :global([class*="awsui_header"]) {
-  padding: 16px !important;
-  width: 100% !important;
-  background-color: #f8f8f8 !important;
-  border-bottom: 1px solid #eaeded !important;
-}
-
-/* Ensure proper spacing between grid items */
-.fullWidthLayout :global([class*="awsui_grid-container"]) {
-  gap: 0 !important;
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-}
-
-/* Responsive grid */
-@media (max-width: 768px) {
-  .fullWidthLayout :global([class*="awsui_grid-container"]) {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .gridItem,
-  .gridItem > :global([class*="awsui_container"]) {
-    min-height: 500px !important;
-  }
-}
-
-/* Form field alignment */
-.fullWidthLayout :global([class*="awsui_form-field"]) {
-  margin-bottom: 16px !important;
-}
-
-.fullWidthLayout :global([class*="awsui_form-field"]) :global([class*="awsui_label"]) {
-  margin-bottom: 8px !important;
-}
-
-/* Input and control styles */
-.fullWidthLayout :global([class*="awsui_input"]),
-.fullWidthLayout :global([class*="awsui_select"]),
-.fullWidthLayout :global([class*="awsui_textarea"]) {
-  width: 100% !important;
-}
-
-/* Scrollbar styling */
-.scrollContainer::-webkit-scrollbar,
-.chatMessages::-webkit-scrollbar {
-  width: 8px;
-}
-
-.scrollContainer::-webkit-scrollbar-track,
-.chatMessages::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb,
-.chatMessages::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.scrollContainer::-webkit-scrollbar-thumb:hover,
-.chatMessages::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.container {
+  height: 500px !important;
+  overflow-y: auto;
 }
 
 .scrollableContent {
-  height: 300px;
+  height: 100%;
   overflow-y: auto;
   padding: 10px;
 }
@@ -243,10 +167,6 @@
 .meetingIdField {
   max-width: 300px;
   margin: 0 auto;
-}
-
-.container {
-  height: 300px;
 }
 
 .meetingContent {

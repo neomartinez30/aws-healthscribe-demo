@@ -8,7 +8,7 @@ import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
-import Tabs from '@cloudscape-design/components/tabs';
+import Select from '@cloudscape-design/components/select';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -37,10 +37,9 @@ interface ConversationData {
 }
 
 const AgentDesktop: React.FC = () => {
-  const [activeTabId, setActiveTabId] = React.useState("tool1");
   const [selectedConversation, setSelectedConversation] = React.useState<ConversationData | null>(null);
   const [meetingId] = React.useState("meeting-" + Math.random().toString(36).substr(2, 9));
-  const [activeCommTab, setActiveCommTab] = React.useState("chat");
+  const [communicationType, setCommunicationType] = React.useState({ label: 'Chat', value: 'chat' });
   const [chatMessage, setChatMessage] = React.useState("");
 
   // Sample chat messages
@@ -116,62 +115,58 @@ const AgentDesktop: React.FC = () => {
               }
               className={styles.container}
             >
-              <Tabs
-                activeTabId={activeCommTab}
-                onChange={({ detail }) => setActiveCommTab(detail.activeTabId)}
-                tabs={[
-                  {
-                    label: "Chat",
-                    id: "chat",
-                    content: (
-                      <div className={styles.chatContainer}>
-                        <div className={styles.chatMessages}>
-                          {chatMessages.map((msg, index) => (
-                            <div key={index} className={`${styles.messageBox} ${msg.sender === "Nurse" ? styles.nurseMessage : styles.patientMessage}`}>
-                              <div className={styles.messageSender}>{msg.sender}</div>
-                              <div className={styles.messageContent}>{msg.message}</div>
-                              <div className={styles.messageTime}>{msg.time}</div>
-                            </div>
-                          ))}
+              <SpaceBetween size="m">
+                <Select
+                  selectedOption={communicationType}
+                  onChange={({ detail }) => setCommunicationType(detail.selectedOption)}
+                  options={[
+                    { label: 'Chat', value: 'chat' },
+                    { label: 'Video Call', value: 'video' }
+                  ]}
+                />
+                
+                {communicationType.value === 'chat' ? (
+                  <div className={styles.chatContainer}>
+                    <div className={styles.chatMessages}>
+                      {chatMessages.map((msg, index) => (
+                        <div key={index} className={`${styles.messageBox} ${msg.sender === "Nurse" ? styles.nurseMessage : styles.patientMessage}`}>
+                          <div className={styles.messageSender}>{msg.sender}</div>
+                          <div className={styles.messageContent}>{msg.message}</div>
+                          <div className={styles.messageTime}>{msg.time}</div>
                         </div>
-                        <div className={styles.chatForm}>
-                          <SpaceBetween direction="horizontal" size="xs">
-                            <Input
-                              value={chatMessage}
-                              onChange={({ detail }) => setChatMessage(detail.value)}
-                              placeholder="Type your message..."
-                            />
-                            <Button>Send</Button>
-                          </SpaceBetween>
-                        </div>
-                      </div>
-                    )
-                  },
-                  {
-                    label: "Video Call",
-                    id: "video",
-                    content: (
-                      <div className={styles.meetingContainer}>
-                        <div className={styles.meetingContent}>
-                          <SpaceBetween size="l">
-                            <FormField label="Meeting ID">
-                              <Input 
-                                value={meetingId} 
-                                readOnly
-                                className={styles.meetingIdField}
-                              />
-                            </FormField>
-                            <Button variant="primary" iconName="call">Start Video Call</Button>
-                            <Box color="text-status-info">
-                              Waiting for patient to join...
-                            </Box>
-                          </SpaceBetween>
-                        </div>
-                      </div>
-                    )
-                  }
-                ]}
-              />
+                      ))}
+                    </div>
+                    <div className={styles.chatForm}>
+                      <SpaceBetween direction="horizontal" size="xs">
+                        <Input
+                          value={chatMessage}
+                          onChange={({ detail }) => setChatMessage(detail.value)}
+                          placeholder="Type your message..."
+                        />
+                        <Button>Send</Button>
+                      </SpaceBetween>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.meetingContainer}>
+                    <div className={styles.meetingContent}>
+                      <SpaceBetween size="l">
+                        <FormField label="Meeting ID">
+                          <Input 
+                            value={meetingId} 
+                            readOnly
+                            className={styles.meetingIdField}
+                          />
+                        </FormField>
+                        <Button variant="primary" iconName="call">Start Video Call</Button>
+                        <Box color="text-status-info">
+                          Waiting for patient to join...
+                        </Box>
+                      </SpaceBetween>
+                    </div>
+                  </div>
+                )}
+              </SpaceBetween>
             </Container>
           </Grid>
 
