@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
@@ -9,9 +9,6 @@ import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Tabs from '@cloudscape-design/components/tabs';
-import Alert from '@cloudscape-design/components/alert';
-import Badge from '@cloudscape-design/components/badge';
-import StatusIndicator from '@cloudscape-design/components/status-indicator';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -39,24 +36,8 @@ interface ConversationData {
 }
 
 const AgentDesktop: React.FC = () => {
-  const [activeTabId, setActiveTabId] = useState("tool1");
-  const [selectedConversation, setSelectedConversation] = useState<ConversationData | null>(null);
-  const [patientRiskLevel, setPatientRiskLevel] = useState<'low' | 'medium' | 'high'>('low');
-  const [callTimer, setCallTimer] = useState(0);
-
-  // Start timer when component mounts
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCallTimer(prev => prev + 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  const [activeTabId, setActiveTabId] = React.useState("tool1");
+  const [selectedConversation, setSelectedConversation] = React.useState<ConversationData | null>(null);
 
   return (
     <ContentLayout
@@ -64,17 +45,8 @@ const AgentDesktop: React.FC = () => {
         <Header
           variant="h1"
           description="Virtual Nurse Workspace"
-          info={
-            <StatusIndicator type="success">
-              Connected
-            </StatusIndicator>
-          }
           actions={
             <SpaceBetween direction="horizontal" size="xs">
-              <Box>Call Duration: {formatTime(callTimer)}</Box>
-              <Badge color={patientRiskLevel === 'high' ? 'red' : patientRiskLevel === 'medium' ? 'blue' : 'green'}>
-                Risk Level: {patientRiskLevel.toUpperCase()}
-              </Badge>
               <Button iconName="external" href="/knowledgebase" target="_blank">KnowledgeBase</Button>
               <Button iconName="contact" href="/phonebook" target="_blank">PhoneBook</Button>
             </SpaceBetween>
@@ -97,32 +69,42 @@ const AgentDesktop: React.FC = () => {
                   <Button iconName="edit">Edit</Button>
                 }
               >
-                Caller Attributes
+                Patient Information
               </Header>
             }
           >
-            <div style={{ height: '300px' }}>
-              <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-                <FormField label="Name">
-                  <Input value="John Doe" disabled />
-                </FormField>
-                <FormField label="ID">
-                  <Input value="12345" disabled />
-                </FormField>
-                <FormField label="Phone">
-                  <Input value="+1 (555) 123-4567" disabled />
-                </FormField>
-                <FormField label="Email">
-                  <Input value="john.doe@example.com" disabled />
-                </FormField>
-                <FormField label="Insurance">
-                  <Input value="Blue Cross Blue Shield" disabled />
-                </FormField>
-                <FormField label="Primary Care">
-                  <Input value="Dr. Sarah Johnson" disabled />
-                </FormField>
-              </Grid>
-            </div>
+            <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+              <FormField label="Name">
+                <Input value="John Doe" disabled />
+              </FormField>
+              <FormField label="Date of Birth">
+                <Input value="03/15/1985" disabled />
+              </FormField>
+              <FormField label="Phone">
+                <Input value="+1 (555) 123-4567" disabled />
+              </FormField>
+              <FormField label="Email">
+                <Input value="john.doe@example.com" disabled />
+              </FormField>
+              <FormField label="Insurance">
+                <Input value="Blue Cross Blue Shield" disabled />
+              </FormField>
+              <FormField label="Member ID">
+                <Input value="BCBS123456789" disabled />
+              </FormField>
+              <FormField label="Primary Care">
+                <Input value="Dr. Sarah Johnson" disabled />
+              </FormField>
+              <FormField label="Emergency Contact">
+                <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
+              </FormField>
+              <FormField label="Preferred Language">
+                <Input value="English" disabled />
+              </FormField>
+              <FormField label="Last Visit">
+                <Input value="01/15/2024" disabled />
+              </FormField>
+            </Grid>
           </Container>
 
           {/* Medical Insights */}
@@ -145,6 +127,7 @@ const AgentDesktop: React.FC = () => {
           </Container>
         </Grid>
 
+        {/* Rest of the component remains unchanged */}
         {/* Agent Tools Panel */}
         <Container
           header={
@@ -166,9 +149,6 @@ const AgentDesktop: React.FC = () => {
                 content: (
                   <div style={{ padding: '20px' }}>
                     <SpaceBetween size="l">
-                      <Alert type="info">
-                        Based on the conversation, here are my recommendations:
-                      </Alert>
                       <Box>
                         <SpaceBetween size="m">
                           <div>
@@ -214,7 +194,6 @@ const AgentDesktop: React.FC = () => {
                   <div style={{ height: 'calc(100vh - 400px)', padding: '20px' }}>
                     <iframe 
                       src="https://app.cleartriage.com/app/login" 
-                      id="myIframe"
                       style={{
                         width: '100%',
                         height: '100%',
