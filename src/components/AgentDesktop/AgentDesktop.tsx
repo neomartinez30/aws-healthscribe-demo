@@ -9,6 +9,7 @@ import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
 import FormField from '@cloudscape-design/components/form-field';
 import Select from '@cloudscape-design/components/select';
+import Tabs from '@cloudscape-design/components/tabs';
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -39,8 +40,9 @@ interface ConversationData {
 const AgentDesktop: React.FC = () => {
   const [selectedConversation, setSelectedConversation] = React.useState<ConversationData | null>(null);
   const [meetingId] = React.useState("meeting-" + Math.random().toString(36).substr(2, 9));
-  const [communicationType, setCommunicationType] = React.useState({ label: 'Chat', value: 'chat' });
+  const [communicationType, setCommunicationType] = React.useState<{ label: string; value: string }>({ label: 'Chat', value: 'chat' });
   const [chatMessage, setChatMessage] = React.useState("");
+  const [activeTabId, setActiveTabId] = React.useState("tool1");
 
   // Sample chat messages
   const chatMessages = [
@@ -118,7 +120,7 @@ const AgentDesktop: React.FC = () => {
               <SpaceBetween size="m">
                 <Select
                   selectedOption={communicationType}
-                  onChange={({ detail }) => setCommunicationType(detail.selectedOption)}
+                  onChange={({ detail }) => setCommunicationType(detail.selectedOption as { label: string; value: string })}
                   options={[
                     { label: 'Chat', value: 'chat' },
                     { label: 'Video Call', value: 'video' }
