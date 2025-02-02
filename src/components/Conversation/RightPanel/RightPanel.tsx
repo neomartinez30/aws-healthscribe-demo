@@ -91,7 +91,6 @@ export default function RightPanel({
     const clinicalDocumentNereUnits = useMemo(() => calculateNereUnits(clinicalDocument), [clinicalDocument]);
 
     const handleEditNotes = () => {
-        // Convert clinical document sections to text format
         const notesText = clinicalDocument?.ClinicalDocumentation?.Sections
             .map(section => {
                 return `${section.SectionName}:\n${section.Summary.map(s => s.SummarizedSegment).join('\n')}\n`;
@@ -99,6 +98,11 @@ export default function RightPanel({
             .join('\n') || '';
         setEditableNotes(notesText);
         setShowNotesModal(true);
+    };
+
+    const handleAddTriageNotes = () => {
+        const triageNotes = "\n\nTRIAGE\nProtocol Used: Abdominal Injury (Adult)\nProtocol-Based Disposition: Home Care\n\nPositive Triage Questions:\n* [1] Brief abdominal pain AND [2] no symptoms now (e.g., blow to solar plexus)\n* [1] Abdominal pain (not severe) AND [2] present < 1 hour\n* Small abdominal bruise\n* Small cut (scratch) or abrasion (scrape) is also present";
+        setEditableNotes(prev => prev + triageNotes);
     };
 
     if (jobLoading || clinicalDocument == null) {
@@ -146,6 +150,7 @@ export default function RightPanel({
                     size="large"
                     footer={
                         <SpaceBetween direction="horizontal" size="xs">
+                            <Button onClick={handleAddTriageNotes}>Triage Notes</Button>
                             <Button variant="link" onClick={() => setShowNotesModal(false)}>
                                 Cancel
                             </Button>
