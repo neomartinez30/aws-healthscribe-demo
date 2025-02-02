@@ -111,6 +111,16 @@ const AgentDesktop: React.FC = () => {
                 <Header
                   variant="h2"
                   description="Communication channels"
+                  actions={
+                    <Select
+                      selectedOption={communicationType}
+                      onChange={({ detail }) => setCommunicationType(detail.selectedOption as { label: string; value: string })}
+                      options={[
+                        { label: 'Chat', value: 'chat' },
+                        { label: 'Video Call', value: 'video' }
+                      ]}
+                    />
+                  }
                 >
                   Communication
                 </Header>
@@ -118,15 +128,6 @@ const AgentDesktop: React.FC = () => {
               className={styles.container}
             >
               <SpaceBetween size="m">
-                <Select
-                  selectedOption={communicationType}
-                  onChange={({ detail }) => setCommunicationType(detail.selectedOption as { label: string; value: string })}
-                  options={[
-                    { label: 'Chat', value: 'chat' },
-                    { label: 'Video Call', value: 'video' }
-                  ]}
-                />
-                
                 {communicationType.value === 'chat' ? (
                   <div className={styles.chatContainer}>
                     <div className={styles.chatMessages}>
