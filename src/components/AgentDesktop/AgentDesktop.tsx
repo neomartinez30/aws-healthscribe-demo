@@ -43,6 +43,7 @@ const AgentDesktop: React.FC = () => {
 
   return (
     <ContentLayout
+      disableContentPaddings
       header={
         <Header
           variant="h1"
@@ -145,7 +146,6 @@ const AgentDesktop: React.FC = () => {
           </Container>
         </Grid>
 
-        {/* Rest of the component remains unchanged */}
         {/* Agent Tools Panel */}
         <Container
           header={
