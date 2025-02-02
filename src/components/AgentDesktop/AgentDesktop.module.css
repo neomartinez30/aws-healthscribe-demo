@@ -181,7 +181,7 @@
     background: #555;
   }
   .scrollableContent {
-    max-height: 400px;
+    height: 400px;
     overflow-y: auto;
     padding: 10px;
   }
@@ -200,4 +200,8 @@
   .meetingIdField {
     max-width: 300px;
     margin: 0 auto;
+  }
+  
+  .container {
+    height: 400px;
   }

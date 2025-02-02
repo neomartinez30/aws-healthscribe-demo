@@ -62,19 +62,20 @@ const AgentDesktop: React.FC = () => {
         {/* First Row */}
         <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
           {/* Caller Attributes */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Patient information and attributes"
-                actions={
-                  <Button iconName="edit">Edit</Button>
-                }
-              >
-                Patient Information
-              </Header>
+              <Container
+              header={
+                <Header
+                  variant="h2"
+                  description="Patient information and attributes"
+                  actions={
+                    <Button iconName="edit">Edit</Button>
+                  }
+                >
+                  Patient Information
+                </Header>
             }
             disableContentPaddings={false}
+            className={styles.container}
           >
             <div className={styles.scrollableContent}>
               <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
@@ -92,9 +93,6 @@ const AgentDesktop: React.FC = () => {
                 <FormField label="Email">
                   <Input value="john.doe@example.com" disabled />
                 </FormField>
-                <FormField label="Insurance">
-                  <Input value="Blue Cross Blue Shield" disabled />
-                </FormField>
                 <FormField label="Member ID">
                   <Input value="BCBS123456789" disabled />
                 </FormField>
@@ -103,9 +101,6 @@ const AgentDesktop: React.FC = () => {
                 </FormField>
                 <FormField label="Emergency Contact">
                   <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
-                </FormField>
-                <FormField label="Preferred Language">
-                  <Input value="English" disabled />
                 </FormField>
                 <FormField label="Last Visit">
                   <Input value="01/15/2024" disabled />
