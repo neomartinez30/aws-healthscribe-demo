@@ -6,6 +6,8 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Textarea from '@cloudscape-design/components/textarea';
 import WaveSurfer from 'wavesurfer.js';
 
+import { DetectEntitiesV2Response } from '@aws-sdk/client-comprehendmedical';
+
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ExtractedHealthData } from '@/types/ComprehendMedical';
 import {

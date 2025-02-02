@@ -32,7 +32,7 @@ const MOCK_PROVIDERS: Provider[] = [
         name: 'Dr. Sarah Johnson',
         specialty: 'Cardiology',
         address: '123 Medical Ave, Suite 200, Washington DC',
-        zip: '20001',
+        zip: '91764',
         availableTimes: [
             'Tomorrow 2:00 PM',
             'Tomorrow 3:30 PM',
@@ -52,7 +52,7 @@ const MOCK_PROVIDERS: Provider[] = [
         name: 'Dr. Michael Chen',
         specialty: 'Family Medicine',
         address: '456 Health St, Building B, Washington DC',
-        zip: '20002',
+        zip: '85552',
         availableTimes: [
             'Today 4:00 PM',
             'Tomorrow 1:30 PM',
@@ -92,7 +92,7 @@ const MOCK_PROVIDERS: Provider[] = [
         name: 'Dr. James Wilson',
         specialty: 'Orthopedics',
         address: '321 Wellness Rd, Washington DC',
-        zip: '20004',
+        zip: '41578',
         availableTimes: [
             'Monday 9:00 AM',
             'Monday 2:30 PM',
