@@ -58,21 +58,22 @@ const AgentDesktop: React.FC = () => {
         </Header>
       }
     >
+      <Box padding={{ top: "l" }}></Box>
       <SpaceBetween size="l">
         {/* First Row */}
         <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
           {/* Caller Attributes */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Patient information and attributes"
-                actions={
-                  <Button iconName="edit">Edit</Button>
-                }
-              >
-                Patient Information
-              </Header>
+              <Container
+              header={
+                <Header
+                  variant="h2"
+                  description="Patient information and attributes"
+                  actions={
+                    <Button iconName="edit">Edit</Button>
+                  }
+                >
+                  Patient Information
+                </Header>
             }
             disableContentPaddings={false}
             className={styles.container}
@@ -143,7 +144,6 @@ const AgentDesktop: React.FC = () => {
               </div>
             </div>
           </Container>
-        </Grid>
 
         {/* Agent Tools Panel */}
         <Container
