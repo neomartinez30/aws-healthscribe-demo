@@ -43,7 +43,7 @@ const AgentDesktop: React.FC = () => {
 
   return (
     <ContentLayout>
-      <Box padding={{ top: "l" }}>
+      <Box padding={{ top: "l", bottom: "l" }}>
         <SpaceBetween size="l">
           {/* First Row */}
           <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
@@ -53,9 +53,6 @@ const AgentDesktop: React.FC = () => {
                 <Header
                   variant="h2"
                   description="Patient information and attributes"
-                  actions={
-                    <Button iconName="edit">Edit</Button>
-                  }
                 >
                   Patient Information
                 </Header>
@@ -101,9 +98,6 @@ const AgentDesktop: React.FC = () => {
                 <Header
                   variant="h2"
                   description="Video conference controls"
-                  actions={
-                    <Button iconName="refresh">Refresh</Button>
-                  }
                 >
                   Video Call
                 </Header>
