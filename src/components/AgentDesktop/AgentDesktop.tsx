@@ -44,7 +44,6 @@ const AgentDesktop: React.FC = () => {
   const [chatMessage, setChatMessage] = React.useState("");
   const [activeTabId, setActiveTabId] = React.useState("tool1");
 
-  // Sample chat messages
   const chatMessages = [
     { sender: "Nurse", message: "Hello, I'm Nurse Johnson. How can I assist you today?", time: "10:02 AM" },
     { sender: "Patient", message: "Hi, I've been having severe headaches for the past week.", time: "10:03 AM" },
@@ -57,53 +56,51 @@ const AgentDesktop: React.FC = () => {
 
   return (
     <ContentLayout>
-      <Box padding={{ top: "l", bottom: "l" }}>
-        <SpaceBetween size="l">
-          <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-            {/* Caller Attributes */}
-            <Container
-              header={
-                <Header
-                  variant="h2"
-                  description="Patient information and attributes"
-                >
-                  Patient Information
-                </Header>
-              }
-              disableContentPaddings={false}
-              className={styles.container}
+      <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+        {/* Caller Attributes */}
+        <Container
+          header={
+            <Header
+              variant="h2"
+              description="Patient information and attributes"
             >
-              <div className={styles.scrollableContent}>
-                <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-                  <FormField label="Name">
-                    <Input value="John Doe" disabled />
-                  </FormField>
-                  <FormField label="Date of Birth">
-                    <div className={styles.dateField}>
-                      <Input value="03/15/1985" disabled />
-                    </div>
-                  </FormField>
-                  <FormField label="Phone">
-                    <Input value="+1 (555) 123-4567" disabled />
-                  </FormField>
-                  <FormField label="Email">
-                    <Input value="john.doe@example.com" disabled />
-                  </FormField>
-                  <FormField label="Member ID">
-                    <Input value="BCBS123456789" disabled />
-                  </FormField>
-                  <FormField label="Primary Care">
-                    <Input value="Dr. Sarah Johnson" disabled />
-                  </FormField>
-                  <FormField label="Emergency Contact">
-                    <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
-                  </FormField>
-                  <FormField label="Last Visit">
-                    <Input value="01/15/2024" disabled />
-                  </FormField>
-                </Grid>
-              </div>
-            </Container>
+              Patient Information
+            </Header>
+          }
+          disableContentPaddings={false}
+          className={styles.container}
+        >
+          <div className={styles.scrollableContent}>
+            <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+              <FormField label="Name">
+                <Input value="John Doe" disabled />
+              </FormField>
+              <FormField label="Date of Birth">
+                <div className={styles.dateField}>
+                  <Input value="03/15/1985" disabled />
+                </div>
+              </FormField>
+              <FormField label="Phone">
+                <Input value="+1 (555) 123-4567" disabled />
+              </FormField>
+              <FormField label="Email">
+                <Input value="john.doe@example.com" disabled />
+              </FormField>
+              <FormField label="Member ID">
+                <Input value="BCBS123456789" disabled />
+              </FormField>
+              <FormField label="Primary Care">
+                <Input value="Dr. Sarah Johnson" disabled />
+              </FormField>
+              <FormField label="Emergency Contact">
+                <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
+              </FormField>
+              <FormField label="Last Visit">
+                <Input value="01/15/2024" disabled />
+              </FormField>
+            </Grid>
+          </div>
+        </Container>
 
             {/* Communication Container */}
             <Container
