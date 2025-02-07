@@ -10,6 +10,7 @@ import Input from '@cloudscape-design/components/input';
 import Tabs from '@cloudscape-design/components/tabs';
 import KeyValuePairs from "@cloudscape-design/components/key-value-pairs";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
+import ExpandableSection from "@cloudscape-design/components/expandable-section";
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -70,7 +71,6 @@ const AgentDesktop: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  // Start the conversation with the first patient message
   useEffect(() => {
     if (activeCommTab === 'chat' && messages.length === 0) {
       setMessages([{
@@ -84,7 +84,7 @@ const AgentDesktop: React.FC = () => {
 
   const simulatePatientResponse = async () => {
     setIsTyping(true);
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate typing delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
     setIsTyping(false);
     
     const response = patientResponses[responseIndex];
@@ -123,6 +123,20 @@ const AgentDesktop: React.FC = () => {
     }
   };
 
+  const VitalSign = ({ icon, value, label, color = "normal" }) => (
+    <div style={{ textAlign: 'center', padding: '10px' }}>
+      <div style={{ fontSize: '24px', marginBottom: '5px' }}>{icon}</div>
+      <div style={{ 
+        fontSize: '20px', 
+        fontWeight: 'bold',
+        color: color === 'warning' ? '#f4b400' : 
+              color === 'critical' ? '#d93025' : 
+              '#1a73e8'
+      }}>{value}</div>
+      <div style={{ fontSize: '14px', color: '#5f6368' }}>{label}</div>
+    </div>
+  );
+
   return (
     <div>
       <div className={styles.fixedSidebar}>
@@ -154,45 +168,79 @@ const AgentDesktop: React.FC = () => {
                       }
                     </div>
                   ) : (
-                    <KeyValuePairs
-                      columns={2}
-                      items={[
-                        {
-                          type: "group",
-                          title: "Personal",
-                          items: [
-                            { label: "DOD ID :", value: "1234567890" },
-                            { label: "Address :", value: "123 Main St, Virginia, USA" },
-                            { label: "Contact Number :", value: "+1 (555) 123-4567" },
-                            { label: "Military Relationship :", value: "Spouse" },
-                            { label: "TRICARE Convergency :", value: "Active" },
-                            { label: "Primary Care Manager :", value: "Dr. Sarah Kumar" },
-                            { label: "Authenticated :", value: <StatusIndicator>Yes</StatusIndicator> }
-                          ]
-                        },
-                        {
-                          type: "group",
-                          title: "Medical",
-                          items: [
-                            { label: "Symptom :", value: "Pain in neck" },
-                            { label: "Is it for child or Adult? :", value: "child" },
-                            { label: "Related to Head and Neck?:", value: "Yes" },
-                            { label: "Had any surgery before? :", value: "No" },
-                            { label: "Having trouble breathing? :", value: "No" },
-                            { label: "Is child having a fever?", value: "Yes" },
-                            { label: "Body Temperature :", value: "102 F" }
-                          ]
-                        },
-                      ]}
-                    />
+                    <SpaceBetween size="l">
+                      <KeyValuePairs
+                        columns={2}
+                        items={[
+                          {
+                            type: "group",
+                            title: "Personal",
+                            items: [
+                              { label: "DOD ID :", value: "1234567890" },
+                              { label: "Address :", value: "123 Main St, Virginia, USA" },
+                              { label: "Contact Number :", value: "+1 (555) 123-4567" },
+                              { label: "Military Relationship :", value: "Spouse" },
+                              { label: "TRICARE Convergency :", value: "Active" },
+                              { label: "Primary Care Manager :", value: "Dr. Sarah Kumar" },
+                              { label: "Authenticated :", value: <StatusIndicator>Yes</StatusIndicator> }
+                            ]
+                          }
+                        ]}
+                      />
+
+                      <ExpandableSection headerText="Medical Information">
+                        <KeyValuePairs
+                          columns={2}
+                          items={[
+                            {
+                              type: "group",
+                              items: [
+                                { label: "Blood Type :", value: "O+" },
+                                { label: "Allergies :", value: "Penicillin, Peanuts" },
+                                { label: "Current Medications :", value: "Lisinopril, Metformin" },
+                                { label: "Past Surgeries :", value: "Appendectomy (2019)" },
+                                { label: "Chronic Conditions :", value: "Hypertension, Type 2 Diabetes" },
+                                { label: "Last Physical :", value: "March 15, 2024" },
+                                { label: "Immunizations :", value: "Up to date" }
+                              ]
+                            }
+                          ]}
+                        />
+                      </ExpandableSection>
+
+                      <ExpandableSection headerText="Vital Signs">
+                        <Grid gridDefinition={[{ colspan: 3 }, { colspan: 3 }, { colspan: 3 }, { colspan: 3 }]}>
+                          <VitalSign 
+                            icon="❤️"
+                            value="72 bpm"
+                            label="Heart Rate"
+                          />
+                          <VitalSign 
+                            icon="🌡️"
+                            value="100.4°F"
+                            label="Temperature"
+                            color="warning"
+                          />
+                          <VitalSign 
+                            icon="🫁"
+                            value="18/min"
+                            label="Respiratory Rate"
+                          />
+                          <VitalSign 
+                            icon="🩺"
+                            value="140/90"
+                            label="Blood Pressure"
+                            color="critical"
+                          />
+                        </Grid>
+                      </ExpandableSection>
+                    </SpaceBetween>
                   )}
                 </div>
               </Container>
 
               {/* Communication Container */}
-              <Container
-                
-              >
+              <Container>
                 <Tabs
                   activeTabId={activeCommTab}
                   onChange={({ detail }) => setActiveCommTab(detail.activeTabId)}
@@ -224,7 +272,6 @@ const AgentDesktop: React.FC = () => {
                                 value={chatMessage}
                                 onChange={({ detail }) => setChatMessage(detail.value)}
                                 placeholder="Type your message..."
-                                
                               />
                               <Button onClick={handleSendMessage}>Send</Button>
                             </div>
