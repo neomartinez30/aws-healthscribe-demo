@@ -93,6 +93,36 @@ const AgentDesktop: React.FC = () => {
     }, 2000);
   };
 
+  const personalInfoItems = [
+    { id: "dodId", label: "DOD ID", value: "1234567890" },
+    { id: "address", label: "Address", value: "123 Main St, Virginia, USA" },
+    { id: "contact", label: "Contact Number", value: "+1 (555) 123-4567" },
+    { id: "relationship", label: "Military Relationship", value: "Spouse" },
+    { id: "tricare", label: "TRICARE Convergency", value: "Active" },
+    { id: "pcm", label: "Primary Care Manager", value: "Dr. Sarah Kumar" },
+    { id: "auth", label: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
+  ];
+
+  const medicalInfoItems = [
+    { id: "bloodType", label: "Blood Type", value: "O+" },
+    { id: "allergies", label: "Allergies", value: "Penicillin, Peanuts" },
+    { id: "conditions", label: "Chronic Conditions", value: "Asthma" },
+    { id: "physical", label: "Last Physical", value: "2023-12-15" },
+    { id: "medications", label: "Medications", value: "Albuterol Inhaler" },
+    { id: "surgeries", label: "Past Surgeries", value: "Appendectomy (2020)" }
+  ];
+
+  const vitalSigns = [
+    { id: "heartRate", icon: <Icon name="heart" size="big" />, value: "72 bpm", label: "Heart Rate", color: "normal" },
+    { id: "temp", icon: <Icon name="status-warning" size="big" />, value: "102.1°F", label: "Temperature", color: "critical" },
+    { id: "respRate", icon: <Icon name="status-info" size="big" />, value: "18/min", label: "Respiratory Rate", color: "normal" },
+    { id: "bp", icon: <Icon name="status-pending" size="big" />, value: "138/85", label: "Blood Pressure", color: "warning" },
+    { id: "weight", icon: <Icon name="status-in-progress" size="big" />, value: "165 lbs", label: "Weight", color: "normal" },
+    { id: "height", icon: <Icon name="status-positive" size="big" />, value: "5'8", label: "Height", color: "normal" },
+    { id: "o2", icon: <Icon name="status-stopped" size="big" />, value: "98%", label: "O2 Saturation", color: "normal" },
+    { id: "bmi", icon: <Icon name="status-negative" size="big" />, value: "27.4", label: "BMI", color: "warning" }
+  ];
+
   return (
     <div>
       <div className={styles.fixedSidebar}>
@@ -126,31 +156,12 @@ const AgentDesktop: React.FC = () => {
                   ) : (
                     <SpaceBetween size="l">
                       {/* Personal Information */}
-                      <KeyValuePairs
-                        items={[
-                          { key: "DOD ID", value: "1234567890" },
-                          { key: "Address", value: "123 Main St, Virginia, USA" },
-                          { key: "Contact Number", value: "+1 (555) 123-4567" },
-                          { key: "Military Relationship", value: "Spouse" },
-                          { key: "TRICARE Convergency", value: "Active" },
-                          { key: "Primary Care Manager", value: "Dr. Sarah Kumar" },
-                          { key: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
-                        ]}
-                      />
+                      <KeyValuePairs items={personalInfoItems} />
 
                       {/* Medical Information */}
                       <ExpandableSection headerText="Medical Information" variant="container">
                         <SpaceBetween size="l">
-                          <KeyValuePairs
-                            items={[
-                              { key: "Blood Type", value: "O+" },
-                              { key: "Allergies", value: "Penicillin, Peanuts" },
-                              { key: "Chronic Conditions", value: "Asthma" },
-                              { key: "Last Physical", value: "2023-12-15" },
-                              { key: "Medications", value: "Albuterol Inhaler" },
-                              { key: "Past Surgeries", value: "Appendectomy (2020)" }
-                            ]}
-                          />
+                          <KeyValuePairs items={medicalInfoItems} />
                         </SpaceBetween>
                       </ExpandableSection>
 
@@ -164,54 +175,15 @@ const AgentDesktop: React.FC = () => {
                             { colspan: 3 }
                           ]}
                         >
-                          <VitalSign 
-                            icon={<Icon name="heart" size="big" />}
-                            value="72 bpm" 
-                            label="Heart Rate"
-                            color="normal"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-warning" size="big" />}
-                            value="102.1°F" 
-                            label="Temperature"
-                            color="critical"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-info" size="big" />}
-                            value="18/min" 
-                            label="Respiratory Rate"
-                            color="normal"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-pending" size="big" />}
-                            value="138/85" 
-                            label="Blood Pressure"
-                            color="warning"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-in-progress" size="big" />}
-                            value="165 lbs" 
-                            label="Weight"
-                            color="normal"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-positive" size="big" />}
-                            value="5'8" 
-                            label="Height"
-                            color="normal"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-stopped" size="big" />}
-                            value="98%" 
-                            label="O2 Saturation"
-                            color="normal"
-                          />
-                          <VitalSign 
-                            icon={<Icon name="status-negative" size="big" />}
-                            value="27.4" 
-                            label="BMI"
-                            color="warning"
-                          />
+                          {vitalSigns.map((vital) => (
+                            <VitalSign 
+                              key={vital.id}
+                              icon={vital.icon}
+                              value={vital.value}
+                              label={vital.label}
+                              color={vital.color}
+                            />
+                          ))}
                         </Grid>
                       </ExpandableSection>
                     </SpaceBetween>
@@ -226,8 +198,8 @@ const AgentDesktop: React.FC = () => {
                   onChange={({ detail }) => setActiveCommTab(detail.activeTabId)}
                   tabs={[
                     {
-                      label: "Chat",
                       id: "chat",
+                      label: "Chat",
                       content: (
                         <div className={styles.chatContainer}>
                           <div className={styles.chatMessages}>
@@ -286,18 +258,18 @@ const AgentDesktop: React.FC = () => {
                 onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
                 tabs={[
                   {
-                    label: "Patient Insights",
                     id: "tool5",
+                    label: "Patient Insights",
                     content: <ChatPanel />
                   },
                   {
-                    label: "Resource Locator",
                     id: "tool2",
+                    label: "Resource Locator",
                     content: <ProviderLocator />
                   },
                   {
-                    label: "Clear Triage",
                     id: "tool3",
+                    label: "Clear Triage",
                     content: (
                       <div style={{ height: 'calc(100vh - 400px)', padding: '20px' }}>
                         <iframe
@@ -315,8 +287,8 @@ const AgentDesktop: React.FC = () => {
                     )
                   },
                   {
-                    label: "Medical Notes",
                     id: "tool4",
+                    label: "Medical Notes",
                     content: (
                       <div>
                         {!selectedConversation ? (
