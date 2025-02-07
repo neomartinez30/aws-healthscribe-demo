@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
@@ -41,16 +41,28 @@ interface VitalSign {
 }
 
 const VitalSign: React.FC<VitalSignProps> = ({ icon, value, label, color = "normal" }) => (
-  <div style={{ textAlign: 'center', padding: '10px' }}>
-    <div style={{ fontSize: '24px', marginBottom: '5px', color: '#545b64' }}>{icon}</div>
+  <div style={{ 
+    textAlign: 'center', 
+    padding: '15px',
+    background: 'white',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    transition: 'transform 0.2s',
+    cursor: 'pointer',
+    ':hover': {
+      transform: 'translateY(-2px)'
+    }
+  }}>
+    <div style={{ fontSize: '28px', marginBottom: '8px', color: '#545b64' }}>{icon}</div>
     <div style={{ 
-      fontSize: '20px', 
+      fontSize: '24px', 
       fontWeight: 'bold',
       color: color === 'warning' ? '#f4b400' : 
             color === 'critical' ? '#d93025' : 
-            '#1a73e8'
+            '#1a73e8',
+      marginBottom: '4px'
     }}>{value}</div>
-    <div style={{ fontSize: '14px', color: '#5f6368' }}>{label}</div>
+    <div style={{ fontSize: '14px', color: '#5f6368', fontWeight: '500' }}>{label}</div>
   </div>
 );
 
@@ -146,6 +158,11 @@ const AgentDesktop: React.FC = () => {
                   <Header
                     variant="h2"
                     description="Patient information and attributes"
+                    actions={
+                      patientInfoVisible && (
+                        <Button iconName="refresh" variant="icon" onClick={fetchPatientInfo} />
+                      )
+                    }
                   >
                     Patient Information
                   </Header>
@@ -163,18 +180,27 @@ const AgentDesktop: React.FC = () => {
                     </div>
                   ) : (
                     <SpaceBetween size="l">
-                      {/* Personal Information */}
-                      <KeyValuePairs items={personalInfoItems} />
+                      {/* Personal Information Card */}
+                      <Container
+                        header={<Header variant="h3">Personal Information</Header>}
+                        className={styles.infoCard}
+                      >
+                        <KeyValuePairs items={personalInfoItems} />
+                      </Container>
 
-                      {/* Medical Information */}
-                      <ExpandableSection headerText="Medical Information" variant="container">
-                        <SpaceBetween size="l">
-                          <KeyValuePairs items={medicalInfoItems} />
-                        </SpaceBetween>
-                      </ExpandableSection>
+                      {/* Medical Information Card */}
+                      <Container
+                        header={<Header variant="h3">Medical Information</Header>}
+                        className={styles.infoCard}
+                      >
+                        <KeyValuePairs items={medicalInfoItems} />
+                      </Container>
 
-                      {/* Vitals */}
-                      <ExpandableSection headerText="Patient Vitals" variant="container">
+                      {/* Vitals Card */}
+                      <Container
+                        header={<Header variant="h3">Patient Vitals</Header>}
+                        className={styles.infoCard}
+                      >
                         <Grid
                           gridDefinition={[
                             { colspan: 3 },
@@ -193,7 +219,7 @@ const AgentDesktop: React.FC = () => {
                             />
                           ))}
                         </Grid>
-                      </ExpandableSection>
+                      </Container>
                     </SpaceBetween>
                   )}
                 </div>
