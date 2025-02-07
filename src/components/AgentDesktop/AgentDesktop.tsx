@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
@@ -10,7 +10,6 @@ import Input from '@cloudscape-design/components/input';
 import Tabs from '@cloudscape-design/components/tabs';
 import KeyValuePairs from "@cloudscape-design/components/key-value-pairs";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
-import ExpandableSection from "@cloudscape-design/components/expandable-section";
 import Icon from "@cloudscape-design/components/icon";
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
@@ -49,9 +48,6 @@ const VitalSign: React.FC<VitalSignProps> = ({ icon, value, label, color = "norm
     boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
     transition: 'transform 0.2s',
     cursor: 'pointer',
-    ':hover': {
-      transform: 'translateY(-2px)'
-    }
   }}>
     <div style={{ fontSize: '28px', marginBottom: '8px', color: '#545b64' }}>{icon}</div>
     <div style={{ 
