@@ -24,6 +24,9 @@ import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
 import Sidebar from './Sidebar';
 import ExpandableSection from "@cloudscape-design/components/expandable-section";
+import FormField from '@cloudscape-design/components/form-field';
+import Select, { SelectProps } from '@cloudscape-design/components/select';
+
 
 interface VitalSignProps {
   icon: React.ReactNode;
@@ -274,7 +277,7 @@ const AgentDesktop: React.FC = () => {
                   <FormField label="Select Patient Address">
                       <Select
                           selectedOption={null}
-                          onChange={({ detail }) => {
+                          onChange={({ detail }: { detail: SelectProps.ChangeDetail }) => {
                               // Start chat with selected patient
                               setMessages([{
                                   sender: "Nurse",
