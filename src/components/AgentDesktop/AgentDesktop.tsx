@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
@@ -7,19 +7,21 @@ import Grid from '@cloudscape-design/components/grid';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Input from '@cloudscape-design/components/input';
-import FormField from '@cloudscape-design/components/form-field';
-import Select from '@cloudscape-design/components/select';
 import Tabs from '@cloudscape-design/components/tabs';
+import KeyValuePairs from "@cloudscape-design/components/key-value-pairs";
+import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
 import Conversations from '@/components/Conversations';
 import LeftPanel from '@/components/Conversation/LeftPanel';
 import RightPanel from '@/components/Conversation/RightPanel';
+import Spinner from "@cloudscape-design/components/spinner";
 import { IAuraClinicalDocOutput, IAuraTranscriptOutput } from '@/types/HealthScribe';
 import WaveSurfer from 'wavesurfer.js';
 import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
+import Sidebar from './Sidebar';
 
 interface ConversationData {
   jobLoading: boolean;
@@ -37,261 +39,285 @@ interface ConversationData {
   wavesurfer: React.MutableRefObject<WaveSurfer | undefined>;
 }
 
-const AgentDesktop: React.FC = () => {
-  const [selectedConversation, setSelectedConversation] = React.useState<ConversationData | null>(null);
-  const [meetingId] = React.useState("meeting-" + Math.random().toString(36).substr(2, 9));
-  const [communicationType, setCommunicationType] = React.useState<{ label: string; value: string }>({ label: 'Chat', value: 'chat' });
-  const [chatMessage, setChatMessage] = React.useState("");
-  const [activeTabId, setActiveTabId] = React.useState("tool1");
+const patientResponses = [
+  "Hi, I've been experiencing severe stomach pain since yesterday.",
+  "It's a sharp pain in my lower right abdomen. Gets worse when I move.",
+  "Yes, I felt nauseous this morning and my temperature was 100.4°F.",
+  "No, I haven't had this type of pain before.",
+  "Yes, I feel a bit nauseous too.",
+];
 
-  const chatMessages = [
-    { sender: "Nurse", message: "Hello, I'm Nurse Johnson. How can I assist you today?", time: "10:02 AM" },
-    { sender: "Patient", message: "Hi, I've been having severe headaches for the past week.", time: "10:03 AM" },
-    { sender: "Nurse", message: "I'm sorry to hear that. Can you describe the pain and its location?", time: "10:03 AM" },
-    { sender: "Patient", message: "It's a throbbing pain, mainly on the right side of my head. Gets worse with light.", time: "10:04 AM" },
-    { sender: "Nurse", message: "That sounds like it could be a migraine. Have you experienced any nausea or sensitivity to sound?", time: "10:04 AM" },
-    { sender: "Patient", message: "Yes, both actually. I've had to stay in a dark room several times.", time: "10:05 AM" },
-    { sender: "Nurse", message: "I understand. Have you taken any medication for this?", time: "10:05 AM" }
-  ];
+const AgentDesktop: React.FC = () => {
+  const [selectedConversation, setSelectedConversation] = useState<ConversationData | null>(null);
+  const [meetingId] = useState("meeting-" + Math.random().toString(36).substr(2, 9));
+  const [activeCommTab, setActiveCommTab] = useState<string>("video");
+  const [activeTabId, setActiveTabId] = useState("tool1");
+  const [patientInfoVisible, setPatientInfoVisible] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+  const [showVideoMeeting, setShowVideoMeeting] = useState(false);
+  const [uniqueKey] = useState("16db42ff-fa");
+  const [messages, setMessages] = useState<Array<{ sender: string; message: string; time: string }>>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [responseIndex, setResponseIndex] = useState(0);
+  const [chatMessage, setChatMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  // Start the conversation with the first patient message
+  useEffect(() => {
+    if (activeCommTab === 'chat' && messages.length === 0) {
+      setMessages([{
+        sender: "Patient",
+        message: patientResponses[0],
+        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      }]);
+      setResponseIndex(1);
+    }
+  }, [activeCommTab]);
+
+  const simulatePatientResponse = async () => {
+    setIsTyping(true);
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate typing delay
+    setIsTyping(false);
+    
+    const response = patientResponses[responseIndex];
+    if (response) {
+      setMessages(prev => [...prev, {
+        sender: "Patient",
+        message: response,
+        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      }]);
+      setResponseIndex(prev => (prev + 1) % patientResponses.length);
+    }
+  };
+
+  const fetchPatientInfo = () => {
+    setSpinner(true);
+    setTimeout(() => {
+      setPatientInfoVisible(true);
+      setSpinner(false);
+    }, 2000);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const handleSendMessage = () => {
+    if (chatMessage.trim()) {
+      setMessages(prev => [...prev, {
+        sender: "Nurse",
+        message: chatMessage,
+        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      }]);
+      setChatMessage("");
+      
+      simulatePatientResponse();
+    }
+  };
 
   return (
-    <ContentLayout>
-      <SpaceBetween size="l">
-        <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-          {/* Caller Attributes */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Patient information and attributes"
-              >
-                Patient Information
-              </Header>
-            }
-            disableContentPaddings={false}
-            className={styles.container}
-          >
-            <div className={styles.scrollableContent}>
-              <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-                <FormField label="Name">
-                  <Input value="John Doe" disabled />
-                </FormField>
-                <FormField label="Date of Birth">
-                  <div className={styles.dateField}>
-                    <Input value="03/15/1985" disabled />
-                  </div>
-                </FormField>
-                <FormField label="Phone">
-                  <Input value="+1 (555) 123-4567" disabled />
-                </FormField>
-                <FormField label="Email">
-                  <Input value="john.doe@example.com" disabled />
-                </FormField>
-                <FormField label="Member ID">
-                  <Input value="BCBS123456789" disabled />
-                </FormField>
-                <FormField label="Primary Care">
-                  <Input value="Dr. Sarah Johnson" disabled />
-                </FormField>
-                <FormField label="Emergency Contact">
-                  <Input value="Jane Doe (Wife) - (555) 987-6543" disabled />
-                </FormField>
-                <FormField label="Last Visit">
-                  <Input value="01/15/2024" disabled />
-                </FormField>
-              </Grid>
-            </div>
-          </Container>
-
-          {/* Communication Container */}
-          <Container
-            header={
-              <Header
-                variant="h2"
-                description="Communication channels"
-                actions={
-                  <Select
-                    selectedOption={communicationType}
-                    onChange={({ detail }) => setCommunicationType(detail.selectedOption as { label: string; value: string })}
-                    options={[
-                      { label: 'Chat', value: 'chat' },
-                      { label: 'Video Call', value: 'video' }
-                    ]}
-                  />
+    <div>
+      <div className={styles.fixedSidebar}>
+        <Sidebar />
+      </div>
+      <div style={{ marginLeft: '40px' }}>
+        <ContentLayout>
+          <SpaceBetween size="l">
+            <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+              {/* Patient Info Container */}
+              <Container
+                header={
+                  <Header
+                    variant="h2"
+                    description="Patient information and attributes"
+                  >
+                    Patient Information
+                  </Header>
                 }
+                className={styles.container}
               >
-                Communication
-              </Header>
-            }
-            className={styles.container}
-          >
-            <SpaceBetween size="m">
-              {communicationType.value === 'chat' ? (
-                <div className={styles.chatContainer}>
-                  <div className={styles.chatMessages}>
-                    {chatMessages.map((msg, index) => (
-                      <div key={index} className={`${styles.messageBox} ${msg.sender === "Nurse" ? styles.nurseMessage : styles.patientMessage}`}>
-                        <div className={styles.messageSender}>{msg.sender}</div>
-                        <div className={styles.messageContent}>{msg.message}</div>
-                        <div className={styles.messageTime}>{msg.time}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className={styles.chatForm}>
-                    <SpaceBetween direction="horizontal" size="xs">
-                      <Input
-                        value={chatMessage}
-                        onChange={({ detail }) => setChatMessage(detail.value)}
-                        placeholder="Type your message..."
-                      />
-                      <Button>Send</Button>
-                    </SpaceBetween>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.meetingContainer}>
-                  <div className={styles.meetingContent}>
-                    <SpaceBetween size="l">
-                      <FormField label="Meeting ID">
-                        <Input 
-                          value={meetingId} 
-                          readOnly
-                          className={styles.meetingIdField}
-                        />
-                      </FormField>
-                      <Button variant="primary" iconName="call">Start Video Call</Button>
-                      <Box color="text-status-info">
-                        Waiting for patient to join...
-                      </Box>
-                    </SpaceBetween>
-                  </div>
-                </div>
-              )}
-            </SpaceBetween>
-          </Container>
-        </Grid>
-
-        {/* Agent Tools Panel */}
-        <Container
-          header={
-            <Header
-              variant="h2"
-              description="Available tools and resources"
-            >
-              Nurse's Toolkit
-            </Header>
-          }
-        >
-          <Tabs
-            activeTabId={activeTabId}
-            onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
-            tabs={[
-              {
-                label: "Agent Assist",
-                id: "tool1",
-                content: (
-                  <div style={{ padding: '20px' }}>
-                    <SpaceBetween size="l">
-                      <Box>
-                        <SpaceBetween size="m">
-                          <div>
-                            <Box variant="h4">Key Points:</Box>
-                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
-                              <li>Patient is expressing thoughts of self-harm</li>
-                              <li>Immediate intervention required</li>
-                              <li>Has support system (sister) available</li>
-                            </ul>
-                          </div>
-                          <div>
-                            <Box variant="h4">Recommended Actions:</Box>
-                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
-                              <li>Keep patient on the line</li>
-                              <li>Connect with crisis counselor immediately</li>
-                              <li>Encourage contacting sister for support</li>
-                              <li>Document suicide risk assessment</li>
-                            </ul>
-                          </div>
-                          <div>
-                            <Box variant="h4">Resources to Share:</Box>
-                            <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
-                              <li>National Suicide Prevention Lifeline: 988</li>
-                              <li>Local Crisis Center: (555) 123-4567</li>
-                              <li>Emergency Services if needed: 911</li>
-                            </ul>
-                          </div>
-                        </SpaceBetween>
-                      </Box>
-                    </SpaceBetween>
-                  </div>
-                )
-              },
-              {
-                label: "Resource Locator",
-                id: "tool2",
-                content: <ProviderLocator />
-              },
-              {
-                label: "Clear Triage",
-                id: "tool3",
-                content: (
-                  <div style={{ height: 'calc(100vh - 400px)', padding: '20px' }}>
-                    <iframe 
-                      src="https://app.cleartriage.com/app/login" 
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        border: 'none',
-                        borderRadius: '4px',
-                        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
-                      }}
-                      title="Clear Triage"
+                <div className={styles.scrollableContent}>
+                  {!patientInfoVisible ? (
+                    <div className={styles.fetchButtonContainer}>
+                      {spinner ? <Spinner /> : 
+                        <Button onClick={fetchPatientInfo} variant="primary">
+                          Fetch Patient Information
+                        </Button>
+                      }
+                    </div>
+                  ) : (
+                    <KeyValuePairs
+                      columns={2}
+                      items={[
+                        {
+                          type: "group",
+                          title: "Personal",
+                          items: [
+                            { label: "DOD ID :", value: "1234567890" },
+                            { label: "Address :", value: "123 Main St, Virginia, USA" },
+                            { label: "Contact Number :", value: "+1 (555) 123-4567" },
+                            { label: "Military Relationship :", value: "Spouse" },
+                            { label: "TRICARE Convergency :", value: "Active" },
+                            { label: "Primary Care Manager :", value: "Dr. Sarah Kumar" },
+                            { label: "Authenticated :", value: <StatusIndicator>Yes</StatusIndicator> }
+                          ]
+                        },
+                        {
+                          type: "group",
+                          title: "Medical",
+                          items: [
+                            { label: "Symptom :", value: "Pain in neck" },
+                            { label: "Is it for child or Adult? :", value: "child" },
+                            { label: "Related to Head and Neck?:", value: "Yes" },
+                            { label: "Had any surgery before? :", value: "No" },
+                            { label: "Having trouble breathing? :", value: "No" },
+                            { label: "Is child having a fever?", value: "Yes" },
+                            { label: "Body Temperature :", value: "102 F" }
+                          ]
+                        },
+                      ]}
                     />
-                  </div>
-                )
-              },
-              {
-                label: "Medical Notes",
-                id: "tool4",
-                content: (
-                  <div>
-                    {!selectedConversation ? (
-                      <Conversations onConversationSelect={setSelectedConversation} />
-                    ) : (
-                      <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
-                        <LeftPanel 
-                          jobLoading={selectedConversation.jobLoading}
-                          transcriptFile={selectedConversation.transcriptFile}
-                          highlightId={selectedConversation.highlightId}
-                          setHighlightId={selectedConversation.setHighlightId}
-                          wavesurfer={selectedConversation.wavesurfer}
-                          smallTalkCheck={false}
-                          audioTime={0}
-                          setAudioTime={() => {}}
-                          audioReady={false}
-                        />
-                        <RightPanel 
-                          jobLoading={selectedConversation.jobLoading}
-                          clinicalDocument={selectedConversation.clinicalDocument}
-                          transcriptFile={selectedConversation.transcriptFile}
-                          highlightId={selectedConversation.highlightId}
-                          setHighlightId={selectedConversation.setHighlightId}
-                          wavesurfer={selectedConversation.wavesurfer}
-                        />
-                      </Grid>
-                    )}
-                  </div>
-                )
-              },
-              {
-                label: "Patient Insights",
-                id: "tool5",
-                content: <ChatPanel />
+                  )}
+                </div>
+              </Container>
+
+              {/* Communication Container */}
+              <Container
+                
+              >
+                <Tabs
+                  activeTabId={activeCommTab}
+                  onChange={({ detail }) => setActiveCommTab(detail.activeTabId)}
+                  tabs={[
+                    {
+                      label: "Chat",
+                      id: "chat",
+                      content: (
+                        <div className={styles.chatContainer}>
+                          <div className={styles.chatMessages}>
+                            {messages.map((msg, index) => (
+                              <div key={index} className={`${styles.messageBox} ${msg.sender === "Nurse" ? styles.nurseMessage : styles.patientMessage}`}>
+                                <div className={styles.messageContent}>{msg.message}</div>
+                                <div className={styles.messageTime}>{msg.time}</div>
+                              </div>
+                            ))}
+                            {isTyping && (
+                              <div className={styles.typingIndicator}>
+                                <div className={styles.typingDot}></div>
+                                <div className={styles.typingDot}></div>
+                                <div className={styles.typingDot}></div>
+                              </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                          </div>
+                          <div className={styles.chatForm}>
+                            <div className={styles.chatInputContainer}>
+                              <Input
+                                value={chatMessage}
+                                onChange={({ detail }) => setChatMessage(detail.value)}
+                                placeholder="Type your message..."
+                                
+                              />
+                              <Button onClick={handleSendMessage}>Send</Button>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    }
+                  ]}
+                />
+              </Container>
+            </Grid>
+
+            {/* Agent Tools Panel */}
+            <Container
+              header={
+                <Header variant="h2" description="Available tools and resources">
+                  Nurse's Toolkit
+                </Header>
               }
-            ]}
-          />
-        </Container>
-      </SpaceBetween>
-    </ContentLayout>
+            >
+              <Tabs
+                activeTabId={activeTabId}
+                onChange={({ detail }) => setActiveTabId(detail.activeTabId)}
+                tabs={[
+                  {
+                    label: "Patient Insights",
+                    id: "tool5",
+                    content: <ChatPanel />
+                  },
+                  {
+                    label: "Resource Locator",
+                    id: "tool2",
+                    content: <ProviderLocator />
+                  },
+                  {
+                    label: "Clear Triage",
+                    id: "tool3",
+                    content: (
+                      <div style={{ height: 'calc(100vh - 400px)', padding: '20px' }}>
+                        <iframe
+                          src="https://app.cleartriage.com/app/login"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            borderRadius: '4px',
+                            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                          }}
+                          title="Clear Triage"
+                        />
+                      </div>
+                    )
+                  },
+                  {
+                    label: "Medical Notes",
+                    id: "tool4",
+                    content: (
+                      <div>
+                        {!selectedConversation ? (
+                          <Conversations onConversationSelect={setSelectedConversation} />
+                        ) : (
+                          <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+                            <LeftPanel
+                              jobLoading={selectedConversation.jobLoading}
+                              transcriptFile={selectedConversation.transcriptFile}
+                              highlightId={selectedConversation.highlightId}
+                              setHighlightId={selectedConversation.setHighlightId}
+                              wavesurfer={selectedConversation.wavesurfer}
+                              smallTalkCheck={false}
+                              audioTime={0}
+                              setAudioTime={() => {}}
+                              audioReady={false}
+                            />
+                            <RightPanel
+                              jobLoading={selectedConversation.jobLoading}
+                              clinicalDocument={selectedConversation.clinicalDocument}
+                              transcriptFile={selectedConversation.transcriptFile}
+                              highlightId={selectedConversation.highlightId}
+                              setHighlightId={selectedConversation.setHighlightId}
+                              wavesurfer={selectedConversation.wavesurfer}
+                            />
+                          </Grid>
+                        )}
+                      </div>
+                    )
+                  }
+                ]}
+              />
+            </Container>
+          </SpaceBetween>
+        </ContentLayout>
+      </div>
+    </div>
   );
 };
 
