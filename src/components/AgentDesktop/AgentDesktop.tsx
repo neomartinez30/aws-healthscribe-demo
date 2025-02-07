@@ -204,7 +204,7 @@ const AgentDesktop: React.FC = () => {
                           />
                           <VitalSign 
                             icon={<Icon name="status-positive" size="big" />}
-                            value="5'8\"" 
+                            value="5'8" 
                             label="Height"
                             color="normal"
                           />
