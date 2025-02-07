@@ -115,8 +115,7 @@ const AgentDesktop: React.FC = () => {
     { id: "contact", label: "Contact Number", value: "+1 (555) 123-4567" },
     { id: "relationship", label: "Military Relationship", value: "Spouse" },
     { id: "tricare", label: "TRICARE Convergency", value: "Active" },
-    { id: "pcm", label: "Primary Care Manager", value: "Dr. Sarah Kumar" },
-    { id: "auth", label: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
+    { id: "pcm", label: "Primary Care Manager", value: "Dr. Sarah Kumar" }
   ];
 
   const medicalInfoItems = [
@@ -189,6 +188,9 @@ const AgentDesktop: React.FC = () => {
                             items={personalInfoItems.slice(Math.ceil(personalInfoItems.length / 2))}
                           />
                         </Grid>
+                        <Box textAlign="right" padding={{ top: 's' }}>
+                          <StatusIndicator type="success">Authenticated</StatusIndicator>
+                        </Box>
                       </Container>
 
                       {/* Medical Information Card */}
@@ -196,7 +198,9 @@ const AgentDesktop: React.FC = () => {
                         header={<Header variant="h3">Medical Information</Header>}
                         className={styles.infoCard}
                       >
-                        <KeyValuePairs items={medicalInfoItems} />
+                        <ExpandableSection headerText="Medical History">
+                          <KeyValuePairs items={medicalInfoItems} />
+                        </ExpandableSection>
                       </Container>
 
                       {/* Vitals Card */}
@@ -204,45 +208,47 @@ const AgentDesktop: React.FC = () => {
                         header={<Header variant="h3">Patient Vitals</Header>}
                         className={styles.infoCard}
                       >
-                        <Grid
-                          gridDefinition={[
-                            { colspan: 6 },
-                            { colspan: 6 }
-                          ]}
-                        >
+                        <ExpandableSection headerText="Current Vitals">
                           <Grid
                             gridDefinition={[
                               { colspan: 6 },
                               { colspan: 6 }
                             ]}
                           >
-                            {vitalSigns.slice(0, 4).map((vital) => (
-                              <VitalSign 
-                                key={vital.id}
-                                icon={vital.icon}
-                                value={vital.value}
-                                label={vital.label}
-                                color={vital.color}
-                              />
-                            ))}
+                            <Grid
+                              gridDefinition={[
+                                { colspan: 6 },
+                                { colspan: 6 }
+                              ]}
+                            >
+                              {vitalSigns.slice(0, 4).map((vital) => (
+                                <VitalSign 
+                                  key={vital.id}
+                                  icon={vital.icon}
+                                  value={vital.value}
+                                  label={vital.label}
+                                  color={vital.color}
+                                />
+                              ))}
+                            </Grid>
+                            <Grid
+                              gridDefinition={[
+                                { colspan: 6 },
+                                { colspan: 6 }
+                              ]}
+                            >
+                              {vitalSigns.slice(4).map((vital) => (
+                                <VitalSign 
+                                  key={vital.id}
+                                  icon={vital.icon}
+                                  value={vital.value}
+                                  label={vital.label}
+                                  color={vital.color}
+                                />
+                              ))}
+                            </Grid>
                           </Grid>
-                          <Grid
-                            gridDefinition={[
-                              { colspan: 6 },
-                              { colspan: 6 }
-                            ]}
-                          >
-                            {vitalSigns.slice(4).map((vital) => (
-                              <VitalSign 
-                                key={vital.id}
-                                icon={vital.icon}
-                                value={vital.value}
-                                label={vital.label}
-                                color={vital.color}
-                              />
-                            ))}
-                          </Grid>
-                        </Grid>
+                        </ExpandableSection>
                       </Container>
                     </SpaceBetween>
                   )}
