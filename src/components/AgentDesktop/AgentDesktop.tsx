@@ -181,7 +181,14 @@ const AgentDesktop: React.FC = () => {
                         header={<Header variant="h3">Personal Information</Header>}
                         className={styles.infoCard}
                       >
-                        <KeyValuePairs items={personalInfoItems} />
+                        <Grid gridDefinition={[{ colspan: 6 }, { colspan: 6 }]}>
+                          <KeyValuePairs
+                            items={personalInfoItems.slice(0, Math.ceil(personalInfoItems.length / 2))}
+                          />
+                          <KeyValuePairs
+                            items={personalInfoItems.slice(Math.ceil(personalInfoItems.length / 2))}
+                          />
+                        </Grid>
                       </Container>
 
                       {/* Medical Information Card */}
@@ -199,21 +206,42 @@ const AgentDesktop: React.FC = () => {
                       >
                         <Grid
                           gridDefinition={[
-                            { colspan: 3 },
-                            { colspan: 3 },
-                            { colspan: 3 },
-                            { colspan: 3 }
+                            { colspan: 6 },
+                            { colspan: 6 }
                           ]}
                         >
-                          {vitalSigns.map((vital) => (
-                            <VitalSign 
-                              key={vital.id}
-                              icon={vital.icon}
-                              value={vital.value}
-                              label={vital.label}
-                              color={vital.color}
-                            />
-                          ))}
+                          <Grid
+                            gridDefinition={[
+                              { colspan: 6 },
+                              { colspan: 6 }
+                            ]}
+                          >
+                            {vitalSigns.slice(0, 4).map((vital) => (
+                              <VitalSign 
+                                key={vital.id}
+                                icon={vital.icon}
+                                value={vital.value}
+                                label={vital.label}
+                                color={vital.color}
+                              />
+                            ))}
+                          </Grid>
+                          <Grid
+                            gridDefinition={[
+                              { colspan: 6 },
+                              { colspan: 6 }
+                            ]}
+                          >
+                            {vitalSigns.slice(4).map((vital) => (
+                              <VitalSign 
+                                key={vital.id}
+                                icon={vital.icon}
+                                value={vital.value}
+                                label={vital.label}
+                                color={vital.color}
+                              />
+                            ))}
+                          </Grid>
                         </Grid>
                       </Container>
                     </SpaceBetween>
