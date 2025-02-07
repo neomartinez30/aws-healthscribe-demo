@@ -32,6 +32,14 @@ interface VitalSignProps {
   color?: 'normal' | 'warning' | 'critical';
 }
 
+interface VitalSign {
+  id: string;
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+  color: VitalSignProps['color'];
+}
+
 const VitalSign: React.FC<VitalSignProps> = ({ icon, value, label, color = "normal" }) => (
   <div style={{ textAlign: 'center', padding: '10px' }}>
     <div style={{ fontSize: '24px', marginBottom: '5px', color: '#545b64' }}>{icon}</div>
@@ -112,7 +120,7 @@ const AgentDesktop: React.FC = () => {
     { id: "surgeries", label: "Past Surgeries", value: "Appendectomy (2020)" }
   ];
 
-  const vitalSigns = [
+  const vitalSigns: VitalSign[] = [
     { id: "heartRate", icon: <Icon name="heart" size="big" />, value: "72 bpm", label: "Heart Rate", color: "normal" },
     { id: "temp", icon: <Icon name="status-warning" size="big" />, value: "102.1°F", label: "Temperature", color: "critical" },
     { id: "respRate", icon: <Icon name="status-info" size="big" />, value: "18/min", label: "Respiratory Rate", color: "normal" },
