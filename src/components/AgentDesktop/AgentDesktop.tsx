@@ -24,6 +24,27 @@ import { ChatPanel } from './ChatPanel';
 import styles from './AgentDesktop.module.css';
 import Sidebar from './Sidebar';
 
+interface VitalSignProps {
+  icon: string;
+  value: string;
+  label: string;
+  color?: 'normal' | 'warning' | 'critical';
+}
+
+const VitalSign: React.FC<VitalSignProps> = ({ icon, value, label, color = "normal" }) => (
+  <div style={{ textAlign: 'center', padding: '10px' }}>
+    <div style={{ fontSize: '24px', marginBottom: '5px' }}>{icon}</div>
+    <div style={{ 
+      fontSize: '20px', 
+      fontWeight: 'bold',
+      color: color === 'warning' ? '#f4b400' : 
+            color === 'critical' ? '#d93025' : 
+            '#1a73e8'
+    }}>{value}</div>
+    <div style={{ fontSize: '14px', color: '#5f6368' }}>{label}</div>
+  </div>
+);
+
 interface ConversationData {
   jobLoading: boolean;
   jobDetails: MedicalScribeJob | null;
@@ -39,14 +60,6 @@ interface ConversationData {
   }>>;
   wavesurfer: React.MutableRefObject<WaveSurfer | undefined>;
 }
-
-const patientResponses = [
-  "Hi, I've been experiencing severe stomach pain since yesterday.",
-  "It's a sharp pain in my lower right abdomen. Gets worse when I move.",
-  "Yes, I felt nauseous this morning and my temperature was 100.4°F.",
-  "No, I haven't had this type of pain before.",
-  "Yes, I feel a bit nauseous too.",
-];
 
 const AgentDesktop: React.FC = () => {
   const [selectedConversation, setSelectedConversation] = useState<ConversationData | null>(null);
@@ -71,33 +84,6 @@ const AgentDesktop: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  useEffect(() => {
-    if (activeCommTab === 'chat' && messages.length === 0) {
-      setMessages([{
-        sender: "Patient",
-        message: patientResponses[0],
-        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-      }]);
-      setResponseIndex(1);
-    }
-  }, [activeCommTab]);
-
-  const simulatePatientResponse = async () => {
-    setIsTyping(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsTyping(false);
-    
-    const response = patientResponses[responseIndex];
-    if (response) {
-      setMessages(prev => [...prev, {
-        sender: "Patient",
-        message: response,
-        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-      }]);
-      setResponseIndex(prev => (prev + 1) % patientResponses.length);
-    }
-  };
-
   const fetchPatientInfo = () => {
     setSpinner(true);
     setTimeout(() => {
@@ -105,37 +91,6 @@ const AgentDesktop: React.FC = () => {
       setSpinner(false);
     }, 2000);
   };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
-
-  const handleSendMessage = () => {
-    if (chatMessage.trim()) {
-      setMessages(prev => [...prev, {
-        sender: "Nurse",
-        message: chatMessage,
-        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-      }]);
-      setChatMessage("");
-      
-      simulatePatientResponse();
-    }
-  };
-
-  const VitalSign = ({ icon, value, label, color = "normal" }) => (
-    <div style={{ textAlign: 'center', padding: '10px' }}>
-      <div style={{ fontSize: '24px', marginBottom: '5px' }}>{icon}</div>
-      <div style={{ 
-        fontSize: '20px', 
-        fontWeight: 'bold',
-        color: color === 'warning' ? '#f4b400' : 
-              color === 'critical' ? '#d93025' : 
-              '#1a73e8'
-      }}>{value}</div>
-      <div style={{ fontSize: '14px', color: '#5f6368' }}>{label}</div>
-    </div>
-  );
 
   return (
     <div>
@@ -169,68 +124,100 @@ const AgentDesktop: React.FC = () => {
                     </div>
                   ) : (
                     <SpaceBetween size="l">
+                      {/* Personal Information */}
                       <KeyValuePairs
-                        columns={2}
+                        columnDefinitions={[
+                          { key: "label", label: "Label", width: 170 },
+                          { key: "value", label: "Value", width: 400 }
+                        ]}
                         items={[
-                          {
-                            type: "group",
-                            title: "Personal",
-                            items: [
-                              { label: "DOD ID :", value: "1234567890" },
-                              { label: "Address :", value: "123 Main St, Virginia, USA" },
-                              { label: "Contact Number :", value: "+1 (555) 123-4567" },
-                              { label: "Military Relationship :", value: "Spouse" },
-                              { label: "TRICARE Convergency :", value: "Active" },
-                              { label: "Primary Care Manager :", value: "Dr. Sarah Kumar" },
-                              { label: "Authenticated :", value: <StatusIndicator>Yes</StatusIndicator> }
-                            ]
-                          }
+                          { label: "DOD ID", value: "1234567890" },
+                          { label: "Address", value: "123 Main St, Virginia, USA" },
+                          { label: "Contact Number", value: "+1 (555) 123-4567" },
+                          { label: "Military Relationship", value: "Spouse" },
+                          { label: "TRICARE Convergency", value: "Active" },
+                          { label: "Primary Care Manager", value: "Dr. Sarah Kumar" },
+                          { label: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
                         ]}
                       />
 
-                      <ExpandableSection headerText="Medical Information">
-                        <KeyValuePairs
-                          columns={2}
-                          items={[
-                            {
-                              type: "group",
-                              items: [
-                                { label: "Blood Type :", value: "O+" },
-                                { label: "Allergies :", value: "Penicillin, Peanuts" },
-                                { label: "Current Medications :", value: "Lisinopril, Metformin" },
-                                { label: "Past Surgeries :", value: "Appendectomy (2019)" },
-                                { label: "Chronic Conditions :", value: "Hypertension, Type 2 Diabetes" },
-                                { label: "Last Physical :", value: "March 15, 2024" },
-                                { label: "Immunizations :", value: "Up to date" }
-                              ]
-                            }
-                          ]}
-                        />
+                      {/* Medical Information */}
+                      <ExpandableSection headerText="Medical Information" variant="container">
+                        <SpaceBetween size="l">
+                          <KeyValuePairs
+                            columnDefinitions={[
+                              { key: "label", label: "Label", width: 170 },
+                              { key: "value", label: "Value", width: 400 }
+                            ]}
+                            items={[
+                              { label: "Blood Type", value: "O+" },
+                              { label: "Allergies", value: "Penicillin, Peanuts" },
+                              { label: "Chronic Conditions", value: "Asthma" },
+                              { label: "Last Physical", value: "2023-12-15" },
+                              { label: "Medications", value: "Albuterol Inhaler" },
+                              { label: "Past Surgeries", value: "Appendectomy (2020)" }
+                            ]}
+                          />
+                        </SpaceBetween>
                       </ExpandableSection>
 
-                      <ExpandableSection headerText="Vital Signs">
-                        <Grid gridDefinition={[{ colspan: 3 }, { colspan: 3 }, { colspan: 3 }, { colspan: 3 }]}>
+                      {/* Vitals */}
+                      <ExpandableSection headerText="Patient Vitals" variant="container">
+                        <Grid
+                          gridDefinition={[
+                            { colspan: 3 },
+                            { colspan: 3 },
+                            { colspan: 3 },
+                            { colspan: 3 }
+                          ]}
+                        >
                           <VitalSign 
-                            icon="❤️"
-                            value="72 bpm"
+                            icon="❤️" 
+                            value="72 bpm" 
                             label="Heart Rate"
+                            color="normal"
                           />
                           <VitalSign 
-                            icon="🌡️"
-                            value="100.4°F"
+                            icon="🌡️" 
+                            value="102.1°F" 
                             label="Temperature"
+                            color="critical"
+                          />
+                          <VitalSign 
+                            icon="🫁" 
+                            value="18/min" 
+                            label="Respiratory Rate"
+                            color="normal"
+                          />
+                          <VitalSign 
+                            icon="🩸" 
+                            value="138/85" 
+                            label="Blood Pressure"
                             color="warning"
                           />
                           <VitalSign 
-                            icon="🫁"
-                            value="18/min"
-                            label="Respiratory Rate"
+                            icon="⚖️" 
+                            value="165 lbs" 
+                            label="Weight"
+                            color="normal"
                           />
                           <VitalSign 
-                            icon="🩺"
-                            value="140/90"
-                            label="Blood Pressure"
-                            color="critical"
+                            icon="📏" 
+                            value="5'8\"" 
+                            label="Height"
+                            color="normal"
+                          />
+                          <VitalSign 
+                            icon="🫧" 
+                            value="98%" 
+                            label="O2 Saturation"
+                            color="normal"
+                          />
+                          <VitalSign 
+                            icon="📊" 
+                            value="27.4" 
+                            label="BMI"
+                            color="warning"
                           />
                         </Grid>
                       </ExpandableSection>
@@ -273,7 +260,16 @@ const AgentDesktop: React.FC = () => {
                                 onChange={({ detail }) => setChatMessage(detail.value)}
                                 placeholder="Type your message..."
                               />
-                              <Button onClick={handleSendMessage}>Send</Button>
+                              <Button onClick={() => {
+                                if (chatMessage.trim()) {
+                                  setMessages(prev => [...prev, {
+                                    sender: "Nurse",
+                                    message: chatMessage,
+                                    time: new Date().toLocaleTimeString()
+                                  }]);
+                                  setChatMessage("");
+                                }
+                              }}>Send</Button>
                             </div>
                           </div>
                         </div>
