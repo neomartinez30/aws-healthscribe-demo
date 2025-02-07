@@ -127,18 +127,14 @@ const AgentDesktop: React.FC = () => {
                     <SpaceBetween size="l">
                       {/* Personal Information */}
                       <KeyValuePairs
-                        columnDefinitions={[
-                          { key: "label", label: "Label", width: 170 },
-                          { key: "value", label: "Value", width: 400 }
-                        ]}
                         items={[
-                          { label: "DOD ID", value: "1234567890" },
-                          { label: "Address", value: "123 Main St, Virginia, USA" },
-                          { label: "Contact Number", value: "+1 (555) 123-4567" },
-                          { label: "Military Relationship", value: "Spouse" },
-                          { label: "TRICARE Convergency", value: "Active" },
-                          { label: "Primary Care Manager", value: "Dr. Sarah Kumar" },
-                          { label: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
+                          { key: "DOD ID", value: "1234567890" },
+                          { key: "Address", value: "123 Main St, Virginia, USA" },
+                          { key: "Contact Number", value: "+1 (555) 123-4567" },
+                          { key: "Military Relationship", value: "Spouse" },
+                          { key: "TRICARE Convergency", value: "Active" },
+                          { key: "Primary Care Manager", value: "Dr. Sarah Kumar" },
+                          { key: "Authenticated", value: <StatusIndicator>Yes</StatusIndicator> }
                         ]}
                       />
 
@@ -146,17 +142,13 @@ const AgentDesktop: React.FC = () => {
                       <ExpandableSection headerText="Medical Information" variant="container">
                         <SpaceBetween size="l">
                           <KeyValuePairs
-                            columnDefinitions={[
-                              { key: "label", label: "Label", width: 170 },
-                              { key: "value", label: "Value", width: 400 }
-                            ]}
                             items={[
-                              { label: "Blood Type", value: "O+" },
-                              { label: "Allergies", value: "Penicillin, Peanuts" },
-                              { label: "Chronic Conditions", value: "Asthma" },
-                              { label: "Last Physical", value: "2023-12-15" },
-                              { label: "Medications", value: "Albuterol Inhaler" },
-                              { label: "Past Surgeries", value: "Appendectomy (2020)" }
+                              { key: "Blood Type", value: "O+" },
+                              { key: "Allergies", value: "Penicillin, Peanuts" },
+                              { key: "Chronic Conditions", value: "Asthma" },
+                              { key: "Last Physical", value: "2023-12-15" },
+                              { key: "Medications", value: "Albuterol Inhaler" },
+                              { key: "Past Surgeries", value: "Appendectomy (2020)" }
                             ]}
                           />
                         </SpaceBetween>
