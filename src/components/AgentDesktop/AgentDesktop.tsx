@@ -11,6 +11,7 @@ import Tabs from '@cloudscape-design/components/tabs';
 import KeyValuePairs from "@cloudscape-design/components/key-value-pairs";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import ExpandableSection from "@cloudscape-design/components/expandable-section";
+import Icon from "@cloudscape-design/components/icon";
 import { MedicalScribeJob } from '@aws-sdk/client-transcribe';
 import MedicalSummary from './MedicalSummary';
 import { ProviderLocator } from './ProviderLocator';
@@ -25,7 +26,7 @@ import styles from './AgentDesktop.module.css';
 import Sidebar from './Sidebar';
 
 interface VitalSignProps {
-  icon: string;
+  icon: React.ReactNode;
   value: string;
   label: string;
   color?: 'normal' | 'warning' | 'critical';
@@ -33,7 +34,7 @@ interface VitalSignProps {
 
 const VitalSign: React.FC<VitalSignProps> = ({ icon, value, label, color = "normal" }) => (
   <div style={{ textAlign: 'center', padding: '10px' }}>
-    <div style={{ fontSize: '24px', marginBottom: '5px' }}>{icon}</div>
+    <div style={{ fontSize: '24px', marginBottom: '5px', color: '#545b64' }}>{icon}</div>
     <div style={{ 
       fontSize: '20px', 
       fontWeight: 'bold',
@@ -172,49 +173,49 @@ const AgentDesktop: React.FC = () => {
                           ]}
                         >
                           <VitalSign 
-                            icon="❤️" 
+                            icon={<Icon name="heart" size="big" />}
                             value="72 bpm" 
                             label="Heart Rate"
                             color="normal"
                           />
                           <VitalSign 
-                            icon="🌡️" 
+                            icon={<Icon name="status-warning" size="big" />}
                             value="102.1°F" 
                             label="Temperature"
                             color="critical"
                           />
                           <VitalSign 
-                            icon="🫁" 
+                            icon={<Icon name="status-info" size="big" />}
                             value="18/min" 
                             label="Respiratory Rate"
                             color="normal"
                           />
                           <VitalSign 
-                            icon="🩸" 
+                            icon={<Icon name="status-pending" size="big" />}
                             value="138/85" 
                             label="Blood Pressure"
                             color="warning"
                           />
                           <VitalSign 
-                            icon="⚖️" 
+                            icon={<Icon name="status-in-progress" size="big" />}
                             value="165 lbs" 
                             label="Weight"
                             color="normal"
                           />
                           <VitalSign 
-                            icon="📏" 
+                            icon={<Icon name="status-positive" size="big" />}
                             value="5'8\"" 
                             label="Height"
                             color="normal"
                           />
                           <VitalSign 
-                            icon="🫧" 
+                            icon={<Icon name="status-stopped" size="big" />}
                             value="98%" 
                             label="O2 Saturation"
                             color="normal"
                           />
                           <VitalSign 
-                            icon="📊" 
+                            icon={<Icon name="status-negative" size="big" />}
                             value="27.4" 
                             label="BMI"
                             color="warning"
