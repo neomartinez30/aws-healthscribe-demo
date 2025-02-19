@@ -140,6 +140,17 @@ const AgentDesktop: React.FC = () => {
     { id: "bmi", icon: <Icon name="status-negative" size="big" />, value: "27.4", label: "BMI", color: "warning" }
   ];
 
+  const handleKeyDown = ({ detail }: { detail: { keyCode: number } }) => {
+    if (detail.keyCode === 13 && chatMessage.trim()) {
+      setMessages(prev => [...prev, {
+        sender: "User",
+        message: chatMessage,
+        time: new Date().toLocaleTimeString()
+      }]);
+      setChatMessage("");
+    }
+  };
+
   return (
     <div>
       <div className={styles.fixedSidebar}>
@@ -316,16 +327,7 @@ const AgentDesktop: React.FC = () => {
                                     value={chatMessage}
                                     onChange={({ detail }) => setChatMessage(detail.value)}
                                     placeholder="Type your message..."
-                                    onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-                                      if (event.key === 'Enter' && chatMessage.trim()) {
-                                        setMessages(prev => [...prev, {
-                                          sender: "User",
-                                          message: chatMessage,
-                                          time: new Date().toLocaleTimeString()
-                                        }]);
-                                        setChatMessage("");
-                                      }
-                                    }}
+                                    onKeyDown={handleKeyDown}
                                   />
                                   <Button 
                                     iconName="send"
