@@ -25,8 +25,6 @@ import styles from './AgentDesktop.module.css';
 import Sidebar from './Sidebar';
 import ExpandableSection from "@cloudscape-design/components/expandable-section";
 import FormField from '@cloudscape-design/components/form-field';
-import Select, { SelectProps } from '@cloudscape-design/components/select';
-
 
 interface VitalSignProps {
   icon: React.ReactNode;
@@ -265,78 +263,93 @@ const AgentDesktop: React.FC = () => {
                   activeTabId={activeCommTab}
                   onChange={({ detail }) => setActiveCommTab(detail.activeTabId)}
                   tabs={[
-// In the existing AgentDesktop.tsx file, locate the chat tab content and replace it with:
-
-{
-  id: "chat",
-  label: "Chat",
-  content: (
-      <div className={styles.chatContainer}>
-          {!messages.length ? (
-              <div className={styles.startChatContainer}>
-                  <FormField label="Select Patient Address">
-                      <Select
-                          selectedOption={null}
-                          onChange={({ detail }: { detail: SelectProps.ChangeDetail }) => {
-                              // Start chat with selected patient
-                              setMessages([{
-                                  sender: "Nurse",
-                                  message: `Hello, this is Nurse Johnson from the DHA Nurse Advice Line. How can I assist you today?`,
-                                  time: new Date().toLocaleTimeString()
-                              }]);
-                          }}
-                          options={[
-                              { label: "377 Sauer Rapid Apt 46, Los Angeles, CA 91040", value: "addr1" },
-                              { label: "892 Highland Drive, San Diego, CA 92101", value: "addr2" },
-                              { label: "1234 Ocean View Blvd, Santa Monica, CA 90401", value: "addr3" },
-                              { label: "567 Mountain Way, Beverly Hills, CA 90210", value: "addr4" }
-                          ]}
-                          placeholder="Select patient address to start chat"
-                      />
-                  </FormField>
-              </div>
-          ) : (
-              <>
-                  <div className={styles.chatMessages}>
-                      {messages.map((msg, index) => (
-                          <div key={index} className={`${styles.messageBox} ${msg.sender === "Nurse" ? styles.nurseMessage : styles.patientMessage}`}>
-                              <div className={styles.messageContent}>{msg.message}</div>
-                              <div className={styles.messageTime}>{msg.time}</div>
-                          </div>
-                      ))}
-                      {isTyping && (
-                          <div className={styles.typingIndicator}>
-                              <div className={styles.typingDot}></div>
-                              <div className={styles.typingDot}></div>
-                              <div className={styles.typingDot}></div>
-                          </div>
-                      )}
-                      <div ref={messagesEndRef} />
-                  </div>
-                  <div className={styles.chatForm}>
-                      <div className={styles.chatInputContainer}>
-                          <Input
-                              value={chatMessage}
-                              onChange={({ detail }) => setChatMessage(detail.value)}
-                              placeholder="Type your message..."
-                          />
-                          <Button onClick={() => {
-                              if (chatMessage.trim()) {
-                                  setMessages(prev => [...prev, {
-                                      sender: "Nurse",
-                                      message: chatMessage,
+                    {
+                      id: "chat",
+                      label: "Chat",
+                      content: (
+                        <div className={styles.chatContainer}>
+                          {!messages.length ? (
+                            <div className={styles.startChatContainer}>
+                              <div className={styles.welcomeMessage}>
+                                <h2>Virtual Nurse Assistant</h2>
+                                <p>Hello! I'm your virtual assistant. How can I help you today?</p>
+                                <Button 
+                                  variant="primary"
+                                  onClick={() => {
+                                    setMessages([{
+                                      sender: "Assistant",
+                                      message: "Hello! I'm your virtual nurse assistant. How can I help you today?",
                                       time: new Date().toLocaleTimeString()
-                                  }]);
-                                  setChatMessage("");
-                              }
-                          }}>Send</Button>
-                      </div>
-                  </div>
-              </>
-          )}
-      </div>
-  )
-}
+                                    }]);
+                                  }}
+                                >
+                                  Start Chat
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className={styles.chatMessages}>
+                                {messages.map((msg, index) => (
+                                  <div 
+                                    key={index} 
+                                    className={`${styles.messageBox} ${
+                                      msg.sender === "Assistant" ? styles.assistantMessage : styles.userMessage
+                                    }`}
+                                  >
+                                    <div className={styles.messageContent}>{msg.message}</div>
+                                    <div className={styles.messageTime}>{msg.time}</div>
+                                  </div>
+                                ))}
+                                {isTyping && (
+                                  <div className={styles.typingIndicator}>
+                                    <div className={styles.typingDot}></div>
+                                    <div className={styles.typingDot}></div>
+                                    <div className={styles.typingDot}></div>
+                                  </div>
+                                )}
+                                <div ref={messagesEndRef} />
+                              </div>
+                              <div className={styles.chatForm}>
+                                <div className={styles.chatInputContainer}>
+                                  <Input
+                                    value={chatMessage}
+                                    onChange={({ detail }) => setChatMessage(detail.value)}
+                                    placeholder="Type your message..."
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter' && chatMessage.trim()) {
+                                        setMessages(prev => [...prev, {
+                                          sender: "User",
+                                          message: chatMessage,
+                                          time: new Date().toLocaleTimeString()
+                                        }]);
+                                        setChatMessage("");
+                                      }
+                                    }}
+                                  />
+                                  <Button 
+                                    iconName="send"
+                                    variant="primary"
+                                    onClick={() => {
+                                      if (chatMessage.trim()) {
+                                        setMessages(prev => [...prev, {
+                                          sender: "User",
+                                          message: chatMessage,
+                                          time: new Date().toLocaleTimeString()
+                                        }]);
+                                        setChatMessage("");
+                                      }
+                                    }}
+                                  >
+                                    Send
+                                  </Button>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )
+                    }
                   ]}
                 />
               </Container>
