@@ -103,6 +103,44 @@ const AgentDesktop: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  const handleUserMessage = (message: string) => {
+    setMessages(prev => [...prev, {
+      sender: "User",
+      message: message,
+      time: new Date().toLocaleTimeString()
+    }]);
+
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      
+      let response = "";
+      const lowerMessage = message.toLowerCase();
+      
+      if (lowerMessage.includes("what medications") && lowerMessage.includes("mary")) {
+        response = "Mary Smith is currently taking Acetaminophen 325 MG Oral Tablets";
+      } else if (lowerMessage.includes("interactions") && lowerMessage.includes("ssri")) {
+        response = "According to the FDA public database, Acetaminophen does not have documented interactions with SSRIs, however; Mary has a history Hemophilia A and B, which is a bleeding disorder. SSRIs can increase the risk of bleeding.";
+      } else {
+        response = "I'm here to help you with medication information and potential interactions. What would you like to know?";
+      }
+
+      setMessages(prev => [...prev, {
+        sender: "Assistant",
+        message: response,
+        time: new Date().toLocaleTimeString()
+      }]);
+    }, 1500);
+  };
+
+  const handleKeyDown = ({ detail }: { detail: { keyCode: number } }) => {
+    if (detail.keyCode === 13 && chatMessage.trim()) {
+      handleUserMessage(chatMessage);
+      setChatMessage("");
+    }
+  };
+
   const fetchPatientInfo = () => {
     setSpinner(true);
     setTimeout(() => {
@@ -139,17 +177,6 @@ const AgentDesktop: React.FC = () => {
     { id: "o2", icon: <Icon name="status-stopped" size="big" />, value: "98%", label: "O2 Saturation", color: "normal" },
     { id: "bmi", icon: <Icon name="status-negative" size="big" />, value: "27.4", label: "BMI", color: "warning" }
   ];
-
-  const handleKeyDown = ({ detail }: { detail: { keyCode: number } }) => {
-    if (detail.keyCode === 13 && chatMessage.trim()) {
-      setMessages(prev => [...prev, {
-        sender: "User",
-        message: chatMessage,
-        time: new Date().toLocaleTimeString()
-      }]);
-      setChatMessage("");
-    }
-  };
 
   return (
     <div>
@@ -334,11 +361,7 @@ const AgentDesktop: React.FC = () => {
                                     variant="primary"
                                     onClick={() => {
                                       if (chatMessage.trim()) {
-                                        setMessages(prev => [...prev, {
-                                          sender: "User",
-                                          message: chatMessage,
-                                          time: new Date().toLocaleTimeString()
-                                        }]);
+                                        handleUserMessage(chatMessage);
                                         setChatMessage("");
                                       }
                                     }}
