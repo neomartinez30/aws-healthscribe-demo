@@ -238,9 +238,80 @@ const AgentDesktop: React.FC = () => {
                         header={<Header variant="h3">Medical Information</Header>}
                         className={styles.infoCard}
                       >
-                        <ExpandableSection headerText="Medical History">
-                          <KeyValuePairs items={medicalInfoItems} />
-                        </ExpandableSection>
+                        <Tabs
+                          tabs={[
+                            {
+                              label: "Conditions",
+                              id: "conditions",
+                              content: (
+                                <div style={{ maxHeight: '300px', overflowY: 'auto', padding: '16px' }}>
+                                  <SpaceBetween size="l">
+                                    <div>
+                                      <Box variant="h4" color="text-status-error">Active Conditions</Box>
+                                      <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        <li style={{ marginBottom: '8px' }}>• Victim of intimate partner abuse (finding) - Diagnosed on 2022-02-18</li>
+                                        <li style={{ marginBottom: '8px' }}>• Unhealthy alcohol drinking behavior (finding) - Diagnosed on 2019-02-15</li>
+                                        <li style={{ marginBottom: '8px' }}>• Body mass index 30+ - obesity (finding) - Diagnosed on 2016-02-12</li>
+                                        <li style={{ marginBottom: '8px' }}>• Social isolation (finding) - Diagnosed on 2007-02-02</li>
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <Box variant="h4">Other Conditions</Box>
+                                      <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        <li style={{ marginBottom: '8px' }}>• Received higher education (finding) - Diagnosed on 2006-01-27</li>
+                                        <li style={{ marginBottom: '8px' }}>• Facial laceration - Resolved (2020)</li>
+                                      </ul>
+                                    </div>
+                                  </SpaceBetween>
+                                </div>
+                              )
+                            },
+                            {
+                              label: "Immunizations",
+                              id: "immunizations",
+                              content: (
+                                <div style={{ maxHeight: '300px', overflowY: 'auto', padding: '16px' }}>
+                                  <SpaceBetween size="l">
+                                    <div>
+                                      <Box variant="h4">COVID-19 Vaccines</Box>
+                                      <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        <li style={{ marginBottom: '12px' }}>
+                                          • SARS-COV-2 vaccine, mRNA (30 mcg/0.3mL)
+                                          <div style={{ color: '#666', marginLeft: '16px', fontSize: '13px' }}>
+                                            Administered: 2021-11-05
+                                            <br />
+                                            Location: COMMUNITY HOSPITAL OF HUNTINGTON PARK
+                                          </div>
+                                        </li>
+                                        <li style={{ marginBottom: '12px' }}>
+                                          • SARS-COV-2 vaccine, mRNA (30 mcg/0.3mL)
+                                          <div style={{ color: '#666', marginLeft: '16px', fontSize: '13px' }}>
+                                            Administered: 2021-10-15
+                                            <br />
+                                            Location: COMMUNITY HOSPITAL OF HUNTINGTON PARK
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <Box variant="h4">Other Vaccines</Box>
+                                      <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        <li style={{ marginBottom: '12px' }}>
+                                          • Td (adult) preservative free
+                                          <div style={{ color: '#666', marginLeft: '16px', fontSize: '13px' }}>
+                                            Administered: 2019-02-15
+                                            <br />
+                                            Location: LOS REYES CLIINICA MEDICA, INC
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </SpaceBetween>
+                                </div>
+                              )
+                            }
+                          ]}
+                        />
                       </Container>
 
                       {/* Vitals Card */}
