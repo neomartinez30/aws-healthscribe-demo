@@ -316,8 +316,8 @@ const AgentDesktop: React.FC = () => {
                                     value={chatMessage}
                                     onChange={({ detail }) => setChatMessage(detail.value)}
                                     placeholder="Type your message..."
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' && chatMessage.trim()) {
+                                    onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                                      if (event.key === 'Enter' && chatMessage.trim()) {
                                         setMessages(prev => [...prev, {
                                           sender: "User",
                                           message: chatMessage,
