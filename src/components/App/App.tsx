@@ -1,68 +1,37 @@
-import React, { Suspense, lazy } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import AppLayout from '@cloudscape-design/components/app-layout';
-import Flashbar from '@cloudscape-design/components/flashbar';
-import Breadcrumbs from '@/components/Breadcrumbs';
-import SuspenseLoader from '@/components/SuspenseLoader';
-import TopNav from '@/components/TopNav';
-import Welcome from '@/components/Welcome';
-import { useAuthContext } from '@/store/auth';
-import { useNotificationsContext } from '@/store/notifications';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { I18nProvider, importMessages } from '@cloudscape-design/components/i18n';
+import '@cloudscape-design/global-styles/index.css';
+import './index.css';
+import ReactDOM from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
+import Box from '@cloudscape-design/components/box';
 
-// Lazy components
-const Debug = lazy(() => import('@/components/Debug'));
-const Settings = lazy(() => import('@/components/Settings'));
-const Conversations = lazy(() => import('@/components/Conversations'));
-const Conversation = lazy(() => import('@/components/Conversation'));
-const NewConversation = lazy(() => import('@/components/NewConversation'));
-const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
-const PatientInsights = lazy(() => import('@/components/PatientInsights'));
-const AgentDesktop = lazy(() => import('@/components/AgentDesktop'));
+import AppSettingsContextProvider from '@/store/appSettings';
+import AppThemeContextProvider from '@/store/appTheme';
+import NotificationsContextProvider from '@/store/notifications';
 
-export default function App() {
-    const { isUserAuthenticated } = useAuthContext();
-    const { flashbarItems } = useNotificationsContext();
+import { App } from './components';
 
-    const content = (
-        <Suspense fallback={<SuspenseLoader />}>
-            {isUserAuthenticated ? (
-                <Routes>
-                    <Route index element={<Welcome />} />
-                    <Route path="/debug" element={<Debug />} />
-                    <Route path="/conversations" element={<Conversations />} />
-                    <Route path="/conversation/:conversationName" element={<Conversation />} />
-                    <Route path="/new" element={<NewConversation />} />
-                    <Route path="/generate" element={<GenerateAudio />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/PatientInsights" element={<PatientInsights />} />
-                    <Route path="/AgentDesktop" element={<AgentDesktop/>} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            ) : (
-                <Routes>
-                    <Route path="*" element={<Welcome />} />
-                </Routes>
-            )}
-        </Suspense>
-    );
+const locale = document.documentElement.lang;
+const messages = await importMessages(locale);
 
-    return (
-        <>
-            <div id="appTopNav">
-                <TopNav />
-            </div>
-            <AppLayout
-                breadcrumbs={<Breadcrumbs />}
-                content={content}
-                headerSelector="#appTopNav"
-                headerVariant="high-contrast"
-                notifications={<Flashbar items={flashbarItems} />}
-                toolsHide={true}
-                navigationHide={true}
-                contentType="default"
-                disableContentPaddings={false}
-                maxContentWidth={1280}
-            />
-        </>
-    );
-}
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <I18nProvider locale={locale} messages={messages}>
+                <AppThemeContextProvider>
+                    <AppSettingsContextProvider>
+                        <NotificationsContextProvider>
+                            <App />
+                            <Box>
+                                <Toaster position="bottom-left" reverseOrder={false} />
+                            </Box>
+                        </NotificationsContextProvider>
+                    </AppSettingsContextProvider>
+                </AppThemeContextProvider>
+            </I18nProvider>
+        </BrowserRouter>
+    </React.StrictMode>
+);
