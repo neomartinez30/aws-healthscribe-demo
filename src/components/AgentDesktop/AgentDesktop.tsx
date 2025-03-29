@@ -536,3 +536,5 @@ const AgentDesktop: React.FC = () => {
 };
 
 export default AgentDesktop;
+
+export default AgentDesktop
