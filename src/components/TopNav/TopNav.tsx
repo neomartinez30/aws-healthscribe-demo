@@ -120,24 +120,26 @@ export default function TopNav() {
     };
 
     return (
-        <TopNavigation
-            identity={{
-                href: '/',
-                title: 'Virtual Nurse Workspace',
-                logo: {
-                    src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
-                    alt: "DHA Logo"
-                }
-            }}
-            utilities={[utilHelp, utilVisual]}
-            i18nStrings={{
-                searchIconAriaLabel: 'Search',
-                searchDismissIconAriaLabel: 'Close search',
-                overflowMenuTriggerText: 'More',
-                overflowMenuTitleText: 'All',
-                overflowMenuBackIconAriaLabel: 'Back',
-                overflowMenuDismissIconAriaLabel: 'Close menu'
-            }}
-        />
+        <div id="appTopNav" className="custom-nav-gradient nav-container">
+            <TopNavigation
+                identity={{
+                    href: '/',
+                    title: 'Virtual Nurse Workspace',
+                    logo: {
+                        src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
+                        alt: "DHA Logo"
+                    }
+                }}
+                utilities={[utilHelp, utilVisual]}
+                i18nStrings={{
+                    searchIconAriaLabel: 'Search',
+                    searchDismissIconAriaLabel: 'Close search',
+                    overflowMenuTriggerText: 'More',
+                    overflowMenuTitleText: 'All',
+                    overflowMenuBackIconAriaLabel: 'Back',
+                    overflowMenuDismissIconAriaLabel: 'Close menu'
+                }}
+            />
+        </div>
     );
 }
