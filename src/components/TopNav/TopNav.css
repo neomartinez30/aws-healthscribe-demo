@@ -1,6 +1,42 @@
 #appTopNav {
-    /* https://cloudscape.design/components/top-navigation/?tabId=api */
     position: sticky;
     top: 0;
     z-index: 1999;
+}
+
+.custom-nav-gradient {
+    background: linear-gradient(to right, rgb(3, 105, 161), rgb(13, 148, 136));
+}
+
+.nav-container {
+    height: 64px;
+    margin: 0;
+    padding: 0 1rem;
+    border-bottom: 1px solid rgb(229, 231, 235);
+    transition: box-shadow 0.3s ease;
+}
+
+.nav-container:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Override Cloudscape default styles */
+#appTopNav [class*="top-navigation_title"] {
+    color: white !important;
+}
+
+#appTopNav [class*="top-navigation_utility"] button {
+    color: white !important;
+}
+
+#appTopNav [class*="top-navigation_utility"] button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#appTopNav [class*="top-navigation_identity"] {
+    color: white !important;
+}
+
+#appTopNav [class*="top-navigation_logo"] {
+    filter: brightness(0) invert(1);
 }
