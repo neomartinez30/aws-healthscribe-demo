@@ -11,13 +11,12 @@ const Conversation = lazy(() => import('@/components/Conversation'));
 const NewConversation = lazy(() => import('@/components/NewConversation'));
 const GenerateAudio = lazy(() => import('@/components/GenerateAudio'));
 const PatientInsights = lazy(() => import('@/components/PatientInsights'));
-const AgentDesktop = lazy(() => import('@/components/AgentDesktop'));
 
 export default function App() {
     const content = (
         <Suspense fallback={<SuspenseLoader />}>
             <Routes>
-                <Route path="/" element={<AgentDesktop />} />
+                <Route path="/" element={<PatientInsights />} />
                 <Route path="/debug" element={<Debug />} />
                 <Route path="/conversations" element={<Conversations />} />
                 <Route path="/conversation/:conversationName" element={<Conversation />} />
@@ -25,7 +24,6 @@ export default function App() {
                 <Route path="/generate" element={<GenerateAudio />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/PatientInsights" element={<PatientInsights />} />
-                <Route path="/AgentDesktop" element={<AgentDesktop/>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Suspense>
