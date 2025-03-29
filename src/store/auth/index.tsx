@@ -1,12 +1,5 @@
 import React, { createContext, useContext } from 'react';
-
-import { useAuthenticator } from '@aws-amplify/ui-react';
-import { Amplify } from 'aws-amplify';
 import { AuthUser } from 'aws-amplify/auth';
-
-import config from '@/amplifyconfiguration.json';
-
-Amplify.configure(config);
 
 type AuthContextType = {
     isUserAuthenticated: boolean;
@@ -15,8 +8,14 @@ type AuthContextType = {
 };
 
 export const AuthContext = createContext<AuthContextType>({
-    isUserAuthenticated: false,
-    user: null,
+    isUserAuthenticated: true,
+    user: {
+        username: 'neomartinez@deloitte.com',
+        userId: 'static-user-id',
+        signInDetails: {
+            loginId: 'neomartinez@deloitte.com',
+        }
+    } as AuthUser,
     signOut: () => {},
 });
 
@@ -29,12 +28,17 @@ export function useAuthContext() {
 }
 
 export default function AuthContextProvider({ children }: { children: React.ReactElement }) {
-    const { authStatus, user, signOut } = useAuthenticator((context) => [context.user]);
-
+    // Static authentication values
     const authContextValue = {
-        isUserAuthenticated: authStatus === 'authenticated',
-        user: user,
-        signOut: signOut,
+        isUserAuthenticated: true,
+        user: {
+            username: 'neomartinez@deloitte.com',
+            userId: 'static-user-id',
+            signInDetails: {
+                loginId: 'neomartinez@deloitte.com',
+            }
+        } as AuthUser,
+        signOut: () => {},
     };
 
     return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
