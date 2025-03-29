@@ -124,7 +124,7 @@ export default function TopNav() {
             <TopNavigation
                 identity={{
                     href: '/',
-                    title: 'Virtual Nurse Workspace',
+                    title: 'Clinical Notes',
                     logo: {
                         src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
                         alt: "DHA Logo"
