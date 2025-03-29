@@ -13,25 +13,44 @@ import NotificationsContextProvider from '@/store/notifications';
 
 import { App } from './components';
 
+// ✅ Cloudscape Theming
+import { applyTheme } from "@cloudscape-design/components/theming";
+import type { Theme } from "@cloudscape-design/components/theming";
+
+// Apply custom top nav color
+applyTheme({
+  theme: {
+    contexts: {
+      "top-navigation": {
+        tokens: {
+          colorBackgroundContainerContent: "#005b8c",
+        },
+      },
+    },
+  } as Theme,
+});
+
+// Locale handling
 const locale = document.documentElement.lang;
 const messages = await importMessages(locale);
 
+// React root
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <I18nProvider locale={locale} messages={messages}>
-                <AppThemeContextProvider>
-                    <AppSettingsContextProvider>
-                        <NotificationsContextProvider>
-                            <App />
-                            <Box>
-                                <Toaster position="bottom-left" reverseOrder={false} />
-                            </Box>
-                        </NotificationsContextProvider>
-                    </AppSettingsContextProvider>
-                </AppThemeContextProvider>
-            </I18nProvider>
-        </BrowserRouter>
-    </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <I18nProvider locale={locale} messages={messages}>
+        <AppThemeContextProvider>
+          <AppSettingsContextProvider>
+            <NotificationsContextProvider>
+              <App />
+              <Box>
+                <Toaster position="bottom-left" reverseOrder={false} />
+              </Box>
+            </NotificationsContextProvider>
+          </AppSettingsContextProvider>
+        </AppThemeContextProvider>
+      </I18nProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
