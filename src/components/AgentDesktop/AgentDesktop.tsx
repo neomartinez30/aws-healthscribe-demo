@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import Container from '@cloudscape-design/components/container';
-import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Grid from '@cloudscape-design/components/grid';
 import Box from '@cloudscape-design/components/box';
@@ -536,5 +535,3 @@ const AgentDesktop: React.FC = () => {
 };
 
 export default AgentDesktop;
-
-export default AgentDesktop
