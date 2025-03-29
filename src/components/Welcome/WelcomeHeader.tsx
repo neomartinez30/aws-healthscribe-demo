@@ -6,7 +6,6 @@ import Container from '@cloudscape-design/components/container';
 import Grid from '@cloudscape-design/components/grid';
 import RadioGroup from '@cloudscape-design/components/radio-group';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import { useAuthContext } from '@/store/auth';
 
 interface WelcomeHeaderProps {
     logoUrl: string;
@@ -14,7 +13,6 @@ interface WelcomeHeaderProps {
 
 export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
     const navigate = useNavigate();
-    const { isUserAuthenticated } = useAuthContext();
     const [selectedOption, setSelectedOption] = useState('conversations');
 
     const buttonText = useMemo(() => {
@@ -70,27 +68,25 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                     <Box fontSize="heading-xl">DHA Nurse Advise Health Line</Box>
                 </SpaceBetween>
 
-                {isUserAuthenticated && (
-                    <Container>
-                        <SpaceBetween size="l">
-                            <Box variant="h1" fontWeight="heavy" padding="n" fontSize="heading-m">
-                                Get started
-                            </Box>
-                            <RadioGroup
-                                onChange={({ detail }) => setSelectedOption(detail.value)}
-                                value={selectedOption}
-                                items={navigationOptions}
-                            />
-                            <Button 
-                                variant="primary" 
-                                onClick={() => navigate(`/${selectedOption}`)}
-                                iconName="arrow-right"
-                            >
-                                {buttonText}
-                            </Button>
-                        </SpaceBetween>
-                    </Container>
-                )}
+                <Container>
+                    <SpaceBetween size="l">
+                        <Box variant="h1" fontWeight="heavy" padding="n" fontSize="heading-m">
+                            Get started
+                        </Box>
+                        <RadioGroup
+                            onChange={({ detail }) => setSelectedOption(detail.value)}
+                            value={selectedOption}
+                            items={navigationOptions}
+                        />
+                        <Button 
+                            variant="primary" 
+                            onClick={() => navigate(`/${selectedOption}`)}
+                            iconName="arrow-right"
+                        >
+                            {buttonText}
+                        </Button>
+                    </SpaceBetween>
+                </Container>
             </Grid>
         </Box>
     );
