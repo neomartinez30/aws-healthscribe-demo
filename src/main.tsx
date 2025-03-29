@@ -20,6 +20,7 @@ import type { Theme } from "@cloudscape-design/components/theming";
 // Apply custom top nav color
 applyTheme({
   theme: {
+    tokens: {}, //
     contexts: {
       "top-navigation": {
         tokens: {
@@ -29,6 +30,7 @@ applyTheme({
     },
   } as Theme,
 });
+
 
 // Locale handling
 const locale = document.documentElement.lang;
