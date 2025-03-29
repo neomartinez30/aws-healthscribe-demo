@@ -1,22 +1,15 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
 import { useCollection } from '@cloudscape-design/collection-hooks';
 import Button from '@cloudscape-design/components/button';
 import { CollectionPreferencesProps } from '@cloudscape-design/components/collection-preferences';
 import Table from '@cloudscape-design/components/table';
 import Pagination from '@cloudscape-design/components/pagination';
-
 import { MedicalScribeJobSummary } from '@aws-sdk/client-transcribe';
-
 import { ConversationsFilter } from '@/components/Conversations/ConversationsFilter';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useNotificationsContext } from '@/store/notifications';
 import { ListHealthScribeJobsProps, listHealthScribeJobs, getHealthScribeJob } from '@/utils/HealthScribeApi';
 import { getObject, getS3Object } from '@/utils/S3Api';
-
-import { ConversationsHeaderActions } from './ConversationsHeaderActions';
 import TableEmptyState from './TableEmptyState';
 import { TablePreferences } from './TablePreferences';
 import { columnDefs } from './conversationsColumnDefs';
@@ -37,17 +30,12 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
     const [healthScribeJobs, setHealthScribeJobs] = useState<MedicalScribeJobSummary[]>([]);
     const [moreHealthScribeJobs, setMoreHealthScribeJobs] = useState<MoreHealthScribeJobs>({});
     const [selectedHealthScribeJob, setSelectedHealthScribeJob] = useState<MedicalScribeJobSummary[] | []>([]);
-
     const [tableLoading, setTableLoading] = useState(false);
-
     const [preferences, setPreferences] = useLocalStorage<CollectionPreferencesProps.Preferences>(
         'Conversations-Table-Preferences',
         DEFAULT_PREFERENCES
     );
-
     const [searchParams, setSearchParams] = useState<ListHealthScribeJobsProps>({});
-
-    const headerCounterText = `(${healthScribeJobs.length}${Object.keys(moreHealthScribeJobs).length > 0 ? '+' : ''})`;
 
     const listHealthScribeJobsWrapper = useCallback(async (searchFilter: ListHealthScribeJobsProps) => {
         setTableLoading(true);
@@ -168,47 +156,49 @@ export default function Conversations({ onConversationSelect }: ConversationsPro
     };
 
     return (
-        <Table
-            {...collectionProps}
-            columnDefinitions={columnDefs}
-            columnDisplay={preferences.contentDisplay}
-            contentDensity={preferences.contentDensity}
-            filter={
-                <ConversationsFilter
-                    listHealthScribeJobs={listHealthScribeJobsWrapper}
-                    searchParams={searchParams}
-                    setSearchParams={setSearchParams}
-                />
-            }
-            items={items}
-            loading={tableLoading}
-            loadingText="Loading HealthScribe jobs"
-            onSelectionChange={handleSelectionChange}
-            pagination={
-                <Pagination
-                    {...openEndPaginationProp}
-                    {...paginationProps}
-                    onChange={(event) => {
-                        if (event.detail?.currentPageIndex > paginationProps.pagesCount) {
-                            listHealthScribeJobsWrapper({
-                                ...moreHealthScribeJobs.searchFilter,
-                                NextToken: moreHealthScribeJobs.NextToken,
-                            }).catch(console.error);
-                        }
-                        paginationProps.onChange(event);
-                    }}
-                />
-            }
-            preferences={<TablePreferences preferences={preferences} setPreferences={setPreferences} />}
-            resizableColumns={true}
-            selectedItems={selectedHealthScribeJob}
-            selectionType="single"
-            stickyColumns={preferences.stickyColumns}
-            stickyHeader={true}
-            stripedRows={preferences.stripedRows}
-            trackBy="MedicalScribeJobName"
-            variant="container"
-            wrapLines={preferences.wrapLines}
-        />
+        <div style={{ padding: '20px' }}>
+            <Table
+                {...collectionProps}
+                columnDefinitions={columnDefs}
+                columnDisplay={preferences.contentDisplay}
+                contentDensity={preferences.contentDensity}
+                filter={
+                    <ConversationsFilter
+                        listHealthScribeJobs={listHealthScribeJobsWrapper}
+                        searchParams={searchParams}
+                        setSearchParams={setSearchParams}
+                    />
+                }
+                items={items}
+                loading={tableLoading}
+                loadingText="Loading HealthScribe jobs"
+                onSelectionChange={handleSelectionChange}
+                pagination={
+                    <Pagination
+                        {...openEndPaginationProp}
+                        {...paginationProps}
+                        onChange={(event) => {
+                            if (event.detail?.currentPageIndex > paginationProps.pagesCount) {
+                                listHealthScribeJobsWrapper({
+                                    ...moreHealthScribeJobs.searchFilter,
+                                    NextToken: moreHealthScribeJobs.NextToken,
+                                }).catch(console.error);
+                            }
+                            paginationProps.onChange(event);
+                        }}
+                    />
+                }
+                preferences={<TablePreferences preferences={preferences} setPreferences={setPreferences} />}
+                resizableColumns={true}
+                selectedItems={selectedHealthScribeJob}
+                selectionType="single"
+                stickyColumns={preferences.stickyColumns}
+                stickyHeader={true}
+                stripedRows={preferences.stripedRows}
+                trackBy="MedicalScribeJobName"
+                variant="container"
+                wrapLines={preferences.wrapLines}
+            />
+        </div>
     );
 }
