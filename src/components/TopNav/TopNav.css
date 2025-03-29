@@ -2,10 +2,12 @@
     position: sticky;
     top: 0;
     z-index: 1999;
+    background: #005b8c !important; /* ✅ Force the correct background */
 }
 
+/* Optional: if you still want the class-based version */
 .custom-nav-gradient {
-    background: #005b8c;
+    background: #005b8c !important;
 }
 
 .nav-container {
@@ -21,20 +23,14 @@
 }
 
 /* Override Cloudscape default styles */
-#appTopNav [class*="top-navigation_title"] {
-    color: white !important;
-}
-
+#appTopNav [class*="top-navigation_title"],
+#appTopNav [class*="top-navigation_identity"],
 #appTopNav [class*="top-navigation_utility"] button {
     color: white !important;
 }
 
 #appTopNav [class*="top-navigation_utility"] button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-#appTopNav [class*="top-navigation_identity"] {
-    color: white !important;
 }
 
 #appTopNav [class*="top-navigation_logo"] {
