@@ -4,7 +4,6 @@ import TopNavigation from '@cloudscape-design/components/top-navigation';
 import { TopNavigationProps } from '@cloudscape-design/components/top-navigation';
 import { Density, Mode, applyDensity, applyMode } from '@cloudscape-design/global-styles';
 import { useAppThemeContext } from '@/store/appTheme';
-import './TopNav.css';
 
 interface TopNavClick {
     detail: {
@@ -120,26 +119,28 @@ export default function TopNav() {
     };
 
     return (
-        <div id="appTopNav" className="custom-nav-gradient nav-container">
-            <TopNavigation
-                identity={{
-                    href: '/',
-                    title: 'Clinical Notes',
-                    logo: {
-                        src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
-                        alt: "DHA Logo"
-                    }
-                }}
-                utilities={[utilHelp, utilVisual]}
-                i18nStrings={{
-                    searchIconAriaLabel: 'Search',
-                    searchDismissIconAriaLabel: 'Close search',
-                    overflowMenuTriggerText: 'More',
-                    overflowMenuTitleText: 'All',
-                    overflowMenuBackIconAriaLabel: 'Back',
-                    overflowMenuDismissIconAriaLabel: 'Close menu'
-                }}
-            />
+        <div id="appTopNav" className="sticky top-0 z-[1999] bg-[#005b8c]">
+            <div className="h-16 m-0 px-4 border-b border-gray-200 transition-shadow hover:shadow-md">
+                <TopNavigation
+                    identity={{
+                        href: '/',
+                        title: 'Clinical Notes',
+                        logo: {
+                            src: "https://www.tricare.mil/About/-/media/69C0BE06D96345CC872565890A0CC4B1.ashx",
+                            alt: "DHA Logo"
+                        }
+                    }}
+                    utilities={[utilHelp, utilVisual]}
+                    i18nStrings={{
+                        searchIconAriaLabel: 'Search',
+                        searchDismissIconAriaLabel: 'Close search',
+                        overflowMenuTriggerText: 'More',
+                        overflowMenuTitleText: 'All',
+                        overflowMenuBackIconAriaLabel: 'Back',
+                        overflowMenuDismissIconAriaLabel: 'Close menu'
+                    }}
+                />
+            </div>
         </div>
     );
 }
