@@ -63,9 +63,9 @@ export default function WelcomeHeader({ logoUrl }: WelcomeHeaderProps) {
                 </Box>
                 <SpaceBetween size="xl">
                     <Box fontSize="display-l" fontWeight="bold">
-                        Virtual Nurse Experience
+                        Clinical Notes
                     </Box>
-                    <Box fontSize="heading-xl">DHA Nurse Advise Health Line</Box>
+                    <Box fontSize="heading-xl">Clinical Notes</Box>
                 </SpaceBetween>
 
                 <Container>
