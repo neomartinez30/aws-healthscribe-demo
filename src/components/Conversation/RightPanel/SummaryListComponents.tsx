@@ -1,23 +1,19 @@
 import React, { memo } from 'react';
-
 import * as awsui from '@cloudscape-design/design-tokens';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
 import Popover from '@cloudscape-design/components/popover';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-
 import { Entity } from '@aws-sdk/client-comprehendmedical';
-
 import ValueWithLabel from '@/components/Common/ValueWithLabel';
 import { SegmentExtractedData } from '@/types/ComprehendMedical';
 import toTitleCase from '@/utils/toTitleCase';
-
 import { OntologyLinking } from '../Common/OntologyLinking';
-import styles from './SummarizedConcepts.module.css';
 
 type RightWordPopoverProps = {
     word: string;
     wordData: Entity[];
 };
+
 function WordPopover({ word, wordData }: RightWordPopoverProps) {
     return (
         <Popover
@@ -69,10 +65,11 @@ function WordPopover({ word, wordData }: RightWordPopoverProps) {
                 </SpaceBetween>
             }
         >
-            <span style={{ color: awsui.colorTextStatusInfo, fontWeight: 'bold' }}>{word}</span>
+            <span className="text-[#0972d3] font-bold">{word}</span>
         </Popover>
     );
 }
+
 const WordPopoverComprehendMedical = memo(WordPopover);
 
 type ExtractedHealthDataWordProps = {
@@ -81,6 +78,7 @@ type ExtractedHealthDataWordProps = {
     word: string;
     acceptableConfidence: number;
 };
+
 export function ExtractedHealthDataWord({
     linkedId,
     sectionExtractedData,
@@ -95,7 +93,7 @@ export function ExtractedHealthDataWord({
     });
 
     return (
-        <div className={styles.extractedHealthDataWord}>
+        <div className="inline">
             {wordData.length > 0 ? <WordPopoverComprehendMedical word={word} wordData={wordData} /> : word}{' '}
         </div>
     );
