@@ -1,19 +1,12 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { memo, useMemo } from 'react';
-
-import * as awsui from '@cloudscape-design/design-tokens';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Popover from '@cloudscape-design/components/popover';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-
 import toast from 'react-hot-toast';
 import WaveSurfer from 'wavesurfer.js';
-
 import ValueWithLabel from '@/components/Common/ValueWithLabel';
 import { IClinicalInsights, IWordAlternative } from '@/types/HealthScribe';
-
 import ClinicalInsight from './ClinicalInsight';
 
 type PopOverCompProps = {
@@ -48,11 +41,11 @@ function WordPopover({
         };
 
         if (isClinicalEntity) {
-            style.color = awsui.colorTextStatusInfo;
+            style.color = '#0972d3';
             style.fontWeight = 'bold';
         }
-        if (highlightWord) style.color = awsui.colorTextStatusError;
-        if (disableSegment) style.color = awsui.colorTextStatusInactive;
+        if (highlightWord) style.color = '#d91515';
+        if (disableSegment) style.color = '#5f6b7a';
 
         return style;
     }, [highlightWord, disableSegment, isClinicalEntity]);
@@ -66,11 +59,6 @@ function WordPopover({
         }
     }, [word.Confidence]);
 
-    /**
-     * Jump to button is disabled if audioDuration or wordBeginAudioTime is not available
-     * i.e. if selecting the word from Insights (vs Transcript)
-     * @constructor
-     */
     function JumpToButton() {
         if (audioDuration && wordBeginAudioTime) {
             return (
@@ -112,6 +100,7 @@ function WordPopover({
             >
                 <span
                     style={wordStyle}
+                    className="cursor-pointer"
                     onCopy={() => {
                         toast.success('Copied Text!');
                     }}
