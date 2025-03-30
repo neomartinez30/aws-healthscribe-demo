@@ -1,16 +1,10 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { useEffect, useRef, useState } from 'react';
-
 import Button from '@cloudscape-design/components/button';
 import Grid from '@cloudscape-design/components/grid';
 import Icon from '@cloudscape-design/components/icon';
-
 import WaveSurfer from 'wavesurfer.js';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record';
-
 import AudioControls from '../Common/AudioControls';
-import styles from './AudioRecorder.module.css';
 
 type AudioRecorderProps = {
     setRecordedAudio: React.Dispatch<React.SetStateAction<File | undefined>>;
@@ -28,17 +22,16 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
     const [recordingStatus, setRecordingStatus] = useState('inactive');
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-    const [showControls, setShowControls] = useState<boolean>(false); // show/hide audio controls
-    const [playingAudio, setPlayingAudio] = useState<boolean>(false); // is audio playing
-    const [playBackSpeed, setPlayBackSpeed] = useState<number>(1); // playback speed
-    const waveformElement = document.getElementById('waveformForRecording'); // wavesurfer.js wrapper element
-    const [audioLoading, setAudioLoading] = useState<boolean>(true); // is audio file loading
+    const [showControls, setShowControls] = useState<boolean>(false);
+    const [playingAudio, setPlayingAudio] = useState<boolean>(false);
+    const [playBackSpeed, setPlayBackSpeed] = useState<number>(1);
+    const waveformElement = document.getElementById('waveformForRecording');
+    const [audioLoading, setAudioLoading] = useState<boolean>(true);
     const [stopWatchTime, setStopWatchTime] = useState(0);
     const stopWatchHours: number = Math.floor(stopWatchTime / 360000);
     const stopWatchMinutes = Math.floor((stopWatchTime % 360000) / 6000);
     const stopWatchSeconds = Math.floor((stopWatchTime % 6000) / 100);
     const [lastRecordingDetails, setLastRecordingDetails] = useState<Recording | null>(null);
-    // const showDownloadButton = true;
 
     useEffect(() => {
         if (!wavesurfermic || !wavesurfermic.current) {
@@ -123,14 +116,14 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
     };
 
     return (
-        <div className={styles.audioRecorderContainer}>
-            <div className={styles.audioRecorderTopPanel}>
+        <div>
+            <div className="py-10 border-b border-t border-gray-200">
                 <Grid gridDefinition={[{ colspan: { default: 1, xxs: 1 } }, { colspan: { default: 11, xxs: 11 } }]}>
-                    <div className={styles.audioRecorderSpeaker}>
-                        <img className={styles.audioRecorderSpeakerIcon} src="/record.png" alt={'Record Icon'} />
+                    <div className="flex justify-center items-center w-full h-full">
+                        <img className="w-[30px]" src="/record.png" alt={'Record Icon'} />
                     </div>
                     <div>
-                        <span className={styles.audioRecorderSpeakerText}>
+                        <span className="block mb-2">
                             {recordingStatus === 'inactive' ? 'Click "Start" when you are ready to record' : null}
                             {recordingStatus === 'recorded' ? 'Click "Restart" to record a new session' : null}
                             {recordingStatus === 'recording' ? 'Click "Stop" to stop the recording' : null}
@@ -139,11 +132,11 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
                             id="wavesurfermic"
                             className={
                                 recordingStatus === 'inactive' || recordingStatus === 'recorded'
-                                    ? styles.audioWavesurferInitialState
-                                    : styles.audioWavesurferLoadedState
+                                    ? 'w-[350px] max-w-full mt-0 mb-0 block h-0 invisible'
+                                    : 'w-[350px] max-w-full my-4 table h-auto visible'
                             }
                         />
-                        <div className={styles.audioRecorderRecordingControls}>
+                        <div className="flex">
                             <Button
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -158,17 +151,17 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
                                         <Icon name="caret-right-filled"></Icon> Start
                                     </span>
                                 ) : recordingStatus === 'recording' ? (
-                                    <span className={styles.audioRecorderIcon}>
+                                    <span className="mr-1">
                                         <Icon name="close"></Icon> Stop
                                     </span>
                                 ) : (
-                                    <span className={styles.audioRecorderIcon}>
+                                    <span className="mr-1">
                                         <Icon name="redo"></Icon> Restart
                                     </span>
                                 )}
                             </Button>
                             {recordingStatus === 'recording' ? (
-                                <div className={styles.audioRecorderStopWatch}>
+                                <div className="font-bold px-3 py-1 text-base">
                                     <span>
                                         {stopWatchHours.toString().padStart(2, '0')}:
                                         {stopWatchMinutes.toString().padStart(2, '0')}:
@@ -182,20 +175,16 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
                     </div>
                 </Grid>
             </div>
-            <div className={!audioUrl ? '' : styles.recordingItem} style={{ height: !audioUrl ? 0 : '' }}>
+            <div className={!audioUrl ? '' : 'mt-4 p-4 rounded-lg bg-gray-50'} style={{ height: !audioUrl ? 0 : '' }}>
                 {recordingStatus === 'recorded' ? (
-                    <div className={styles.recordingItemHeader}>
-                        <div>Recording {lastRecordingDetails?.index}</div>
+                    <div className="flex justify-between">
+                        <div className="font-bold">Recording {lastRecordingDetails?.index}</div>
                         <div>{lastRecordingDetails?.duration}</div>
                     </div>
                 ) : null}
                 <div
                     id="waveformForRecording"
-                    style={{
-                        marginTop: '5px',
-                        height: !audioUrl ? 0 : '',
-                        display: !audioUrl ? 'table' : 'block',
-                    }}
+                    className={`mt-[5px] ${!audioUrl ? 'h-0 table' : 'block'}`}
                 />
                 <AudioControls
                     wavesurfer={wavesurfer}
