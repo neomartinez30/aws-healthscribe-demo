@@ -1,16 +1,11 @@
 import React from 'react';
-
 import Button from '@cloudscape-design/components/button';
-
 import { InferICD10CMResponse, InferRxNormResponse, InferSNOMEDCTResponse } from '@aws-sdk/client-comprehendmedical';
-
 import { useAppSettingsContext } from '@/store/appSettings';
 import { getInferredData } from '@/utils/ComprehendMedicalApi';
-
 import { EnableComprehendMedicalPopover } from '../Common/ComprehendMedical';
 import OntologyLinkingData from './OntologyLinkingData';
 
-// Comprehend Medical ontology linking API qualification categories and types
 const ONTOLOGY_LINKING = [
     { key: 'icd10cm', name: 'ICD-10-CM', category: ['MEDICAL_CONDITION'], type: ['DX_NAME', 'TIME_EXPRESSION'] },
     { key: 'rxnorm', name: 'RxNorm', category: ['MEDICATION'] },
@@ -43,9 +38,7 @@ export function OntologyLinking({ category, type, text }: OntologyLinkingProps) 
 
     return (
         <>
-            <div
-                style={{ display: 'flex', columnGap: '5px', justifyContent: 'space-around', alignItems: 'center' + '' }}
-            >
+            <div className="flex gap-5 justify-around items-center">
                 {ONTOLOGY_LINKING.map((o, index) => {
                     if (o.category.includes(category)) {
                         if (!!o.type && !o.type.includes(type)) return;
