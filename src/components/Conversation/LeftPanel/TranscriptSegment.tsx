@@ -1,11 +1,6 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-
 import WaveSurfer from 'wavesurfer.js';
-
 import { IClinicalInsights, ITranscript } from '@/types/HealthScribe';
-
 import { WordPopoverTranscript } from './WordPopover';
 
 interface TranscriptSegmentProps {
@@ -29,7 +24,6 @@ export const TranscriptSegment = memo(function TranscriptSegment({
     const executeScroll = () => {
         (segmentRef.current as HTMLDivElement).scrollIntoView({
             behavior: 'smooth',
-            // jump to start when audio isn't playing. otherwise, jump to nearest
             block: wavesurfer.current?.isPlaying() ? 'nearest' : 'start',
             inline: 'center',
         });
@@ -42,7 +36,6 @@ export const TranscriptSegment = memo(function TranscriptSegment({
         } else if ((audioTime < script.BeginAudioTime || audioTime > script.EndAudioTime) && triggerKey) {
             setTriggerKey(false);
         }
-        // eslint-disable-next-line
     }, [audioTime]);
 
     const disableSegment = useMemo(() => {
@@ -58,14 +51,10 @@ export const TranscriptSegment = memo(function TranscriptSegment({
     }, [audioReady]);
 
     return (
-        <div ref={segmentRef} style={{ scrollMarginTop: '80px' }}>
+        <div ref={segmentRef} className="scroll-mt-20">
             {script.Words.map((word, i) => {
-                // punctuation (.,?, etc.) the same BeingAudioTime and EndAudioTime
                 const isPunctuation = word.BeginAudioTime === word.EndAudioTime;
-                // highlight the word if the current audio time is between where the word time starts and ends
-                const highlightWord =
-                    audioTime > word.BeginAudioTime && audioTime < word.EndAudioTime && !isPunctuation;
-                // highlight the word as a clinical entity if word.ClinicalEntity and word.Type exist
+                const highlightWord = audioTime > word.BeginAudioTime && audioTime < word.EndAudioTime && !isPunctuation;
                 const isClinicalEntity = !!word.ClinicalEntity && !!word.Type;
                 return (
                     <WordPopoverTranscript
