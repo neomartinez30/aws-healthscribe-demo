@@ -1,20 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
 import Icon from '@cloudscape-design/components/icon';
-
 import { useDebouncedCallback } from 'use-debounce';
-
 import { useScroll } from '@/hooks/useScroll';
-
-import styles from './ScrollingContainer.module.css';
 
 type ScrollingContainerProps = {
     containerTitle: string;
     containerActions?: React.ReactNode;
     children: React.ReactNode;
 };
+
 export default function ScrollingContainer({
     containerTitle,
     containerActions = null,
@@ -23,8 +19,8 @@ export default function ScrollingContainer({
     const [showUpScroll, setShowUpScroll] = useState<boolean>(false);
     const [showDownScroll, setShowDownScroll] = useState<boolean>(false);
 
-    // Use a ref for the right panel container, so we can show arrows for scrolling
     const childContainerRef = useRef(null);
+    
     function handleScroll(e: Event) {
         const scrollElement = e.target as HTMLElement;
         const scrollLeftTop = scrollElement.scrollTop > 0;
@@ -40,10 +36,10 @@ export default function ScrollingContainer({
             setShowDownScroll(true);
         }
     }
+    
     const debouncedHandleScroll = useDebouncedCallback(handleScroll, 300);
     useScroll(childContainerRef, debouncedHandleScroll);
 
-    // Show down scroll if the scroll height (entire child div) is larger than client height (visible child div)
     useEffect(() => {
         if (childContainerRef.current == null) return;
         const childContainer = childContainerRef.current as HTMLElement;
@@ -59,15 +55,15 @@ export default function ScrollingContainer({
             }
         >
             {showUpScroll && (
-                <div className={styles.scrollUpIcon}>
+                <div className="absolute top-[5px] left-1/2 opacity-50 animate-bounce">
                     <Icon name="angle-up" size="medium" />
                 </div>
             )}
-            <div className={styles.childDiv} ref={childContainerRef}>
+            <div className="min-h-[300px] h-[calc(100vh-400px)] mb-4 overflow-scroll scrollbar-hide" ref={childContainerRef}>
                 {children}
             </div>
             {showDownScroll && (
-                <div className={styles.scrollDownIcon}>
+                <div className="absolute bottom-0 left-1/2 opacity-50 animate-bounce">
                     <Icon name="angle-down" size="medium" />
                 </div>
             )}
