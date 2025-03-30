@@ -1,12 +1,6 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import React, { memo, useEffect } from 'react';
-
 import { FileWithPath, useDropzone } from 'react-dropzone';
 
-import styles from './Dropzone.module.css';
-
-// Validate dropped files
 function validateFile(f: FileWithPath) {
     if (!f.type.startsWith('audio/')) {
         return {
@@ -56,10 +50,12 @@ export const AudioDropzone = memo(function AudioDropzone({ setFilePath, setFormE
     }, [acceptedFiles, fileRejections]);
 
     return (
-        <div className={styles.dropzoneContainer}>
+        <div className="flex flex-col justify-center">
             <div
                 {...getRootProps({
-                    className: `${styles.dropzone} ${acceptedFiles.length > 0 && styles.dropzoneShorter}`,
+                    className: `text-center p-5 border-3 border-dashed border-[#eeeeee] bg-[#fafafa] text-[#bdbdbd] mb-5 transition-border duration-500 ease-in-out ${
+                        acceptedFiles.length > 0 ? 'h-[120px] pt-0' : 'h-[180px]'
+                    }`,
                 })}
             >
                 <input {...getInputProps()} />
