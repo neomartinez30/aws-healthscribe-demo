@@ -33,16 +33,25 @@ div[class*="awsui_layout_"] {
   margin: 0 !important;
 }
 
+/* Custom styles for TopNav */
+#appTopNav [class*="top-navigation_title"],
+#appTopNav [class*="top-navigation_identity"],
+#appTopNav [class*="top-navigation_utility"] button {
+  @apply text-white;
+}
+
+#appTopNav [class*="top-navigation_utility"] button:hover {
+  @apply bg-white/10;
+}
+
+#appTopNav [class*="top-navigation_logo"] {
+  @apply brightness-0 invert;
+}
+
 /* Ensure proper button styling */
 button {
   @apply cursor-pointer;
 }
-
-/* Form element styling */
-input, select, textarea {
-  @apply border-gray-300;
-}
-
 
 /* Form element styling */
 input, select, textarea {
