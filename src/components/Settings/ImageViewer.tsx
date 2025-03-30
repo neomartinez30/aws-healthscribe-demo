@@ -12,17 +12,11 @@ export function ImageViewer({ src, alt }: ImageViewerProps) {
 
   return (
     <>
-      <Box margin={{ bottom: 'l' }} textAlign="center">
+      <Box className="mb-8 text-center">
         <img
           src={src}
           alt={alt}
-          style={{ 
-            maxWidth: '100%', 
-            height: 'auto', 
-            cursor: 'pointer',
-            borderRadius: '8px',
-            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-          }}
+          className="max-w-full h-auto cursor-pointer rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
           onClick={() => setIsFullscreen(true)}
         />
       </Box>
@@ -36,11 +30,7 @@ export function ImageViewer({ src, alt }: ImageViewerProps) {
         <img
           src={src}
           alt={alt}
-          style={{
-            maxWidth: '100%',
-            maxHeight: 'calc(100vh - 150px)',
-            objectFit: 'contain'
-          }}
+          className="max-w-full max-h-[calc(100vh-150px)] object-contain"
         />
       </Modal>
     </>
