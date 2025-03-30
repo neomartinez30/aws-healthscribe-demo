@@ -1,16 +1,11 @@
 import React, { useMemo } from 'react';
-
-import * as awsui from '@cloudscape-design/design-tokens';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import FormField from '@cloudscape-design/components/form-field';
 import Modal from '@cloudscape-design/components/modal';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-
 import { useAppSettingsContext } from '@/store/appSettings';
-
 import { ComprehendMedicalNereCost, EnableComprehendMedicalPopover } from '../Common/ComprehendMedical';
-import styles from './SummarizedConcepts.module.css';
 
 type RightPanelActionsProps = {
     hasInsightSections: boolean;
@@ -20,6 +15,7 @@ type RightPanelActionsProps = {
     setRightPanelSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleExtractHealthData: () => void;
 };
+
 export function RightPanelActions({
     hasInsightSections,
     dataExtracted,
@@ -57,6 +53,7 @@ type RightPanelSettingsProps = {
     acceptableConfidence: number;
     setAcceptableConfidence: (confidence: number) => void;
 };
+
 export function RightPanelSettings({
     rightPanelSettingsOpen,
     setRightPanelSettingsOpen,
@@ -90,10 +87,9 @@ export function RightPanelSettings({
                 label="Comprehend Medical Confidence Score Threshold"
                 description="Extracted medical entities with confidence scores lower than this are not shown."
             >
-                <div className={styles.sliderContainer}>
+                <div className="pt-1 w-full flex items-center">
                     <input
-                        className={styles.slider}
-                        style={{ background: awsui.colorBackgroundButtonNormalActive }}
+                        className="appearance-none w-[90%] h-2 rounded-full border-none bg-[#0972d3] mr-2"
                         type="range"
                         step={1}
                         min={0}
