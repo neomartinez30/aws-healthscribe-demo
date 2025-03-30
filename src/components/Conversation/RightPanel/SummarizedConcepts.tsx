@@ -1,13 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
 import TextContent from '@cloudscape-design/components/text-content';
-
 import toast from 'react-hot-toast';
 import WaveSurfer from 'wavesurfer.js';
-
 import { ExtractedHealthData, SummarySectionEntityMapping } from '@/types/ComprehendMedical';
 import { IAuraClinicalDocOutputSection, ITranscriptSegments } from '@/types/HealthScribe';
-
 import { HighlightId } from '../types';
 import { SummaryListDefault } from './SummaryList';
 import { SECTION_ORDER } from './sectionOrder';
@@ -25,21 +21,6 @@ type SummarizedConceptsProps = {
     wavesurfer: React.MutableRefObject<WaveSurfer | undefined>;
 };
 
-// Define valid section names type
-type OriginalSectionName = 
-    | 'CHIEF_COMPLIANT'
-    | 'HISTORY_OF_PRESENT_ILLNESS'
-    | 'PAST_MEDICAL_HISTORY'
-    | 'PAST_FAMILY_HISTORY'
-    | 'PAST_SOCIAL_HISTORY'
-    | 'PHYSICAL_EXAMINATION'
-    | 'DIAGNOSTIC_TESTING'
-    | 'ASSESSMENT'
-    | 'PLAN';
-
-// Define SBAR section type
-type SBARSection = 'SITUATION' | 'BACKGROUND' | 'ASSESSMENT' | 'RECOMMENDATION';
-
 export default function SummarizedConcepts({
     sections,
     extractedHealthData,
@@ -52,7 +33,6 @@ export default function SummarizedConcepts({
     const [currentId, setCurrentId] = useState(0);
     const [currentSegment, setCurrentSegment] = useState<string>('');
 
-    // Unset current segment when the highlight is removed
     useEffect(() => {
         if (!highlightId.selectedSegmentId) setCurrentSegment('');
     }, [highlightId]);
@@ -100,9 +80,8 @@ export default function SummarizedConcepts({
         }
     }
 
-    // Transform sections into SBAR format
     const sbarSections = useMemo(() => {
-        const sbarMap: Record<OriginalSectionName, SBARSection> = {
+        const sbarMap = {
             'CHIEF_COMPLIANT': 'SITUATION',
             'HISTORY_OF_PRESENT_ILLNESS': 'SITUATION',
             'PAST_MEDICAL_HISTORY': 'BACKGROUND',
@@ -114,17 +93,15 @@ export default function SummarizedConcepts({
             'PLAN': 'RECOMMENDATION'
         };
 
-        const sbarSections = SECTION_ORDER.map(sbarSection => {
+        return SECTION_ORDER.map(sbarSection => {
             const relevantSections = sections.filter(section => 
-                sbarMap[section.SectionName as OriginalSectionName] === sbarSection
+                sbarMap[section.SectionName as keyof typeof sbarMap] === sbarSection
             );
             return {
                 SectionName: sbarSection,
                 Summary: relevantSections.flatMap(section => section.Summary)
             };
         });
-
-        return sbarSections;
     }, [sections]);
 
     return (
