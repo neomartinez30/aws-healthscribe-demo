@@ -1,18 +1,13 @@
 import React from 'react';
-
-import * as awsui from '@cloudscape-design/design-tokens';
 import Box from '@cloudscape-design/components/box';
-
 import { SegmentExtractedData } from '@/types/ComprehendMedical';
 import { IEvidence } from '@/types/HealthScribe';
-
-import styles from './SummarizedConcepts.module.css';
 import { ExtractedHealthDataWord } from './SummaryListComponents';
 import { processSummarizedSegment } from './summarizedConceptsUtils';
 
 function NoEntities() {
     return (
-        <div style={{ paddingLeft: '5px' }}>
+        <div className="pl-1">
             <Box variant="small">No Clinical Entities</Box>
         </div>
     );
@@ -26,6 +21,7 @@ type SummaryListDefaultProps = {
     currentSegment: string;
     handleSegmentClick: (SummarizedSegment: string, EvidenceLinks: { SegmentId: string }[]) => void;
 };
+
 export function SummaryListDefault({
     sectionName,
     summary,
@@ -36,11 +32,10 @@ export function SummaryListDefault({
 }: SummaryListDefaultProps) {
     if (summary.length) {
         return (
-            <ul className={styles.summaryList}>
+            <ul className="mt-[1px] mb-[1px] pl-4 list-outside">
                 {summary.map(({ EvidenceLinks, SummarizedSegment }, sectionIndex) => {
                     if (SummarizedSegment === '') return false;
 
-                    // Check if the segment is a section header
                     let sectionHeader = '';
                     let indent = false;
                     if (SummarizedSegment.endsWith('\n')) {
@@ -54,9 +49,8 @@ export function SummaryListDefault({
                     const sectionHeaderWordLength = sectionHeader ? sectionHeader.split(' ').length : 0;
 
                     const summaryItemDivStyle = {
-                        color: awsui.colorTextBodyDefault,
-                        backgroundColor:
-                            currentSegment === SummarizedSegment ? awsui.colorBackgroundToggleCheckedDisabled : '',
+                        color: currentSegment === SummarizedSegment ? '#9d9d9de1' : '',
+                        backgroundColor: currentSegment === SummarizedSegment ? '#f2f3f3' : '',
                     };
 
                     if (summaryExtractedHealthData) {
@@ -64,7 +58,7 @@ export function SummaryListDefault({
                         return (
                             <div key={`${sectionName}_${sectionIndex}`}>
                                 {sectionHeaderWordLength > 0 && (
-                                    <div className={styles.summaryListItemSubHeader}>
+                                    <div className="-ml-4">
                                         {sectionExtractedData.words
                                             .slice(0, sectionHeaderWordLength)
                                             .map(({ word, linkedId }, wordIndex) => (
@@ -78,10 +72,10 @@ export function SummaryListDefault({
                                             ))}
                                     </div>
                                 )}
-                                <li className={`${styles.summaryListItem} ${indent && styles.summaryListItemIndent}`}>
+                                <li className={`py-[2px] pb-[5px] pl-0 ml-0 ${indent ? 'ml-3' : ''}`}>
                                     <div
                                         onClick={() => handleSegmentClick(SummarizedSegment, EvidenceLinks)}
-                                        className={styles.summarizedSegment}
+                                        className="inline cursor-pointer leading-normal font-normal"
                                         style={summaryItemDivStyle}
                                     >
                                         {sectionExtractedData.words
@@ -107,12 +101,12 @@ export function SummaryListDefault({
                         return (
                             <div key={`${sectionName}_${sectionIndex}`}>
                                 {sectionHeader && (
-                                    <div className={styles.summaryListItemSubHeader}>{sectionHeader}</div>
+                                    <div className="-ml-4">{sectionHeader}</div>
                                 )}
-                                <li className={`${styles.summaryListItem} ${indent && styles.summaryListItemIndent}`}>
+                                <li className={`py-[2px] pb-[5px] pl-0 ml-0 ${indent ? 'ml-3' : ''}`}>
                                     <div
                                         onClick={() => handleSegmentClick(SummarizedSegment, EvidenceLinks)}
-                                        className={styles.summarizedSegment}
+                                        className="inline cursor-pointer leading-normal font-normal"
                                         style={summaryItemDivStyle}
                                     >
                                         {processSummarizedSegment(SummarizedSegment)}
