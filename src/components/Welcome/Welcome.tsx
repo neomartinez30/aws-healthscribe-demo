@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import ContentLayout from '@cloudscape-design/components/content-layout';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import styles from './Welcome.module.css';
 import WelcomeHeader from './WelcomeHeader';
 import { Details, Highlights, Overview } from './WelcomeSections';
 
@@ -15,7 +14,7 @@ function Welcome() {
             defaultPadding={true}
             disableOverlap={true}
         >
-            <main className={styles.mainContents}>
+            <main className="mt-5">
                 <SpaceBetween size={'l'}>
                     <Overview />
                     <Highlights />
